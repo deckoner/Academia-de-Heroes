@@ -1,0 +1,5 @@
+Django
+plotly
+playwright
+pytest
+pytest-django
