@@ -10,23 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     env:
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
       DJANGO_SETTINGS_MODULE: academia_de_heroes.settings
       PYTHONPATH: .
 
@@ -45,6 +29,14 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-django playwright
           playwright install --with-deps
+
+      - name: Limpiar base de datos SQLite
+        run: |
+          # Borra SQLite residual si existe
+          if [ -f db.sqlite3 ]; then rm db.sqlite3; fi
+          # Borra archivos pycache y migraciones viejas opcionales
+          find . -path "*/migrations/*.pyc" -delete
+          find . -path "*/migrations/__pycache__" -delete
 
       - name: Ejecutar migraciones
         run: |
