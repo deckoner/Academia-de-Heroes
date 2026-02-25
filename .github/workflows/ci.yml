@@ -30,16 +30,18 @@ jobs:
           pip install pytest pytest-django playwright
           playwright install --with-deps
 
-      - name: Limpiar base de datos SQLite
+      - name: Limpiar SQLite y migraciones
         run: |
-          # Borra SQLite residual si existe
-          if [ -f db.sqlite3 ]; then rm db.sqlite3; fi
-          # Borra archivos pycache y migraciones viejas opcionales
-          find . -path "*/migrations/*.pyc" -delete
-          find . -path "*/migrations/__pycache__" -delete
+          echo "Borrando db.sqlite3 si existe"
+          rm -f db.sqlite3
+          echo "Borrando __pycache__ de migraciones"
+          find . -path "*/migrations/__pycache__" -exec rm -rf {} +
+          echo "Borrando archivos .pyc de migraciones"
+          find . -name "*.pyc" -delete
 
-      - name: Ejecutar migraciones
+      - name: Ejecutar migraciones desde cero
         run: |
+          python manage.py makemigrations
           python manage.py migrate
 
       - name: Ejecutar tests
