@@ -140,6 +140,31 @@ main {
     transition: margin-left 0.3s ease;
 }
 
+/* Capa de desenfoque y degradado al abrir el sidebar */
+main::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to top, rgba(43, 31, 21, 0.95) 0%, rgba(43, 31, 21, 0) 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 90;
+    pointer-events: none;
+}
+
+aside:hover~main::after,
+aside:focus-within~main::after {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
 /* Tipografía */
 h1,
 h2,
