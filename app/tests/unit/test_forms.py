@@ -4,6 +4,7 @@ from app.forms import PersonajeForm
 
 
 @pytest.mark.unit
+@pytest.mark.django_db
 class TestPersonajeForm(TestCase):
     """Tests para el formulario PersonajeForm."""
     
