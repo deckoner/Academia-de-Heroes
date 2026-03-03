@@ -7,29 +7,57 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Personaje',
+            name="Personaje",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tipo', models.CharField(choices=[('PERSONAJE', 'Personaje'), ('GUERRERO', 'Guerrero'), ('MAGO', 'Mago'), ('ARQUERO', 'Arquero')], db_index=True, default='PERSONAJE', max_length=20)),
-                ('nombre', models.CharField(db_index=True, max_length=100, unique=True)),
-                ('nivel', models.PositiveIntegerField(default=1)),
-                ('vida', models.PositiveIntegerField(default=100)),
-                ('vida_max', models.PositiveIntegerField(default=100)),
-                ('armadura', models.PositiveIntegerField(blank=True, null=True)),
-                ('mana', models.PositiveIntegerField(blank=True, null=True)),
-                ('precision', models.PositiveIntegerField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "tipo",
+                    models.CharField(
+                        choices=[
+                            ("PERSONAJE", "Personaje"),
+                            ("GUERRERO", "Guerrero"),
+                            ("MAGO", "Mago"),
+                            ("ARQUERO", "Arquero"),
+                        ],
+                        db_index=True,
+                        default="PERSONAJE",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "nombre",
+                    models.CharField(db_index=True, max_length=100, unique=True),
+                ),
+                ("nivel", models.PositiveIntegerField(default=1)),
+                ("vida", models.PositiveIntegerField(default=100)),
+                ("vida_max", models.PositiveIntegerField(default=100)),
+                ("armadura", models.PositiveIntegerField(blank=True, null=True)),
+                ("mana", models.PositiveIntegerField(blank=True, null=True)),
+                ("precision", models.PositiveIntegerField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'db_table': 'personajes',
-                'ordering': ['nombre'],
-                'indexes': [models.Index(fields=['nombre'], name='personajes_nombre_2495c3_idx'), models.Index(fields=['tipo'], name='personajes_tipo_18654b_idx')],
+                "db_table": "personajes",
+                "ordering": ["nombre"],
+                "indexes": [
+                    models.Index(
+                        fields=["nombre"], name="personajes_nombre_2495c3_idx"
+                    ),
+                    models.Index(fields=["tipo"], name="personajes_tipo_18654b_idx"),
+                ],
             },
         ),
     ]

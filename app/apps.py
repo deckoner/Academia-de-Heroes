@@ -11,4 +11,4 @@ class AcademiaHeroesConfig(AppConfig):
         Nombre interno de la aplicación dentro del proyecto Django.
     """
 
-    name = 'app'
+    name = "app"
