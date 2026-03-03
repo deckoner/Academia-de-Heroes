@@ -177,3 +177,107 @@ class TestPersonajeForm(TestCase):
             personaje = form.save()
             self.assertEqual(personaje.precision, 80)
             personaje.delete()
+    
+    def test_precision_valor_minimo(self):
+        """Verifica que precision puede ser 0."""
+        form = PersonajeForm({
+            'tipo': 'ARQUERO',
+            'nombre': 'ArqueroMin',
+            'nivel': 1,
+            'vida': 90,
+            'vida_max': 90,
+            'precision': 0,
+        })
+        self.assertTrue(form.is_valid())
+    
+    def test_precision_valor_maximo(self):
+        """Verifica que precision puede ser 100."""
+        form = PersonajeForm({
+            'tipo': 'ARQUERO',
+            'nombre': 'ArqueroMax',
+            'nivel': 1,
+            'vida': 90,
+            'vida_max': 90,
+            'precision': 100,
+        })
+        self.assertTrue(form.is_valid())
+    
+    def test_precision_invalido_menor_0(self):
+        """Verifica que precision no puede ser menor a 0."""
+        form = PersonajeForm({
+            'tipo': 'ARQUERO',
+            'nombre': 'ArqueroInv',
+            'nivel': 1,
+            'vida': 90,
+            'vida_max': 90,
+            'precision': -1,
+        })
+        self.assertFalse(form.is_valid())
+    
+    def test_precision_invalido_mayor_100(self):
+        """Verifica que precision no puede ser mayor a 100."""
+        form = PersonajeForm({
+            'tipo': 'ARQUERO',
+            'nombre': 'ArqueroInv2',
+            'nivel': 1,
+            'vida': 90,
+            'vida_max': 90,
+            'precision': 101,
+        })
+        self.assertFalse(form.is_valid())
+    
+    def test_form_editar_personaje(self):
+        """Verifica que se puede editar un personaje existente."""
+        from app.models import Personaje
+        
+        p = Personaje.objects.create(
+            tipo='GUERRERO',
+            nombre='PersonajeEditar',
+            nivel=1,
+            vida=100,
+            vida_max=100,
+            armadura=5
+        )
+        
+        form = PersonajeForm({
+            'tipo': 'GUERRERO',
+            'nombre': 'PersonajeEditado',
+            'nivel': 5,
+            'vida': 120,
+            'vida_max': 120,
+            'armadura': 10,
+        }, instance=p)
+        
+        if form.is_valid():
+            personaje = form.save()
+            self.assertEqual(personaje.nombre, 'PersonajeEditado')
+            self.assertEqual(personaje.nivel, 5)
+            self.assertEqual(personaje.armadura, 10)
+            personaje.delete()
+    
+    def test_form_editar_arquero_precision(self):
+        """Verifica que se puede editar la precision de un arquero."""
+        from app.models import Personaje
+        
+        p = Personaje.objects.create(
+            tipo='ARQUERO',
+            nombre='ArqueroEditar',
+            nivel=1,
+            vida=90,
+            vida_max=90,
+            precision=50
+        )
+        
+        form = PersonajeForm({
+            'tipo': 'ARQUERO',
+            'nombre': 'ArqueroEditar',
+            'nivel': 3,
+            'vida': 100,
+            'vida_max': 100,
+            'precision': 90,
+        }, instance=p)
+        
+        if form.is_valid():
+            personaje = form.save()
+            self.assertEqual(personaje.precision, 90)
+            personaje.delete()
