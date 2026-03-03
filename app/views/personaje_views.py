@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -8,6 +8,7 @@ from app.services import (
     listar_personajes as service_listar,
     obtener_personaje as service_obtener,
     borrar_personaje as service_borrar,
+    actualizar_personaje as service_actualizar,
 )
 
 
@@ -179,3 +180,89 @@ class EliminarPersonajeView(View):
             messages.error(request, f'Error al eliminar el personaje: {str(e)}')
         
         return redirect(self.success_url)
+
+
+class EditarPersonajeView(View):
+    """
+    Controlador para editar un personaje existente.
+    
+    Attributes
+    ----------
+    template_name : str
+        Ruta de la plantilla HTML utilizada para renderizar la vista.
+    success_url : str
+        URL a la que se redirige después de una edición exitosa.
+    """
+    
+    template_name = 'personajes/editar.html'
+    success_url = reverse_lazy('lista_personajes')
+    
+    def get(self, request, personaje_id):
+        """
+        Maneja las peticiones GET mostrando el formulario de edición.
+        
+        Parameters
+        ----------
+        request : HttpRequest
+            Objeto de petición HTTP entrante.
+        personaje_id : int
+            Identificador único del personaje a editar.
+            
+        Returns
+        -------
+        HttpResponse
+            Respuesta HTML con el formulario de edición.
+        """
+        personaje = service_obtener(personaje_id)
+        
+        if not personaje:
+            messages.error(request, 'Personaje no encontrado.')
+            return redirect(self.success_url)
+        
+        initial_data = {
+            'tipo': personaje.tipo,
+            'nombre': personaje.nombre,
+            'nivel': personaje.nivel,
+            'vida': personaje.vida,
+            'vida_max': personaje.vida_max,
+            'armadura': personaje.armadura,
+            'mana': personaje.mana,
+            'precision': personaje.precision,
+        }
+        
+        form = PersonajeForm(initial=initial_data, instance=personaje)
+        return render(request, self.template_name, {'form': form, 'personaje': personaje})
+    
+    def post(self, request, personaje_id):
+        """
+        Maneja las peticiones POST procesando los datos del formulario.
+        
+        Parameters
+        ----------
+        request : HttpRequest
+            Objeto de petición HTTP entrante con los datos del formulario.
+        personaje_id : int
+            Identificador único del personaje a editar.
+            
+        Returns
+        -------
+        HttpResponse
+            Respuesta de redirección si es válido, o el formulario con errores.
+        """
+        personaje = service_obtener(personaje_id)
+        
+        if not personaje:
+            messages.error(request, 'Personaje no encontrado.')
+            return redirect(self.success_url)
+        
+        form = PersonajeForm(request.POST, instance=personaje)
+        
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, f'Personaje "{form.cleaned_data["nombre"]}" actualizado correctamente.')
+                return redirect(self.success_url)
+            except Exception as e:
+                messages.error(request, f'Error al actualizar el personaje: {str(e)}')
+        
+        return render(request, self.template_name, {'form': form, 'personaje': personaje})

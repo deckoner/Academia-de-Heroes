@@ -25,6 +25,7 @@
                     <td>{{ personaje.nivel }}</td>
                     <td>{{ personaje.vida }}/{{ personaje.vida_max }}</td>
                     <td class="actions">
+                        <a href="{% url 'editar_personaje' personaje.id %}">Editar</a>
                         <form method="post" action="{% url 'eliminar_personaje' personaje.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn-danger" onclick="return confirm('¿Estás seguro de eliminar este personaje?')">Eliminar</button>

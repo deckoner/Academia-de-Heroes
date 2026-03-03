@@ -39,17 +39,17 @@
             <input type="number" name="vida_max" id="id_vida_max" min="1" value="100" required>
         </div>
         
-        <div class="form-group" id="campo_armadura">
+        <div class="form-group" id="campo_armadura" style="display:none;">
             <label for="id_armadura">Armadura (solo Guerrero)</label>
             <input type="number" name="armadura" id="id_armadura" min="0" value="5">
         </div>
         
-        <div class="form-group" id="campo_mana">
+        <div class="form-group" id="campo_mana" style="display:none;">
             <label for="id_mana">Mana (solo Mago)</label>
             <input type="number" name="mana" id="id_mana" min="0" value="50">
         </div>
         
-        <div class="form-group" id="campo_precision">
+        <div class="form-group" id="campo_precision" style="display:none;">
             <label for="id_precision">Precision (solo Arquero)</label>
             <input type="number" name="precision" id="id_precision" min="0" max="100" value="80">
         </div>
@@ -66,12 +66,14 @@
             document.getElementById('campo_mana').style.display = (tipo === 'MAGO') ? 'block' : 'none';
             document.getElementById('campo_precision').style.display = (tipo === 'ARQUERO') ? 'block' : 'none';
             
-            if (tipo !== 'GUERRERO') document.getElementById('id_armadura').value = '';
-            if (tipo !== 'MAGO') document.getElementById('id_mana').value = '';
-            if (tipo !== 'ARQUERO') document.getElementById('id_precision').value = '';
+            if (tipo === 'GUERRERO') {
+                document.getElementById('id_armadura').value = '5';
+            } else if (tipo === 'MAGO') {
+                document.getElementById('id_mana').value = '50';
+            } else if (tipo === 'ARQUERO') {
+                document.getElementById('id_precision').value = '80';
+            }
         }
-        
-        actualizarCampos();
     </script>
 </div>
 {% endblock %}
