@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Personaje - Academia de Heroes{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Crear Nuevo Personaje</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_tipo">Tipo de Personaje</label>
+            <select name="tipo" id="id_tipo" required onchange="actualizarCampos()">
+                <option value="">Selecciona un tipo</option>
+                <option value="GUERRERO">Guerrero</option>
+                <option value="MAGO">Mago</option>
+                <option value="ARQUERO">Arquero</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_nombre">Nombre</label>
+            <input type="text" name="nombre" id="id_nombre" maxlength="100" required placeholder="Introduce el nombre del personaje">
+        </div>
+        
+        <div class="form-group">
+            <label for="id_nivel">Nivel</label>
+            <input type="number" name="nivel" id="id_nivel" min="1" max="100" value="1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_vida">Puntos de Vida</label>
+            <input type="number" name="vida" id="id_vida" min="0" value="100" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_vida_max">Vida Maxima</label>
+            <input type="number" name="vida_max" id="id_vida_max" min="1" value="100" required>
+        </div>
+        
+        <div class="form-group" id="campo_armadura" style="display:none;">
+            <label for="id_armadura">Armadura (solo Guerrero)</label>
+            <input type="number" name="armadura" id="id_armadura" min="0" value="5">
+        </div>
+        
+        <div class="form-group" id="campo_mana" style="display:none;">
+            <label for="id_mana">Mana (solo Mago)</label>
+            <input type="number" name="mana" id="id_mana" min="0" value="50">
+        </div>
+        
+        <div class="form-group" id="campo_precision" style="display:none;">
+            <label for="id_precision">Precision (solo Arquero)</label>
+            <input type="number" name="precision" id="id_precision" min="0" max="100" value="80">
+        </div>
+        
+        <button type="submit">Crear Personaje</button>
+        <a href="{% url 'lista_personajes' %}" class="btn-secondary">Cancelar</a>
+    </form>
+    
+    <script>
+        function actualizarCampos() {
+            var tipo = document.getElementById('id_tipo').value;
+            
+            document.getElementById('campo_armadura').style.display = (tipo === 'GUERRERO') ? 'block' : 'none';
+            document.getElementById('campo_mana').style.display = (tipo === 'MAGO') ? 'block' : 'none';
+            document.getElementById('campo_precision').style.display = (tipo === 'ARQUERO') ? 'block' : 'none';
+            
+            if (tipo === 'GUERRERO') {
+                document.getElementById('id_armadura').value = '5';
+            } else if (tipo === 'MAGO') {
+                document.getElementById('id_mana').value = '50';
+            } else if (tipo === 'ARQUERO') {
+                document.getElementById('id_precision').value = '80';
+            }
+        }
+    </script>
+</div>
+{% endblock %}

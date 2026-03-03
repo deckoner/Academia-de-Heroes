@@ -12,6 +12,7 @@ from app.services import (
 
 
 @pytest.mark.unit
+@pytest.mark.django_db
 class TestPersonajeModel(TestCase):
     """Tests para el modelo Personaje."""
     
@@ -175,6 +176,7 @@ class TestPersonajeModel(TestCase):
 
 
 @pytest.mark.unit
+@pytest.mark.django_db
 class TestGuerrero(TestCase):
     """Tests especificos para el tipo Guerrero."""
     
@@ -206,6 +208,7 @@ class TestGuerrero(TestCase):
 
 
 @pytest.mark.unit
+@pytest.mark.django_db
 class TestMago(TestCase):
     """Tests especificos para el tipo Mago."""
     
@@ -238,6 +241,7 @@ class TestMago(TestCase):
 
 
 @pytest.mark.unit
+@pytest.mark.django_db
 class TestArquero(TestCase):
     """Tests especificos para el tipo Arquero."""
     
@@ -256,6 +260,7 @@ class TestArquero(TestCase):
 
 
 @pytest.mark.unit
+@pytest.mark.django_db
 class TestPersonajeService(TestCase):
     """Tests para el servicio de personajes."""
     
@@ -300,6 +305,8 @@ class TestPersonajeService(TestCase):
     
     def test_listar_personajes(self):
         """Verifica que listar_personajes retorna todos los personajes."""
+        Personaje.objects.all().delete()
+        
         crear_personaje('PERSONAJE', 'Personaje1')
         crear_personaje('GUERRERO', 'Personaje2')
         crear_personaje('MAGO', 'Personaje3')
