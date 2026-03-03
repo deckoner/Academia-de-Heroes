@@ -1,24 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia de Heroes</title>
-</head>
-<body>
-    <header>
-        <h1>Academia de Heroes</h1>
-    </header>
-    
-    <main>
-        <h2>Bienvenido a la Academia de Heroes</h2>
-        
-        <nav>
-            <ul>
-                <li><a href="{% url 'crear_personaje' %}">Crear Personaje</a></li>
-                <li><a href="{% url 'lista_personajes' %}">Ver Personajes</a></li>
-            </ul>
-        </nav>
-    </main>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Inicio | Academia de Heroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2>Bienvenido a la Academia de Heroes</h2>
+    <p>Este es el dashboard de Academia de Héroes, donde podrás crear personajes, modificarlos, borrarlos, simular
+        combates y ver estadísticas del juego.</p>
+</div>
+{% endblock %}

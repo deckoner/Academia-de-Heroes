@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Academia de Heroes{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
-    <header>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>Academia De Héroes</h1>
+        </div>
         <nav>
-            <h1>Academia de Heroes</h1>
-            <ul>
-                <li><a href="{% url 'crear_personaje' %}">Crear Personaje</a></li>
-                <li><a href="{% url 'lista_personajes' %}">Lista Personajes</a></li>
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'home' %}" class="nav-home">Inicio</a></li>
+                <li><a href="{% url 'lista_personajes' %}" class="nav-chars">Personajes</a></li>
+                <li><a href="{% url 'combate' %}" class="nav-combat">Simulación de combate</a></li>
+                <li><a href="{% url 'estadisticas' %}" class="nav-stats">Estadísticas</a></li>
             </ul>
         </nav>
-    </header>
-    
-    <main>
+    </aside>
+
+    <main class="main-content">
         {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li class="{{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
         {% endif %}
-        
+
         {% block content %}{% endblock %}
     </main>
 </body>
+
 </html>
