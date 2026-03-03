@@ -7,7 +7,13 @@ on:
     branches: [ main, develop ]
 
 jobs:
+  format_code:
+    if: github.ref != 'refs/heads/main'
+    uses: ./.github/workflows/black.yml
+
   test:
+    if: always() && !cancelled() && needs.format_code.result != 'failure'
+    needs: format_code
     runs-on: ubuntu-latest
 
     env:
