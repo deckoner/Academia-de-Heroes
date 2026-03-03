@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Personajes - Academia de Heroes{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Lista de Personajes</h2>
+    
+    {% if personajes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Nivel</th>
+                    <th>Vida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for personaje in personajes %}
+                <tr>
+                    <td>{{ personaje.nombre }}</td>
+                    <td>{{ personaje.get_tipo_display }}</td>
+                    <td>{{ personaje.nivel }}</td>
+                    <td>{{ personaje.vida }}/{{ personaje.vida_max }}</td>
+                    <td class="actions">
+                        <form method="post" action="{% url 'eliminar_personaje' personaje.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-danger" onclick="return confirm('¿Estás seguro de eliminar este personaje?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay personajes disponibles.</p>
+    {% endif %}
+    
+    <a href="{% url 'crear_personaje' %}" class="btn">Crear Nuevo Personaje</a>
+</div>
+{% endblock %}
