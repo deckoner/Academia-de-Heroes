@@ -158,6 +158,11 @@ class PersonajeForm(forms.ModelForm):
         if tipo == 'ARQUERO' and not cleaned_data.get('precision'):
             cleaned_data['precision'] = 80
         
+        precision = cleaned_data.get('precision')
+        if precision is not None:
+            if precision < 0 or precision > 100:
+                raise forms.ValidationError({'precision': 'La precisión debe estar entre 0 y 100.'})
+        
         return cleaned_data
     
     def save(self, commit=True):
