@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Personajes - Academia de Heroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2>Lista de Personajes</h2>
+
+    <div class="pagination-controls" style="margin-bottom: 20px;">
+        <div>
+            <label for="per_page">Mostrar:</label>
+            <select name="per_page" id="per_page">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+            <span>personajes</span>
+        </div>
+        <a href="{% url 'crear_personaje' %}" class="btn">Crear Nuevo Personaje</a>
+    </div>
+
+    {% if personajes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Nivel</th>
+                <th>Vida</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for personaje in personajes %}
+            <tr>
+                <td>{{ personaje.nombre }}</td>
+                <td>{{ personaje.get_tipo_display }}</td>
+                <td>{{ personaje.nivel }}</td>
+                <td>{{ personaje.vida }}/{{ personaje.vida_max }}</td>
+                <td class="actions">
+                    <a href="{% url 'editar_personaje' personaje.id %}" class="btn"
+                        style="padding: 5px 10px;">Editar</a>
+                    <form method="post" action="{% url 'eliminar_personaje' personaje.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn" style="background-color: var(--accent); padding: 5px 10px;"
+                            onclick="return confirm('¿Estás seguro de eliminar este personaje?')">Borrar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <button class="btn" disabled>Anterior</button>
+        <span>Página 1 de 1</span>
+        <button class="btn" disabled>Siguiente</button>
+    </div>
+    {% else %}
+    <p>No hay personajes disponibles.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,282 @@
+:root {
+    --bg-color: #2b1f15;
+    --text-color: #fcebc7;
+    --nav-bg: #1f140c;
+    --nav-text: #d4af37;
+    --nav-hover: #4a2c11;
+    --accent: #8b0000;
+    --accent-hover: #b30000;
+    --border-color: #5c3e23;
+    --table-header: #352112;
+
+    /* Sidebar */
+    --sidebar-width: clamp(14rem, 18vw, 16rem);
+    --sidebar-collapsed-width: clamp(3.5rem, 4vw, 4rem);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: clamp(14px, 0.9vw, 16px);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+aside {
+    width: var(--sidebar-collapsed-width);
+    background-color: var(--nav-bg);
+    border-right: 0.125rem solid var(--border-color);
+    position: fixed;
+    height: 100vh;
+    transition: width 0.3s ease;
+    overflow-x: hidden;
+    z-index: 100;
+}
+
+aside:hover,
+aside:focus-within {
+    width: var(--sidebar-width);
+}
+
+/* Header */
+header {
+    padding: clamp(1rem, 2vw, 1.25rem);
+    border-bottom: 0.0625rem solid var(--border-color);
+    text-align: center;
+    position: relative;
+}
+
+header h1 {
+    color: var(--nav-text);
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.125rem;
+    line-height: 1.3;
+}
+
+aside:hover header h1 {
+    opacity: 1;
+}
+
+/* Icono */
+header::before {
+    content: "📜";
+    font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+aside:hover header::before {
+    opacity: 0;
+}
+
+/* Navegación */
+nav ul {
+    list-style: none;
+    padding: clamp(1rem, 2vw, 1.25rem) 0;
+}
+
+nav ul a {
+    display: flex;
+    align-items: center;
+    padding: clamp(0.8rem, 1vw, 1rem) clamp(1rem, 1.5vw, 1.25rem);
+    color: var(--text-color);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+nav ul a::before {
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    width: clamp(1.5rem, 2vw, 2rem);
+    margin-right: clamp(0.8rem, 1vw, 1rem);
+    text-align: center;
+}
+
+nav ul a.nav-home::before {
+    content: "🏰";
+}
+
+nav ul a.nav-chars::before {
+    content: "🛡️";
+}
+
+nav ul a.nav-combat::before {
+    content: "⚔️";
+}
+
+nav ul a.nav-stats::before {
+    content: "📊";
+}
+
+nav ul a:hover {
+    background-color: var(--nav-hover);
+    color: var(--nav-text);
+}
+
+/* Contenido principal */
+main {
+    margin-left: var(--sidebar-collapsed-width);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    width: 100%;
+    transition: margin-left 0.3s ease;
+}
+
+/* Capa de desenfoque y degradado al abrir el sidebar */
+main::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to top, rgba(43, 31, 21, 0.95) 0%, rgba(43, 31, 21, 0) 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 90;
+    pointer-events: none;
+}
+
+aside:hover~main::after,
+aside:focus-within~main::after {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Tipografía */
+h1,
+h2,
+h3 {
+    color: var(--nav-text);
+    margin-bottom: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+h1 {
+    font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+h2 {
+    font-size: clamp(1.3rem, 1.8vw, 1.6rem);
+}
+
+h3 {
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+}
+
+p {
+    margin-bottom: clamp(0.8rem, 1vw, 1rem);
+    line-height: 1.6;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+}
+
+/* Botones */
+.btn,
+button,
+input[type="submit"] {
+    background-color: var(--accent);
+    color: var(--text-color);
+    padding: clamp(0.6rem, 1vw, 0.8rem) clamp(1rem, 1.5vw, 1.25rem);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    transition: background-color 0.2s;
+}
+
+.btn:hover,
+button:hover,
+input[type="submit"]:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    background-color: var(--nav-bg);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+table th,
+table td {
+    border: 0.0625rem solid var(--border-color);
+    padding: clamp(0.6rem, 1vw, 0.8rem);
+    text-align: left;
+}
+
+table th {
+    background-color: var(--table-header);
+    color: var(--nav-text);
+}
+
+/* Mensajes */
+.messages {
+    list-style: none;
+    margin-bottom: clamp(1rem, 2vw, 1.25rem);
+    padding: clamp(0.8rem, 1vw, 1rem);
+    background-color: var(--nav-bg);
+    border-left: clamp(0.3rem, 0.5vw, 0.4rem) solid var(--accent);
+}
+
+.messages li {
+    margin-bottom: 0.3rem;
+}
+
+/* Paginación */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--nav-bg);
+    padding: clamp(0.6rem, 1vw, 0.8rem);
+    border: 0.0625rem solid var(--border-color);
+    margin-top: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: clamp(0.8rem, 1vw, 1rem);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: clamp(0.5rem, 0.8vw, 0.6rem);
+    background-color: var(--nav-bg);
+    color: var(--text-color);
+    border: 0.0625rem solid var(--border-color);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
