@@ -5,47 +5,88 @@
 {% block content %}
 <div class="content">
     <h2>Simulación de Combate</h2>
-    
-    {% if personajes|length < 2 %}
-    <p>Se necesitan al menos dos personajes para iniciar un combate.</p>
-    <a href="{% url 'crear_personaje' %}">Crear personaje</a>
-    {% else %}
-    <form method="post" action="{% url 'combate' %}">
-        {% csrf_token %}
-        
-        <div class="combat-selection">
-            <div class="combatant-select">
-                <h3>Atacante</h3>
-                <select name="personaje1" required>
-                    <option value="">Seleccionar...</option>
-                    {% for p in personajes %}
-                    <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}</option>
-                    {% endfor %}
-                </select>
+
+    {% if personajes|length < 2 %} <p>Se necesitan al menos dos personajes para iniciar un combate.</p>
+        <a href="{% url 'crear_personaje' %}">Crear personaje</a>
+        {% else %}
+        <form method="post" action="{% url 'combate' %}" id="combate-form">
+            {% csrf_token %}
+
+            <div class="combat-selection">
+                <div class="combatant-select">
+                    <h3>Atacante</h3>
+                    <select name="personaje1" id="personaje1" required>
+                        <option value="">Seleccionar...</option>
+                        {% for p in personajes %}
+                        <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <div class="combatant-select">
+                    <h3>Defensor</h3>
+                    <select name="personaje2" id="personaje2" required>
+                        <option value="">Seleccionar...</option>
+                        {% for p in personajes %}
+                        <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-            
-            <div class="vs-divider">VS</div>
-            
-            <div class="combatant-select">
-                <h3>Defensor</h3>
-                <select name="personaje2" required>
-                    <option value="">Seleccionar...</option>
-                    {% for p in personajes %}
-                    <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}</option>
-                    {% endfor %}
-                </select>
+
+            <p id="combate-error" style="color:#e74c3c; display:none; margin-top:8px;">
+                No puedes enfrentar a un personaje contra sí mismo.
+            </p>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="guardar" checked>
+                    Guardar cambios en la base de datos
+                </label>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="guardar" checked>
-                Guardar cambios en la base de datos
-            </label>
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Iniciar Combate</button>
-    </form>
-    {% endif %}
+
+            <button type="submit" class="btn btn-primary">Iniciar Combate</button>
+        </form>
+
+        <script>
+            const sel1 = document.getElementById('personaje1');
+            const sel2 = document.getElementById('personaje2');
+            const errorMsg = document.getElementById('combate-error');
+
+            function sincronizarSelects() {
+                const val1 = sel1.value;
+                const val2 = sel2.value;
+
+                // Deshabilitar en cada select la opcion elegida en el otro
+                for (const opt of sel2.options) {
+                    opt.disabled = opt.value !== '' && opt.value === val1;
+                }
+                for (const opt of sel1.options) {
+                    opt.disabled = opt.value !== '' && opt.value === val2;
+                }
+
+                // Si por alguna razon coinciden, limpiar el segundo
+                if (val1 && val2 && val1 === val2) {
+                    sel2.value = '';
+                }
+
+                errorMsg.style.display = 'none';
+            }
+
+            sel1.addEventListener('change', sincronizarSelects);
+            sel2.addEventListener('change', sincronizarSelects);
+
+            document.getElementById('combate-form').addEventListener('submit', function (e) {
+                if (sel1.value && sel2.value && sel1.value === sel2.value) {
+                    e.preventDefault();
+                    errorMsg.style.display = 'block';
+                }
+            });
+        </script>
+        {% endif %}
 </div>
 {% endblock %}

@@ -306,6 +306,10 @@ class CombatirView(View):
             messages.error(request, "Se necesitan al menos dos personajes.")
             return redirect("combate")
 
+        if personaje1_id == personaje2_id:
+            messages.error(request, "No puedes enfrentar a un personaje contra si mismo.")
+            return redirect("combate")
+
         try:
             resultado = simular_combate(personaje1_id, personaje2_id)
 
