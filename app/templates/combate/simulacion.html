@@ -22,7 +22,7 @@
                 <div class="stat-bar mana">
                     <div class="bar-fill" id="mana-fill-p1" style="width: 100%"></div>
                 </div>
-                <span class="bar-text" id="mana-text-p1">{{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
+                <span class="mana-text" id="mana-text-p1">{{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
                 {% elif resultado.p1.tipo == 'GUERRERO' %}
                 <div class="character-stat armor">
                     <span class="stat-icon">🛡️</span>
@@ -55,7 +55,7 @@
                 <div class="stat-bar mana">
                     <div class="bar-fill" id="mana-fill-p2" style="width: 100%"></div>
                 </div>
-                <span class="bar-text" id="mana-text-p2">{{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
+                <span class="mana-text" id="mana-text-p2">{{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
                 {% elif resultado.p2.tipo == 'GUERRERO' %}
                 <div class="character-stat armor">
                     <span class="stat-icon">🛡️</span>
@@ -264,7 +264,8 @@
         transition: width 0.3s;
     }
 
-    .health-text {
+    .health-text,
+    .mana-text {
         display: block;
         margin-top: 5px;
         font-size: 14px;
@@ -325,12 +326,8 @@
         color: var(--combat-precision);
     }
 
-    .bar-text {
-        display: block;
-        margin-top: 4px;
-        font-size: 11px;
-        color: var(--text-color);
-        opacity: 0.9;
+    .mana-text {
+        color: var(--combat-mana);
     }
 
     .vs-display {
@@ -402,8 +399,8 @@
     const p2Nombre = "{{ resultado.p2.nombre }}";
     const p1VidaMax = {{ resultado.p1.vida_max }};
     const p2VidaMax = {{ resultado.p2.vida_max }};
-    const p1ManaMax = {% if resultado.p1.mana_max %}{ { resultado.p1.mana_max } } {% else %} 0{% endif %};
-    const p2ManaMax = {% if resultado.p2.mana_max %}{ { resultado.p2.mana_max } } {% else %} 0{% endif %};
+    const p1ManaMax = {% if resultado.p1.mana_max %}{{ resultado.p1.mana_max }} {% else %} 0{% endif %};
+    const p2ManaMax = {% if resultado.p2.mana_max %}{{ resultado.p2.mana_max }} {% else %} 0{% endif %};
 
     let turnoIndex = 0;
     let autoPlay = false;
