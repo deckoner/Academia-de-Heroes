@@ -8,10 +8,8 @@
     <div class="combatants">
         <div class="combatant" id="combatant-1">
             <div class="character-image">
-                <img src="{% static 'img/personajes/' %}{{ resultado.p1.tipo|lower }}.webp" 
-                     alt="{{ resultado.p1.nombre }}" 
-                     class="character-img"
-                     id="img-p1">
+                <img src="{% static 'img/personajes/' %}{{ resultado.p1.tipo|lower }}.webp"
+                    alt="{{ resultado.p1.nombre }}" class="character-img" id="img-p1">
                 <div class="effect-overlay" id="effect-p1"></div>
             </div>
             <div class="character-info">
@@ -21,23 +19,30 @@
                 </div>
                 <span class="health-text" id="health-text-p1">{{ resultado.p1.vida }}/{{ resultado.p1.vida_max }}</span>
                 {% if resultado.p1.tipo == 'MAGO' %}
-                <span class="stat-text" id="mana-p1">Mana: {{ resultado.p1.mana }}</span>
+                <div class="mana-bar">
+                    <div class="mana-fill" id="mana-fill-p1" style="width: 100%"></div>
+                </div>
+                <span class="mana-text" id="mana-text-p1">{{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
                 {% elif resultado.p1.tipo == 'GUERRERO' %}
-                <span class="stat-text" id="armadura-p1">Armadura: {{ resultado.p1.armadura }}</span>
+                <div class="stat-box armor">
+                    <span class="stat-label">Armadura</span>
+                    <span class="stat-value" id="armadura-p1">{{ resultado.p1.armadura }}</span>
+                </div>
                 {% elif resultado.p1.tipo == 'ARQUERO' %}
-                <span class="stat-text" id="precision-p1">Precision: {{ resultado.p1.precision }}%</span>
+                <div class="stat-box precision">
+                    <span class="stat-label">Precisión</span>
+                    <span class="stat-value" id="precision-p1">{{ resultado.p1.precision }}%</span>
+                </div>
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="vs-display">VS</div>
-        
+
         <div class="combatant" id="combatant-2">
             <div class="character-image">
-                <img src="{% static 'img/personajes/' %}{{ resultado.p2.tipo|lower }}.webp" 
-                     alt="{{ resultado.p2.nombre }}" 
-                     class="character-img"
-                     id="img-p2">
+                <img src="{% static 'img/personajes/' %}{{ resultado.p2.tipo|lower }}.webp"
+                    alt="{{ resultado.p2.nombre }}" class="character-img" id="img-p2">
                 <div class="effect-overlay" id="effect-p2"></div>
             </div>
             <div class="character-info">
@@ -47,20 +52,29 @@
                 </div>
                 <span class="health-text" id="health-text-p2">{{ resultado.p2.vida }}/{{ resultado.p2.vida_max }}</span>
                 {% if resultado.p2.tipo == 'MAGO' %}
-                <span class="stat-text" id="mana-p2">Mana: {{ resultado.p2.mana }}</span>
+                <div class="mana-bar">
+                    <div class="mana-fill" id="mana-fill-p2" style="width: 100%"></div>
+                </div>
+                <span class="mana-text" id="mana-text-p2">{{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
                 {% elif resultado.p2.tipo == 'GUERRERO' %}
-                <span class="stat-text" id="armadura-p2">Armadura: {{ resultado.p2.armadura }}</span>
+                <div class="stat-box armor">
+                    <span class="stat-label">Armadura</span>
+                    <span class="stat-value" id="armadura-p2">{{ resultado.p2.armadura }}</span>
+                </div>
                 {% elif resultado.p2.tipo == 'ARQUERO' %}
-                <span class="stat-text" id="precision-p2">Precision: {{ resultado.p2.precision }}%</span>
+                <div class="stat-box precision">
+                    <span class="stat-label">Precisión</span>
+                    <span class="stat-value" id="precision-p2">{{ resultado.p2.precision }}%</span>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
-    
+
     <div class="combat-log" id="combat-log">
         <p class="log-entry">El combate comienza...</p>
     </div>
-    
+
     <div class="combat-controls">
         <button id="next-turn" class="btn btn-primary">Siguiente Turno</button>
         <button id="auto-play" class="btn btn-secondary">Auto</button>
@@ -69,323 +83,469 @@
 </div>
 
 <style>
-.combat-arena {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.combatants {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.combatant {
-    flex: 1;
-    text-align: center;
-}
-
-.character-image {
-    position: relative;
-    display: inline-block;
-}
-
-.character-img {
-    width: 200px;
-    height: 200px;
-    object-fit: contain;
-    image-rendering: pixelated;
-    transition: filter 0.3s, transform 0.5s, opacity 0.5s;
-}
-
-.effect-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    pointer-events: none;
-    opacity: 0;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.effect-overlay.active {
-    animation: playEffect 0.5s forwards;
-}
-
-.effect-overlay.hit {
-    background-image: url("{% static 'img/efectos/hit.gif' %}");
-}
-
-.effect-overlay.slash {
-    background-image: url("{% static 'img/efectos/slash.gif' %}");
-}
-
-.effect-overlay.magia {
-    background-image: url("{% static 'img/efectos/magia.gif' %}");
-}
-
-@keyframes playEffect {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
-}
-
-@keyframes vibrate {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-.combatant.hit .character-img {
-    animation: vibrate 0.3s;
-}
-
-.combatant.dead .character-img {
-    filter: grayscale(100%);
-}
-
-.combatant.dead .character-img.dissolving {
-    animation: dissolve 1s forwards;
-}
-
-@keyframes dissolve {
-    0% {
-        filter: grayscale(100%);
-        transform: scale(1);
-        opacity: 1;
+    .combat-arena {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
     }
-    100% {
-        filter: grayscale(100%);
-        transform: scale(0) translateY(-100px);
+
+    .combatants {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .combatant {
+        flex: 1;
+        text-align: center;
+    }
+
+    .character-image {
+        position: relative;
+        display: inline-block;
+    }
+
+    .character-img {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        transition: filter 0.3s, transform 0.5s, opacity 0.5s;
+    }
+
+    .effect-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 280px;
+        height: 280px;
+        pointer-events: none;
         opacity: 0;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
     }
-}
 
-.character-info {
-    margin-top: 10px;
-}
+    .effect-overlay.active {
+        animation: playEffect 0.5s forwards;
+    }
 
-.health-bar {
-    width: 200px;
-    height: 20px;
-    background: #333;
-    border: 2px solid #555;
-    margin: 0 auto;
-    position: relative;
-}
+    .effect-overlay.hit {
+        background-image: url("{% static 'img/efectos/hit.gif' %}");
+    }
 
-.health-fill {
-    height: 100%;
-    background: #e74c3c;
-    transition: width 0.3s;
-}
+    .effect-overlay.slash {
+        background-image: url("{% static 'img/efectos/slash.gif' %}");
+    }
 
-.health-text {
-    display: block;
-    margin-top: 5px;
-    font-size: 14px;
-}
+    .effect-overlay.magia {
+        background-image: url("{% static 'img/efectos/magia.gif' %}");
+    }
 
-.stat-text {
-    display: block;
-    margin-top: 5px;
-    font-size: 12px;
-    color: #888;
-}
+    @keyframes playEffect {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
 
-.vs-display {
-    font-size: 40px;
-    font-weight: bold;
-    color: #e74c3c;
-    padding: 0 20px;
-}
+        50% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
 
-.combat-log {
-    background: #1a1a1a;
-    border: 2px solid #333;
-    padding: 15px;
-    height: 150px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-}
+        100% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+    }
 
-.log-entry {
-    margin: 5px 0;
-    font-size: 14px;
-}
+    /* El personaje de la derecha mira hacia la izquierda, hacia su rival */
+    #combatant-2 .character-img {
+        transform: scaleX(-1);
+    }
 
-.combat-controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
+    /* Vibrado del personaje de la derecha respetando el espejo */
+    #combatant-2.hit .character-img {
+        animation: vibrate-r 0.3s;
+    }
 
-.combat-selection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
-}
+    @keyframes vibrate-r {
 
-.combatant-select {
-    text-align: center;
-}
+        0%,
+        100% {
+            transform: scaleX(-1) translateX(0);
+        }
 
-.combatant-select select {
-    padding: 10px;
-    font-size: 16px;
-}
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+            transform: scaleX(-1) translateX(5px);
+        }
 
-.vs-divider {
-    font-size: 30px;
-    font-weight: bold;
-    color: #e74c3c;
-}
+        20%,
+        40%,
+        60%,
+        80% {
+            transform: scaleX(-1) translateX(-5px);
+        }
+    }
 
-.form-group {
-    margin: 20px 0;
-}
+    @keyframes vibrate {
 
-#volver-btn {
-    display: none;
-}
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+            transform: translateX(-5px);
+        }
+
+        20%,
+        40%,
+        60%,
+        80% {
+            transform: translateX(5px);
+        }
+    }
+
+    .combatant.hit .character-img {
+        animation: vibrate 0.3s;
+    }
+
+    .combatant.dead .character-img {
+        filter: grayscale(100%);
+    }
+
+    .combatant.dead .character-img.dissolving {
+        animation: dissolve 1s forwards;
+    }
+
+    @keyframes dissolve {
+        0% {
+            filter: grayscale(100%);
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        100% {
+            filter: grayscale(100%);
+            transform: scale(0) translateY(-100px);
+            opacity: 0;
+        }
+    }
+
+    .character-info {
+        margin-top: 10px;
+    }
+
+    .health-bar {
+        width: 200px;
+        height: 20px;
+        background: #333;
+        border: 2px solid #555;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .health-fill {
+        height: 100%;
+        background: #e74c3c;
+        transition: width 0.3s;
+    }
+
+    .health-text {
+        display: block;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    /* Barra de mana del mago, misma estructura que la de vida pero azul */
+    .mana-bar {
+        width: 200px;
+        height: 12px;
+        background: #1a1a2e;
+        border: 2px solid #4a4a8a;
+        margin: 8px auto 0;
+        position: relative;
+        border-radius: 2px;
+    }
+
+    .mana-fill {
+        height: 100%;
+        background: #3498db;
+        transition: width 0.5s ease;
+        border-radius: 1px;
+    }
+
+    .mana-text {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #5dade2;
+        font-weight: bold;
+    }
+
+    /* Panel de armadura (guerrero) y precision (arquero) */
+    .stat-box {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        background: #222;
+        border: 1px solid #555;
+        border-radius: 4px;
+        padding: 6px 18px;
+        margin-top: 8px;
+    }
+
+    .stat-box.armor {
+        border-color: #a08030;
+    }
+
+    .stat-box.precision {
+        border-color: #8060a0;
+    }
+
+    .stat-box .stat-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+    }
+
+    .stat-box.armor .stat-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: #d4af37;
+    }
+
+    .stat-box.precision .stat-value {
+        font-size: 20px;
+        font-weight: bold;
+        color: #c070e0;
+    }
+
+    .stat-text {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .vs-display {
+        font-size: 40px;
+        font-weight: bold;
+        color: #e74c3c;
+        padding: 0 20px;
+    }
+
+    .combat-log {
+        background: #1a1a1a;
+        border: 2px solid #333;
+        padding: 15px;
+        height: 150px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+    .log-entry {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+    .combat-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .combat-selection {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .combatant-select {
+        text-align: center;
+    }
+
+    .combatant-select select {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .vs-divider {
+        font-size: 30px;
+        font-weight: bold;
+        color: #e74c3c;
+    }
+
+    .form-group {
+        margin: 20px 0;
+    }
+
+    #volver-btn {
+        display: none;
+    }
 </style>
 
 <script>
-const turnos = {{ resultado.turnos_json|safe }};
-const p1Nombre = "{{ resultado.p1.nombre }}";
-const p2Nombre = "{{ resultado.p2.nombre }}";
-const p1VidaMax = {{ resultado.p1.vida_max }};
-const p2VidaMax = {{ resultado.p2.vida_max }};
+    // Datos del combate generados por el servidor
+    const turnos = {{ resultado.turnos_json| safe }};
+    const p1Nombre = "{{ resultado.p1.nombre }}";
+    const p2Nombre = "{{ resultado.p2.nombre }}";
+    const p1VidaMax = {{ resultado.p1.vida_max }};
+    const p2VidaMax = {{ resultado.p2.vida_max }};
+    const p1ManaMax = {% if resultado.p1.mana_max %}{ { resultado.p1.mana_max } } {% else %} 0{% endif %};
+    const p2ManaMax = {% if resultado.p2.mana_max %}{ { resultado.p2.mana_max } } {% else %} 0{% endif %};
 
-let turnoIndex = 0;
-let autoPlay = false;
+    let turnoIndex = 0;
+    let autoPlay = false;
 
-const nextTurnBtn = document.getElementById('next-turn');
-const autoPlayBtn = document.getElementById('auto-play');
-const volverBtn = document.getElementById('volver-btn');
-const combatLog = document.getElementById('combat-log');
+    const nextTurnBtn = document.getElementById('next-turn');
+    const autoPlayBtn = document.getElementById('auto-play');
+    const volverBtn = document.getElementById('volver-btn');
+    const combatLog = document.getElementById('combat-log');
 
-function getEffectClass(tipoAtaque, nombreAtacante) {
-    const tipoAtacante = nombreAtacante === p1Nombre ? "{{ resultado.p1.tipo|lower }}" : "{{ resultado.p2.tipo|lower }}";
-    if (tipoAtacante === 'mago' && tipoAtaque === 'especial') {
-        return 'magia';
-    } else if (tipoAtacante === 'guerrero') {
-        return 'slash';
+    // Devuelve la clase del efecto visual segun el tipo de atacante y su accion
+    function getEffectClass(tipoAtaque, nombreAtacante) {
+        const tipoAtacante = nombreAtacante === p1Nombre ? "{{ resultado.p1.tipo|lower }}" : "{{ resultado.p2.tipo|lower }}";
+        if (tipoAtacante === 'mago' && tipoAtaque === 'especial') {
+            return 'magia';
+        } else if (tipoAtacante === 'guerrero') {
+            return 'slash';
+        }
+        return 'hit';
     }
-    return 'hit';
-}
 
-function getAtacanteId(nombre) {
-    return nombre === p1Nombre ? 1 : 2;
-}
+    // El atacante y el defensor siempre son combatientes distintos
+    function getAtacanteId(nombre) {
+        return nombre === p1Nombre ? 1 : 2;
+    }
 
-function getDefensorId(nombre) {
-    return nombre === p1Nombre ? 1 : 2;
-}
+    function getDefensorId(nombre) {
+        return nombre === p1Nombre ? 1 : 2;
+    }
 
-function executeTurno(turno) {
-    const atacanteId = getAtacanteId(turno.atacante);
-    const defensorId = getDefensorId(turno.defensor);
-    
-    const effect = document.getElementById(`effect-p${defensorId}`);
-    const healthFill = document.getElementById(`health-p${defensorId}`);
-    const healthText = document.getElementById(`health-text-p${defensorId}`);
-    const defensor = document.getElementById(`combatant-${defensorId}`);
-    
-    const effectClass = getEffectClass(turno.tipo_ataque, turno.atacante);
-    
-    const logEntry = document.createElement('p');
-    logEntry.className = 'log-entry';
-    logEntry.textContent = `Turno ${turno.numero}: ${turno.atacante} ataca a ${turno.defensor} con ${turno.tipo_ataque} (${turno.danio} dmg)`;
-    combatLog.appendChild(logEntry);
-    combatLog.scrollTop = combatLog.scrollHeight;
-    
-    setTimeout(() => {
-        effect.className = 'effect-overlay ' + effectClass;
-        effect.classList.add('active');
-        
+    // Procesa un turno: reproduce efectos visuales, actualiza barras y el log
+    function executeTurno(turno) {
+        const atacanteId = getAtacanteId(turno.atacante);
+        const defensorId = getDefensorId(turno.defensor);
+
+        const effect = document.getElementById(`effect-p${defensorId}`);
+        const healthFill = document.getElementById(`health-p${defensorId}`);
+        const healthText = document.getElementById(`health-text-p${defensorId}`);
+        const defensor = document.getElementById(`combatant-${defensorId}`);
+
+        const effectClass = getEffectClass(turno.tipo_ataque, turno.atacante);
+
+        // Anadir la accion al log
+        const logEntry = document.createElement('p');
+        logEntry.className = 'log-entry';
+        logEntry.textContent = `Turno ${turno.numero}: ${turno.atacante} ataca a ${turno.defensor} con ${turno.tipo_ataque} (${turno.danio} dmg)`;
+        combatLog.appendChild(logEntry);
+        combatLog.scrollTop = combatLog.scrollHeight;
+
         setTimeout(() => {
-            effect.classList.remove('active');
-            defensor.classList.add('hit');
-            
-            const maxHp = defensorId === 1 ? p1VidaMax : p2VidaMax;
-            const newHealth = Math.max(0, turno.vida_defensor_restante);
-            const healthPercent = (newHealth / maxHp) * 100;
-            
-            healthFill.style.width = healthPercent + '%';
-            healthText.textContent = `${newHealth}/${maxHp}`;
-            
-            if (turno.mana_restante_atacante !== null && turno.mana_restante_atacante !== undefined) {
-                const manaEl = document.getElementById(`mana-p${atacanteId}`);
-                if (manaEl) {
-                    manaEl.textContent = `Mana: ${turno.mana_restante_atacante}`;
-                }
-            }
-            
-            if (newHealth <= 0) {
-                setTimeout(() => {
-                    const img = document.getElementById(`img-p${defensorId}`);
-                    img.classList.add('dissolving');
-                    defensor.classList.add('dead');
-                    
-                    const logEntry = document.createElement('p');
-                    logEntry.className = 'log-entry';
-                    logEntry.textContent = `${turno.defensor} ha sido derrotado!`;
-                    combatLog.appendChild(logEntry);
-                    combatLog.scrollTop = combatLog.scrollHeight;
-                    
-                    nextTurnBtn.disabled = true;
-                    nextTurnBtn.style.display = 'none';
-                    autoPlayBtn.style.display = 'none';
-                    volverBtn.style.display = 'inline-block';
-                    volverBtn.textContent = 'Nuevo Combate';
-                }, 500);
-            }
-            
+            // Mostrar el efecto sobre el defensor
+            effect.className = 'effect-overlay ' + effectClass;
+            effect.classList.add('active');
+
             setTimeout(() => {
-                defensor.classList.remove('hit');
-            }, 300);
-        }, 500);
-    }, 300);
-}
+                effect.classList.remove('active');
+                defensor.classList.add('hit');
 
-function playNextTurno() {
-    if (turnoIndex >= turnos.length) {
-        return;
-    }
-    
-    executeTurno(turnos[turnoIndex]);
-    turnoIndex++;
-    
-    if (turnoIndex >= turnos.length) {
-        nextTurnBtn.style.display = 'none';
-        autoPlayBtn.style.display = 'none';
-        volverBtn.style.display = 'inline-block';
-        volverBtn.textContent = 'Nuevo Combate';
-    }
-    
-    if (autoPlay && turnoIndex < turnos.length) {
-        setTimeout(playNextTurno, 1500);
-    }
-}
+                // Actualizar barra de vida del defensor
+                const maxHp = defensorId === 1 ? p1VidaMax : p2VidaMax;
+                const newHealth = Math.max(0, turno.vida_defensor_restante);
+                const healthPercent = (newHealth / maxHp) * 100;
 
-nextTurnBtn.addEventListener('click', playNextTurno);
+                healthFill.style.width = healthPercent + '%';
+                healthText.textContent = `${newHealth}/${maxHp}`;
 
-autoPlayBtn.addEventListener('click', () => {
-    autoPlay = !autoPlay;
-    autoPlayBtn.textContent = autoPlay ? 'Detener' : 'Auto';
-    
-    if (autoPlay && turnoIndex < turnos.length) {
-        playNextTurno();
+                // Si el atacante es mago, reducir la barra de mana
+                if (turno.mana_restante_atacante !== null && turno.mana_restante_atacante !== undefined) {
+                    const manaFill = document.getElementById(`mana-fill-p${atacanteId}`);
+                    const manaText = document.getElementById(`mana-text-p${atacanteId}`);
+                    const manaMax = atacanteId === 1 ? p1ManaMax : p2ManaMax;
+                    if (manaFill && manaMax > 0) {
+                        manaFill.style.width = (turno.mana_restante_atacante / manaMax * 100) + '%';
+                    }
+                    if (manaText) {
+                        manaText.textContent = `${turno.mana_restante_atacante}/${manaMax}`;
+                    }
+                }
+
+                // Si el defensor cae, animarlo y terminar el combate
+                if (newHealth <= 0) {
+                    setTimeout(() => {
+                        const img = document.getElementById(`img-p${defensorId}`);
+                        img.classList.add('dissolving');
+                        defensor.classList.add('dead');
+
+                        const logEntry = document.createElement('p');
+                        logEntry.className = 'log-entry';
+                        logEntry.textContent = `${turno.defensor} ha sido derrotado!`;
+                        combatLog.appendChild(logEntry);
+                        combatLog.scrollTop = combatLog.scrollHeight;
+
+                        nextTurnBtn.disabled = true;
+                        nextTurnBtn.style.display = 'none';
+                        autoPlayBtn.style.display = 'none';
+                        volverBtn.style.display = 'inline-block';
+                        volverBtn.textContent = 'Nuevo Combate';
+                    }, 500);
+                }
+
+                setTimeout(() => {
+                    defensor.classList.remove('hit');
+                }, 300);
+            }, 500);
+        }, 300);
     }
-});
+
+    // Avanza un turno; si se acaban, muestra el boton de volver
+    function playNextTurno() {
+        if (turnoIndex >= turnos.length) {
+            return;
+        }
+
+        executeTurno(turnos[turnoIndex]);
+        turnoIndex++;
+
+        if (turnoIndex >= turnos.length) {
+            nextTurnBtn.style.display = 'none';
+            autoPlayBtn.style.display = 'none';
+            volverBtn.style.display = 'inline-block';
+            volverBtn.textContent = 'Nuevo Combate';
+        }
+
+        if (autoPlay && turnoIndex < turnos.length) {
+            setTimeout(playNextTurno, 1500);
+        }
+    }
+
+    nextTurnBtn.addEventListener('click', playNextTurno);
+
+    // Alterna el modo automatico, que encadena turnos cada 1.5 segundos
+    autoPlayBtn.addEventListener('click', () => {
+        autoPlay = !autoPlay;
+        autoPlayBtn.textContent = autoPlay ? 'Detener' : 'Auto';
+
+        if (autoPlay && turnoIndex < turnos.length) {
+            playNextTurno();
+        }
+    });
 </script>
 {% endblock %}
