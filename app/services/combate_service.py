@@ -18,6 +18,8 @@ class TurnoCombate:
         tipo_ataque,
         vida_defensor_restante,
         mana_usado=0,
+        mana_restante_atacante=None,
+        mana_restante_defensor=None,
     ):
         self.numero = numero
         self.atacante = atacante
@@ -26,6 +28,8 @@ class TurnoCombate:
         self.tipo_ataque = tipo_ataque
         self.vida_defensor_restante = vida_defensor_restante
         self.mana_usado = mana_usado
+        self.mana_restante_atacante = mana_restante_atacante
+        self.mana_restante_defensor = mana_restante_defensor
 
     def a_dict(self):
         return {
@@ -36,6 +40,8 @@ class TurnoCombate:
             "tipo_ataque": self.tipo_ataque,
             "vida_defensor_restante": self.vida_defensor_restante,
             "mana_usado": self.mana_usado,
+            "mana_restante_atacante": self.mana_restante_atacante,
+            "mana_restante_defensor": self.mana_restante_defensor,
         }
 
 
@@ -91,6 +97,15 @@ def simular_combate(
     if not p2:
         raise ValueError(f"Personaje con ID {personaje2_id} no encontrado")
 
+    p1_vida_inicial = p1.vida
+    p2_vida_inicial = p2.vida
+    p1_mana_inicial = p1.mana if p1.tipo == "MAGO" else None
+    p2_mana_inicial = p2.mana if p2.tipo == "MAGO" else None
+    p1_armadura_inicial = p1.armadura if p1.tipo == "GUERRERO" else None
+    p2_armadura_inicial = p2.armadura if p2.tipo == "GUERRERO" else None
+    p1_precision_inicial = p1.precision if p1.tipo == "ARQUERO" else None
+    p2_precision_inicial = p2.precision if p2.tipo == "ARQUERO" else None
+
     turnos = []
     numero_turno = 1
 
@@ -122,6 +137,8 @@ def simular_combate(
             tipo_ataque=tipo_ataque,
             vida_defensor_restante=p2.vida,
             mana_usado=mana_usado,
+            mana_restante_atacante=p1.mana if p1.tipo == "MAGO" else None,
+            mana_restante_defensor=p2.mana if p2.tipo == "MAGO" else None,
         )
         turnos.append(turno)
 
@@ -153,6 +170,8 @@ def simular_combate(
             tipo_ataque=tipo_ataque2,
             vida_defensor_restante=p1.vida,
             mana_usado=mana_usado2,
+            mana_restante_atacante=p2.mana if p2.tipo == "MAGO" else None,
+            mana_restante_defensor=p1.mana if p1.tipo == "MAGO" else None,
         )
         turnos.append(turno2)
 
@@ -166,14 +185,22 @@ def simular_combate(
             p1={
                 "id": p1.id,
                 "nombre": p1.nombre,
-                "vida": p1.vida,
+                "tipo": p1.tipo,
+                "vida": p1_vida_inicial,
                 "vida_max": p1.vida_max,
+                "mana": p1_mana_inicial,
+                "armadura": p1_armadura_inicial,
+                "precision": p1_precision_inicial,
             },
             p2={
                 "id": p2.id,
                 "nombre": p2.nombre,
-                "vida": p2.vida,
+                "tipo": p2.tipo,
+                "vida": p2_vida_inicial,
                 "vida_max": p2.vida_max,
+                "mana": p2_mana_inicial,
+                "armadura": p2_armadura_inicial,
+                "precision": p2_precision_inicial,
             },
             turnos=turnos,
             ganador={"id": p1.id, "nombre": p1.nombre},
@@ -184,14 +211,22 @@ def simular_combate(
             p1={
                 "id": p1.id,
                 "nombre": p1.nombre,
-                "vida": p1.vida,
+                "tipo": p1.tipo,
+                "vida": p1_vida_inicial,
                 "vida_max": p1.vida_max,
+                "mana": p1_mana_inicial,
+                "armadura": p1_armadura_inicial,
+                "precision": p1_precision_inicial,
             },
             p2={
                 "id": p2.id,
                 "nombre": p2.nombre,
-                "vida": p2.vida,
+                "tipo": p2.tipo,
+                "vida": p2_vida_inicial,
                 "vida_max": p2.vida_max,
+                "mana": p2_mana_inicial,
+                "armadura": p2_armadura_inicial,
+                "precision": p2_precision_inicial,
             },
             turnos=turnos,
             ganador={"id": p2.id, "nombre": p2.nombre},

@@ -1,6 +1,7 @@
 import pytest
 from django.test import TestCase
 from app.forms import PersonajeForm
+from app.models import Personaje
 
 
 @pytest.mark.unit
@@ -261,8 +262,6 @@ class TestPersonajeForm(TestCase):
 
     def test_form_editar_personaje(self):
         """Verifica que se puede editar un personaje existente."""
-        from app.models import Personaje
-
         p = Personaje.objects.create(
             tipo="GUERRERO",
             nombre="PersonajeEditar",
@@ -293,8 +292,6 @@ class TestPersonajeForm(TestCase):
 
     def test_form_editar_arquero_precision(self):
         """Verifica que se puede editar la precision de un arquero."""
-        from app.models import Personaje
-
         p = Personaje.objects.create(
             tipo="ARQUERO",
             nombre="ArqueroEditar",

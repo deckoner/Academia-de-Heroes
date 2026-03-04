@@ -6,39 +6,53 @@
 {% block content %}
 <div class="combat-arena" id="combat-arena">
     <div class="combatants">
-        <div class="combatant" id="combatant-1" data-tipo="{{ resultado.personaje1.tipo }}">
+        <div class="combatant" id="combatant-1">
             <div class="character-image">
-                <img src="{% static 'img/personajes/' %}{{ resultado.personaje1.tipo|lower }}.webp" 
-                     alt="{{ resultado.personaje1.nombre }}" 
+                <img src="{% static 'img/personajes/' %}{{ resultado.p1.tipo|lower }}.webp" 
+                     alt="{{ resultado.p1.nombre }}" 
                      class="character-img"
                      id="img-p1">
                 <div class="effect-overlay" id="effect-p1"></div>
             </div>
             <div class="character-info">
-                <h3>{{ resultado.personaje1.nombre }}</h3>
+                <h3>{{ resultado.p1.nombre }}</h3>
                 <div class="health-bar">
                     <div class="health-fill" id="health-p1" style="width: 100%"></div>
                 </div>
-                <span class="health-text" id="health-text-p1">{{ resultado.personaje1.vida }}/{{ resultado.personaje1.vida_max }}</span>
+                <span class="health-text" id="health-text-p1">{{ resultado.p1.vida }}/{{ resultado.p1.vida_max }}</span>
+                {% if resultado.p1.tipo == 'MAGO' %}
+                <span class="stat-text" id="mana-p1">Mana: {{ resultado.p1.mana }}</span>
+                {% elif resultado.p1.tipo == 'GUERRERO' %}
+                <span class="stat-text" id="armadura-p1">Armadura: {{ resultado.p1.armadura }}</span>
+                {% elif resultado.p1.tipo == 'ARQUERO' %}
+                <span class="stat-text" id="precision-p1">Precision: {{ resultado.p1.precision }}%</span>
+                {% endif %}
             </div>
         </div>
         
         <div class="vs-display">VS</div>
         
-        <div class="combatant" id="combatant-2" data-tipo="{{ resultado.personaje2.tipo }}">
+        <div class="combatant" id="combatant-2">
             <div class="character-image">
-                <img src="{% static 'img/personajes/' %}{{ resultado.personaje2.tipo|lower }}.webp" 
-                     alt="{{ resultado.personaje2.nombre }}" 
+                <img src="{% static 'img/personajes/' %}{{ resultado.p2.tipo|lower }}.webp" 
+                     alt="{{ resultado.p2.nombre }}" 
                      class="character-img"
                      id="img-p2">
                 <div class="effect-overlay" id="effect-p2"></div>
             </div>
             <div class="character-info">
-                <h3>{{ resultado.personaje2.nombre }}</h3>
+                <h3>{{ resultado.p2.nombre }}</h3>
                 <div class="health-bar">
                     <div class="health-fill" id="health-p2" style="width: 100%"></div>
                 </div>
-                <span class="health-text" id="health-text-p2">{{ resultado.personaje2.vida }}/{{ resultado.personaje2.vida_max }}</span>
+                <span class="health-text" id="health-text-p2">{{ resultado.p2.vida }}/{{ resultado.p2.vida_max }}</span>
+                {% if resultado.p2.tipo == 'MAGO' %}
+                <span class="stat-text" id="mana-p2">Mana: {{ resultado.p2.mana }}</span>
+                {% elif resultado.p2.tipo == 'GUERRERO' %}
+                <span class="stat-text" id="armadura-p2">Armadura: {{ resultado.p2.armadura }}</span>
+                {% elif resultado.p2.tipo == 'ARQUERO' %}
+                <span class="stat-text" id="precision-p2">Precision: {{ resultado.p2.precision }}%</span>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -50,7 +64,7 @@
     <div class="combat-controls">
         <button id="next-turn" class="btn btn-primary">Siguiente Turno</button>
         <button id="auto-play" class="btn btn-secondary">Auto</button>
-        <a href="{% url 'combate' %}" class="btn btn-secondary">Volver</a>
+        <a href="{% url 'combate' %}" id="volver-btn" class="btn btn-secondary">Volver</a>
     </div>
 </div>
 
@@ -95,6 +109,9 @@
     height: 200px;
     pointer-events: none;
     opacity: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .effect-overlay.active {
@@ -102,15 +119,15 @@
 }
 
 .effect-overlay.hit {
-    background: url("{% static 'img/efectos/hit.gif' %}") center/contain no-repeat;
+    background-image: url("{% static 'img/efectos/hit.gif' %}");
 }
 
 .effect-overlay.slash {
-    background: url("{% static 'img/efectos/slash.gif' %}") center/contain no-repeat;
+    background-image: url("{% static 'img/efectos/slash.gif' %}");
 }
 
 .effect-overlay.magia {
-    background: url("{% static 'img/efectos/magia.gif' %}") center/contain no-repeat;
+    background-image: url("{% static 'img/efectos/magia.gif' %}");
 }
 
 @keyframes playEffect {
@@ -131,8 +148,6 @@
 
 .combatant.dead .character-img {
     filter: grayscale(100%);
-    transform: scale(1);
-    opacity: 1;
 }
 
 .combatant.dead .character-img.dissolving {
@@ -175,6 +190,13 @@
     display: block;
     margin-top: 5px;
     font-size: 14px;
+}
+
+.stat-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #888;
 }
 
 .vs-display {
@@ -230,23 +252,29 @@
 .form-group {
     margin: 20px 0;
 }
+
+#volver-btn {
+    display: none;
+}
 </style>
 
 <script>
 const turnos = {{ resultado.turnos_json|safe }};
-const personaje1Id = {{ resultado.personaje1.id }};
-const personaje2Id = {{ resultado.personaje2.id }};
-const personaje1Tipo = "{{ resultado.personaje1.tipo|lower }}";
-const personaje2Tipo = "{{ resultado.personaje2.tipo|lower }}";
+const p1Nombre = "{{ resultado.p1.nombre }}";
+const p2Nombre = "{{ resultado.p2.nombre }}";
+const p1VidaMax = {{ resultado.p1.vida_max }};
+const p2VidaMax = {{ resultado.p2.vida_max }};
 
 let turnoIndex = 0;
 let autoPlay = false;
 
 const nextTurnBtn = document.getElementById('next-turn');
 const autoPlayBtn = document.getElementById('auto-play');
+const volverBtn = document.getElementById('volver-btn');
 const combatLog = document.getElementById('combat-log');
 
-function getEffectClass(tipoAtaque, tipoAtacante) {
+function getEffectClass(tipoAtaque, nombreAtacante) {
+    const tipoAtacante = nombreAtacante === p1Nombre ? "{{ resultado.p1.tipo|lower }}" : "{{ resultado.p2.tipo|lower }}";
     if (tipoAtacante === 'mago' && tipoAtaque === 'especial') {
         return 'magia';
     } else if (tipoAtacante === 'guerrero') {
@@ -256,25 +284,23 @@ function getEffectClass(tipoAtaque, tipoAtacante) {
 }
 
 function getAtacanteId(nombre) {
-    return nombre === "{{ resultado.personaje1.nombre }}" ? 1 : 2;
+    return nombre === p1Nombre ? 1 : 2;
 }
 
 function getDefensorId(nombre) {
-    return nombre === "{{ resultado.personaje1.nombre }}" ? 1 : 2;
+    return nombre === p1Nombre ? 1 : 2;
 }
 
 function executeTurno(turno) {
     const atacanteId = getAtacanteId(turno.atacante);
     const defensorId = getDefensorId(turno.defensor);
     
-    const atacanteImg = document.getElementById(`img-p${atacanteId}`);
-    const defensor = document.getElementById(`combatant-${defensorId}`);
     const effect = document.getElementById(`effect-p${defensorId}`);
     const healthFill = document.getElementById(`health-p${defensorId}`);
     const healthText = document.getElementById(`health-text-p${defensorId}`);
+    const defensor = document.getElementById(`combatant-${defensorId}`);
     
-    const tipoAtacante = atacanteId === 1 ? personaje1Tipo : personaje2Tipo;
-    const effectClass = getEffectClass(turno.tipo_ataque, tipoAtacante);
+    const effectClass = getEffectClass(turno.tipo_ataque, turno.atacante);
     
     const logEntry = document.createElement('p');
     logEntry.className = 'log-entry';
@@ -290,17 +316,25 @@ function executeTurno(turno) {
             effect.classList.remove('active');
             defensor.classList.add('hit');
             
-            const maxHp = defensorId === 1 ? {{ resultado.personaje1.vida_max }} : {{ resultado.personaje2.vida_max }};
+            const maxHp = defensorId === 1 ? p1VidaMax : p2VidaMax;
             const newHealth = Math.max(0, turno.vida_defensor_restante);
             const healthPercent = (newHealth / maxHp) * 100;
             
             healthFill.style.width = healthPercent + '%';
             healthText.textContent = `${newHealth}/${maxHp}`;
             
+            if (turno.mana_restante_atacante !== null && turno.mana_restante_atacante !== undefined) {
+                const manaEl = document.getElementById(`mana-p${atacanteId}`);
+                if (manaEl) {
+                    manaEl.textContent = `Mana: ${turno.mana_restante_atacante}`;
+                }
+            }
+            
             if (newHealth <= 0) {
                 setTimeout(() => {
                     const img = document.getElementById(`img-p${defensorId}`);
                     img.classList.add('dissolving');
+                    defensor.classList.add('dead');
                     
                     const logEntry = document.createElement('p');
                     logEntry.className = 'log-entry';
@@ -309,7 +343,10 @@ function executeTurno(turno) {
                     combatLog.scrollTop = combatLog.scrollHeight;
                     
                     nextTurnBtn.disabled = true;
-                    autoPlayBtn.disabled = true;
+                    nextTurnBtn.style.display = 'none';
+                    autoPlayBtn.style.display = 'none';
+                    volverBtn.style.display = 'inline-block';
+                    volverBtn.textContent = 'Nuevo Combate';
                 }, 500);
             }
             
@@ -325,12 +362,14 @@ function playNextTurno() {
         return;
     }
     
-    executeTurno(turnoIndex);
+    executeTurno(turnos[turnoIndex]);
     turnoIndex++;
     
     if (turnoIndex >= turnos.length) {
-        nextTurnBtn.textContent = 'Combate Finalizado';
-        nextTurnBtn.disabled = true;
+        nextTurnBtn.style.display = 'none';
+        autoPlayBtn.style.display = 'none';
+        volverBtn.style.display = 'inline-block';
+        volverBtn.textContent = 'Nuevo Combate';
     }
     
     if (autoPlay && turnoIndex < turnos.length) {
