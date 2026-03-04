@@ -19,18 +19,18 @@
                 </div>
                 <span class="health-text" id="health-text-p1">{{ resultado.p1.vida }}/{{ resultado.p1.vida_max }}</span>
                 {% if resultado.p1.tipo == 'MAGO' %}
-                <div class="mana-bar">
-                    <div class="mana-fill" id="mana-fill-p1" style="width: 100%"></div>
+                <div class="stat-bar mana">
+                    <div class="bar-fill" id="mana-fill-p1" style="width: 100%"></div>
                 </div>
-                <span class="mana-text" id="mana-text-p1">{{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
+                <span class="bar-text" id="mana-text-p1">{{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
                 {% elif resultado.p1.tipo == 'GUERRERO' %}
-                <div class="stat-box armor">
-                    <span class="stat-label">Armadura</span>
+                <div class="character-stat armor">
+                    <span class="stat-icon">🛡️</span>
                     <span class="stat-value" id="armadura-p1">{{ resultado.p1.armadura }}</span>
                 </div>
                 {% elif resultado.p1.tipo == 'ARQUERO' %}
-                <div class="stat-box precision">
-                    <span class="stat-label">Precisión</span>
+                <div class="character-stat precision">
+                    <span class="stat-icon">🎯</span>
                     <span class="stat-value" id="precision-p1">{{ resultado.p1.precision }}%</span>
                 </div>
                 {% endif %}
@@ -52,18 +52,18 @@
                 </div>
                 <span class="health-text" id="health-text-p2">{{ resultado.p2.vida }}/{{ resultado.p2.vida_max }}</span>
                 {% if resultado.p2.tipo == 'MAGO' %}
-                <div class="mana-bar">
-                    <div class="mana-fill" id="mana-fill-p2" style="width: 100%"></div>
+                <div class="stat-bar mana">
+                    <div class="bar-fill" id="mana-fill-p2" style="width: 100%"></div>
                 </div>
-                <span class="mana-text" id="mana-text-p2">{{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
+                <span class="bar-text" id="mana-text-p2">{{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
                 {% elif resultado.p2.tipo == 'GUERRERO' %}
-                <div class="stat-box armor">
-                    <span class="stat-label">Armadura</span>
+                <div class="character-stat armor">
+                    <span class="stat-icon">🛡️</span>
                     <span class="stat-value" id="armadura-p2">{{ resultado.p2.armadura }}</span>
                 </div>
                 {% elif resultado.p2.tipo == 'ARQUERO' %}
-                <div class="stat-box precision">
-                    <span class="stat-label">Precisión</span>
+                <div class="character-stat precision">
+                    <span class="stat-icon">🎯</span>
                     <span class="stat-value" id="precision-p2">{{ resultado.p2.precision }}%</span>
                 </div>
                 {% endif %}
@@ -250,15 +250,17 @@
     .health-bar {
         width: 200px;
         height: 20px;
-        background: #333;
-        border: 2px solid #555;
+        background: var(--combat-health-bg);
+        border: 2px solid var(--border-color);
         margin: 0 auto;
         position: relative;
+        border-radius: 4px;
+        overflow: hidden;
     }
 
     .health-fill {
         height: 100%;
-        background: #e74c3c;
+        background: var(--combat-health);
         transition: width 0.3s;
     }
 
@@ -266,95 +268,88 @@
         display: block;
         margin-top: 5px;
         font-size: 14px;
+        font-weight: bold;
     }
 
-    /* Barra de mana del mago, misma estructura que la de vida pero azul */
-    .mana-bar {
-        width: 200px;
+    /* Sistema de barras de estadísticas (Maná) */
+    .stat-bar {
+        width: 180px;
         height: 12px;
-        background: #1a1a2e;
-        border: 2px solid #4a4a8a;
-        margin: 8px auto 0;
+        margin: 10px auto 0;
         position: relative;
-        border-radius: 2px;
+        border-radius: 3px;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
     }
 
-    .mana-fill {
+    .bar-fill {
         height: 100%;
-        background: #3498db;
         transition: width 0.5s ease;
-        border-radius: 1px;
     }
 
-    .mana-text {
+    .stat-bar.mana {
+        background: var(--combat-mana-bg);
+    }
+
+    .stat-bar.mana .bar-fill {
+        background: var(--combat-mana);
+    }
+
+    /* Estadísticas numéricas (Armadura, Precisión) */
+    .character-stat {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
+        font-family: 'Philosopher', serif;
+    }
+
+    .stat-icon {
+        font-size: 18px;
+        filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+    }
+
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--nav-text);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .character-stat.armor .stat-value {
+        color: var(--combat-armor);
+    }
+
+    .character-stat.precision .stat-value {
+        color: var(--combat-precision);
+    }
+
+    .bar-text {
         display: block;
         margin-top: 4px;
-        font-size: 12px;
-        color: #5dade2;
-        font-weight: bold;
-    }
-
-    /* Panel de armadura (guerrero) y precision (arquero) */
-    .stat-box {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        background: #222;
-        border: 1px solid #555;
-        border-radius: 4px;
-        padding: 6px 18px;
-        margin-top: 8px;
-    }
-
-    .stat-box.armor {
-        border-color: #a08030;
-    }
-
-    .stat-box.precision {
-        border-color: #8060a0;
-    }
-
-    .stat-box .stat-label {
-        font-size: 9px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #888;
-    }
-
-    .stat-box.armor .stat-value {
-        font-size: 20px;
-        font-weight: bold;
-        color: #d4af37;
-    }
-
-    .stat-box.precision .stat-value {
-        font-size: 20px;
-        font-weight: bold;
-        color: #c070e0;
-    }
-
-    .stat-text {
-        display: block;
-        margin-top: 5px;
-        font-size: 12px;
-        color: #888;
+        font-size: 11px;
+        color: var(--text-color);
+        opacity: 0.9;
     }
 
     .vs-display {
         font-size: 40px;
         font-weight: bold;
-        color: #e74c3c;
+        color: var(--combat-vs);
         padding: 0 20px;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
 
     .combat-log {
-        background: #1a1a1a;
-        border: 2px solid #333;
+        background: var(--combat-log-bg);
+        border: 2px solid var(--combat-log-border);
         padding: 15px;
         height: 150px;
         overflow-y: auto;
         margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
     }
 
     .log-entry {
