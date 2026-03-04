@@ -4,4 +4,5 @@ from .personaje_views import (
     ListaPersonajesView,
     EliminarPersonajeView,
     EditarPersonajeView,
+    CombatirView,
 )

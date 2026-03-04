@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+import random
 
 
 class PersonajeManager(models.Manager):
@@ -73,8 +75,6 @@ class Personaje(models.Model):
         ]
 
     def clean(self):
-        from django.core.exceptions import ValidationError
-
         if self.nivel < 1:
             raise ValidationError({"nivel": "El nivel debe ser al menos 1."})
         if self.vida < 0:
@@ -153,8 +153,6 @@ class Personaje(models.Model):
         dano_base = 10 + self.nivel
 
         if self.tipo == "ARQUERO" and self.precision is not None:
-            import random
-
             probabilidad = random.randint(1, 100)
             if probabilidad > self.precision:
                 return 0

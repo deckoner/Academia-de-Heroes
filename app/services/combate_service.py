@@ -49,6 +49,12 @@ class ResultadoCombate:
         self.ganador = ganador
         self.perdedor = perdedor
 
+    @property
+    def turnos_json(self):
+        import json
+
+        return json.dumps([t.a_dict() for t in self.turnos])
+
     def a_dict(self):
         return {
             "personaje1": self.p1,

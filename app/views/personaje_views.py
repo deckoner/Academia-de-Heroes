@@ -10,6 +10,7 @@ from app.services import (
     borrar_personaje as service_borrar,
     actualizar_personaje as service_actualizar,
 )
+from app.services.combate_service import simular_combate, guardar_resultado_combate
 
 
 class HomeView(View):
@@ -276,3 +277,42 @@ class EditarPersonajeView(View):
         return render(
             request, self.template_name, {"form": form, "personaje": personaje}
         )
+
+
+class CombatirView(View):
+    template_name = "combate/index.html"
+
+    def get(self, request):
+        personajes = service_listar()
+        return render(request, self.template_name, {"personajes": personajes})
+
+    def post(self, request):
+        personaje1_id = request.POST.get("personaje1")
+        personaje2_id = request.POST.get("personaje2")
+        guardar = request.POST.get("guardar") == "on"
+
+        if not personaje1_id or not personaje2_id:
+            messages.error(request, "Selecciona dos personajes para el combate.")
+            return redirect("combate")
+
+        try:
+            personaje1_id = int(personaje1_id)
+            personaje2_id = int(personaje2_id)
+        except ValueError:
+            messages.error(request, "IDs inválidos.")
+            return redirect("combate")
+
+        if service_listar().count() < 2:
+            messages.error(request, "Se necesitan al menos dos personajes.")
+            return redirect("combate")
+
+        try:
+            resultado = simular_combate(personaje1_id, personaje2_id)
+
+            if guardar:
+                guardar_resultado_combate(personaje1_id, personaje2_id)
+
+            return render(request, "combate/simulacion.html", {"resultado": resultado})
+        except ValueError as e:
+            messages.error(request, str(e))
+            return redirect("combate")
