@@ -5,6 +5,47 @@
 {% block content %}
 <div class="content">
     <h2>Simulación de Combate</h2>
-    <p>En construcción 🚧</p>
+    
+    {% if personajes|length < 2 %}
+    <p>Se necesitan al menos dos personajes para iniciar un combate.</p>
+    <a href="{% url 'crear_personaje' %}">Crear personaje</a>
+    {% else %}
+    <form method="post" action="{% url 'combate' %}">
+        {% csrf_token %}
+        
+        <div class="combat-selection">
+            <div class="combatant-select">
+                <h3>Atacante</h3>
+                <select name="personaje1" required>
+                    <option value="">Seleccionar...</option>
+                    {% for p in personajes %}
+                    <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="vs-divider">VS</div>
+            
+            <div class="combatant-select">
+                <h3>Defensor</h3>
+                <select name="personaje2" required>
+                    <option value="">Seleccionar...</option>
+                    {% for p in personajes %}
+                    <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="guardar" checked>
+                Guardar cambios en la base de datos
+            </label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Iniciar Combate</button>
+    </form>
+    {% endif %}
 </div>
 {% endblock %}
