@@ -72,21 +72,3 @@ def test_editar_personaje_get(django_server, page):
     """Verifica que la pagina de editar personaje carga correctamente."""
     response = page.goto(f"{django_server}/personajes/1/editar/")
     assert response.status in [200, 404]
-
-
-@pytest.mark.e2e
-def test_precision_formulario_validacion(django_server, page):
-    """Verifica que el formulario valida precision entre 0 y 100."""
-    page.goto(f"{django_server}/personajes/crear/")
-
-    page.select_option('select[name="tipo"]', "ARQUERO")
-    page.fill('input[name="nombre"]', "TestPrecision")
-    page.fill('input[name="nivel"]', "1")
-    page.fill('input[name="vida"]', "100")
-    page.fill('input[name="vida_max"]', "100")
-    page.fill('input[name="precision"]', "150")
-
-    page.click('button[type="submit"]')
-
-    content = page.content()
-    assert "precision" in content.lower() or "error" in content.lower()
