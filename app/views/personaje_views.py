@@ -307,14 +307,21 @@ class CombatirView(View):
             return redirect("combate")
 
         if personaje1_id == personaje2_id:
-            messages.error(request, "No puedes enfrentar a un personaje contra si mismo.")
+            messages.error(
+                request, "No puedes enfrentar a un personaje contra si mismo."
+            )
             return redirect("combate")
 
         try:
             resultado = simular_combate(personaje1_id, personaje2_id)
 
             if guardar:
-                guardar_resultado_combate(personaje1_id, personaje2_id)
+                guardar_resultado_combate(
+                    personaje1_id,
+                    personaje2_id,
+                    resultado.vida1_final,
+                    resultado.vida2_final,
+                )
 
             return render(request, "combate/simulacion.html", {"resultado": resultado})
         except ValueError as e:

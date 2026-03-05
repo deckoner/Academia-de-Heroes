@@ -48,12 +48,16 @@ class TurnoCombate:
 class ResultadoCombate:
     """Representa el resultado completo de un combate."""
 
-    def __init__(self, p1, p2, turnos, ganador, perdedor):
+    def __init__(
+        self, p1, p2, turnos, ganador, perdedor, vida1_final=None, vida2_final=None
+    ):
         self.p1 = p1
         self.p2 = p2
         self.turnos = turnos
         self.ganador = ganador
         self.perdedor = perdedor
+        self.vida1_final = vida1_final
+        self.vida2_final = vida2_final
 
     @property
     def turnos_json(self):
@@ -68,11 +72,13 @@ class ResultadoCombate:
             "turnos": [t.a_dict() for t in self.turnos],
             "ganador": self.ganador,
             "perdedor": self.perdedor,
+            "vida1_final": self.vida1_final,
+            "vida2_final": self.vida2_final,
         }
 
 
 def simular_combate(
-    personaje1_id, personaje2_id, usar_especial_p1=True, usar_especial_p2=False
+    personaje1_id, personaje2_id, usar_especial_p1=True, usar_especial_p2=True
 ):
     """
     Simula un combate entre dos personajes.
@@ -180,26 +186,17 @@ def simular_combate(
 
         numero_turno += 1
 
-    # Construcción del resultado final, usando los valores reales de vida y maná
-    # en lugar de los iniciales. De esta forma guardamos el estado final en BD
-    # cuando se persiste el resultado.
-    final_p1_mana = p1.mana if p1.tipo == "MAGO" else None
-    final_p2_mana = p2.mana if p2.tipo == "MAGO" else None
+    # Los valores que se usan para mostrar el estado inicial en la UI (antes del combate)
+    initial_p1_mana = p1_mana_inicial
+    initial_p2_mana = p2_mana_inicial
+
     # Mantener el mana_max correcto para magos; para otros, 0
     final_p1_mana_max = p1_mana_inicial if p1.tipo == "MAGO" else 0
     final_p2_mana_max = p2_mana_inicial if p2.tipo == "MAGO" else 0
 
-    # Actualizamos la vida final de cada personaje para el reporte y la persistencia
+    # Vida final después del combate (para guardar en BD si el usuario lo decide)
     final_p1_vida = p1.vida
     final_p2_vida = p2.vida
-
-    # Guardar cambios en BD para reflejar el estado final (vida y maná) de los personajes
-    try:
-        p1.save()
-        p2.save()
-    except Exception:
-        # En caso de error de persistencia, no fallar la respuesta de la simulación.
-        pass
 
     if p1.esta_vivo():
         return ResultadoCombate(
@@ -207,9 +204,9 @@ def simular_combate(
                 "id": p1.id,
                 "nombre": p1.nombre,
                 "tipo": p1.tipo,
-                "vida": final_p1_vida,
+                "vida": p1_vida_inicial,
                 "vida_max": p1.vida_max,
-                "mana": final_p1_mana,
+                "mana": initial_p1_mana,
                 "mana_max": final_p1_mana_max,
                 "armadura": p1_armadura_inicial,
                 "precision": p1_precision_inicial,
@@ -218,9 +215,9 @@ def simular_combate(
                 "id": p2.id,
                 "nombre": p2.nombre,
                 "tipo": p2.tipo,
-                "vida": final_p2_vida,
+                "vida": p2_vida_inicial,
                 "vida_max": p2.vida_max,
-                "mana": final_p2_mana,
+                "mana": initial_p2_mana,
                 "mana_max": final_p2_mana_max,
                 "armadura": p2_armadura_inicial,
                 "precision": p2_precision_inicial,
@@ -228,6 +225,8 @@ def simular_combate(
             turnos=turnos,
             ganador={"id": p1.id, "nombre": p1.nombre},
             perdedor={"id": p2.id, "nombre": p2.nombre},
+            vida1_final=final_p1_vida,
+            vida2_final=final_p2_vida,
         )
     else:
         return ResultadoCombate(
@@ -235,9 +234,9 @@ def simular_combate(
                 "id": p1.id,
                 "nombre": p1.nombre,
                 "tipo": p1.tipo,
-                "vida": final_p1_vida,
+                "vida": p1_vida_inicial,
                 "vida_max": p1.vida_max,
-                "mana": final_p1_mana,
+                "mana": initial_p1_mana,
                 "mana_max": final_p1_mana_max,
                 "armadura": p1_armadura_inicial,
                 "precision": p1_precision_inicial,
@@ -246,9 +245,9 @@ def simular_combate(
                 "id": p2.id,
                 "nombre": p2.nombre,
                 "tipo": p2.tipo,
-                "vida": final_p2_vida,
+                "vida": p2_vida_inicial,
                 "vida_max": p2.vida_max,
-                "mana": final_p2_mana,
+                "mana": initial_p2_mana,
                 "mana_max": final_p2_mana_max,
                 "armadura": p2_armadura_inicial,
                 "precision": p2_precision_inicial,
@@ -256,21 +255,30 @@ def simular_combate(
             turnos=turnos,
             ganador={"id": p2.id, "nombre": p2.nombre},
             perdedor={"id": p1.id, "nombre": p1.nombre},
+            vida1_final=final_p1_vida,
+            vida2_final=final_p2_vida,
         )
 
 
-def guardar_resultado_combate(personaje1_id, personaje2_id):
+def guardar_resultado_combate(personaje1_id, personaje2_id, vida1_final, vida2_final):
     """
     Guarda los cambios de los personajes después de un combate.
+    Solo guarda la vida actual, no el mana.
 
     Args:
         personaje1_id: ID del primer personaje.
         personaje2_id: ID del segundo personaje.
+        vida1_final: Vida final del primer personaje tras el combate.
+        vida2_final: Vida final del segundo personaje tras el combate.
     """
     p1 = Personaje.objects.obtener_por_id(personaje1_id)
     p2 = Personaje.objects.obtener_por_id(personaje2_id)
 
     if p1:
-        p1.save()
+        p1.vida = vida1_final
+        p1.save(update_fields=["vida"])
+        print(f"  Guardado p1: vida={p1.vida}")
     if p2:
-        p2.save()
+        p2.vida = vida2_final
+        p2.save(update_fields=["vida"])
+        print(f"  Guardado p2: vida={p2.vida}")
