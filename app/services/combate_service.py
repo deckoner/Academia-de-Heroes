@@ -180,16 +180,37 @@ def simular_combate(
 
         numero_turno += 1
 
+    # Construcción del resultado final, usando los valores reales de vida y maná
+    # en lugar de los iniciales. De esta forma guardamos el estado final en BD
+    # cuando se persiste el resultado.
+    final_p1_mana = p1.mana if p1.tipo == "MAGO" else None
+    final_p2_mana = p2.mana if p2.tipo == "MAGO" else None
+    # Mantener el mana_max correcto para magos; para otros, 0
+    final_p1_mana_max = p1_mana_inicial if p1.tipo == "MAGO" else 0
+    final_p2_mana_max = p2_mana_inicial if p2.tipo == "MAGO" else 0
+
+    # Actualizamos la vida final de cada personaje para el reporte y la persistencia
+    final_p1_vida = p1.vida
+    final_p2_vida = p2.vida
+
+    # Guardar cambios en BD para reflejar el estado final (vida y maná) de los personajes
+    try:
+        p1.save()
+        p2.save()
+    except Exception:
+        # En caso de error de persistencia, no fallar la respuesta de la simulación.
+        pass
+
     if p1.esta_vivo():
         return ResultadoCombate(
             p1={
                 "id": p1.id,
                 "nombre": p1.nombre,
                 "tipo": p1.tipo,
-                "vida": p1_vida_inicial,
+                "vida": final_p1_vida,
                 "vida_max": p1.vida_max,
-                "mana": p1_mana_inicial,
-                "mana_max": p1_mana_inicial if p1_mana_inicial is not None else 0,
+                "mana": final_p1_mana,
+                "mana_max": final_p1_mana_max,
                 "armadura": p1_armadura_inicial,
                 "precision": p1_precision_inicial,
             },
@@ -197,10 +218,10 @@ def simular_combate(
                 "id": p2.id,
                 "nombre": p2.nombre,
                 "tipo": p2.tipo,
-                "vida": p2_vida_inicial,
+                "vida": final_p2_vida,
                 "vida_max": p2.vida_max,
-                "mana": p2_mana_inicial,
-                "mana_max": p2_mana_inicial if p2_mana_inicial is not None else 0,
+                "mana": final_p2_mana,
+                "mana_max": final_p2_mana_max,
                 "armadura": p2_armadura_inicial,
                 "precision": p2_precision_inicial,
             },
@@ -214,10 +235,10 @@ def simular_combate(
                 "id": p1.id,
                 "nombre": p1.nombre,
                 "tipo": p1.tipo,
-                "vida": p1_vida_inicial,
+                "vida": final_p1_vida,
                 "vida_max": p1.vida_max,
-                "mana": p1_mana_inicial,
-                "mana_max": p1_mana_inicial if p1_mana_inicial is not None else 0,
+                "mana": final_p1_mana,
+                "mana_max": final_p1_mana_max,
                 "armadura": p1_armadura_inicial,
                 "precision": p1_precision_inicial,
             },
@@ -225,10 +246,10 @@ def simular_combate(
                 "id": p2.id,
                 "nombre": p2.nombre,
                 "tipo": p2.tipo,
-                "vida": p2_vida_inicial,
+                "vida": final_p2_vida,
                 "vida_max": p2.vida_max,
-                "mana": p2_mana_inicial,
-                "mana_max": p2_mana_inicial if p2_mana_inicial is not None else 0,
+                "mana": final_p2_mana,
+                "mana_max": final_p2_mana_max,
                 "armadura": p2_armadura_inicial,
                 "precision": p2_precision_inicial,
             },

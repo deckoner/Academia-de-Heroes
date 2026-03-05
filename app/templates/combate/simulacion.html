@@ -14,15 +14,15 @@
             </div>
             <div class="character-info">
                 <h3>{{ resultado.p1.nombre }}</h3>
-                <div class="health-bar">
+                <div class="health-bar" style="width: 240px;">
                     <div class="health-fill" id="health-p1" style="width: 100%"></div>
                 </div>
-                <span class="health-text" id="health-text-p1">{{ resultado.p1.vida }}/{{ resultado.p1.vida_max }}</span>
+                <span class="health-text" id="health-text-p1">Vida: {{ resultado.p1.vida }}/{{ resultado.p1.vida_max }}</span>
                 {% if resultado.p1.tipo == 'MAGO' %}
-                <div class="stat-bar mana">
+                <div class="stat-bar mana" style="width: 240px;">
                     <div class="bar-fill" id="mana-fill-p1" style="width: 100%"></div>
                 </div>
-                <span class="mana-text" id="mana-text-p1">{{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
+                <span class="mana-text" id="mana-text-p1">Mana: {{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
                 {% elif resultado.p1.tipo == 'GUERRERO' %}
                 <div class="character-stat armor">
                     <span class="stat-icon">🛡️</span>
@@ -34,6 +34,11 @@
                     <span class="stat-value" id="precision-p1">{{ resultado.p1.precision }}%</span>
                 </div>
                 {% endif %}
+                <style>
+                    /* Asegura que el nombre y las barras estén centrados de forma consistente */
+                    .character-info { display: flex; flex-direction: column; align-items: center; }
+                    .health-bar, .stat-bar { width: 240px; }
+                </style>
             </div>
         </div>
 
@@ -47,15 +52,15 @@
             </div>
             <div class="character-info">
                 <h3>{{ resultado.p2.nombre }}</h3>
-                <div class="health-bar">
+                <div class="health-bar" style="width: 240px;">
                     <div class="health-fill" id="health-p2" style="width: 100%"></div>
                 </div>
-                <span class="health-text" id="health-text-p2">{{ resultado.p2.vida }}/{{ resultado.p2.vida_max }}</span>
+                <span class="health-text" id="health-text-p2">Vida: {{ resultado.p2.vida }}/{{ resultado.p2.vida_max }}</span>
                 {% if resultado.p2.tipo == 'MAGO' %}
-                <div class="stat-bar mana">
+                <div class="stat-bar mana" style="width: 240px;">
                     <div class="bar-fill" id="mana-fill-p2" style="width: 100%"></div>
                 </div>
-                <span class="mana-text" id="mana-text-p2">{{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
+                <span class="mana-text" id="mana-text-p2">Mana: {{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
                 {% elif resultado.p2.tipo == 'GUERRERO' %}
                 <div class="character-stat armor">
                     <span class="stat-icon">🛡️</span>
@@ -464,7 +469,7 @@
                 const healthPercent = (newHealth / maxHp) * 100;
 
                 healthFill.style.width = healthPercent + '%';
-                healthText.textContent = `${newHealth}/${maxHp}`;
+                healthText.textContent = `Vida: ${newHealth}/${maxHp}`;
 
                 // Si el atacante es mago, reducir la barra de mana
                 if (turno.mana_restante_atacante !== null && turno.mana_restante_atacante !== undefined) {
@@ -475,7 +480,7 @@
                         manaFill.style.width = (turno.mana_restante_atacante / manaMax * 100) + '%';
                     }
                     if (manaText) {
-                        manaText.textContent = `${turno.mana_restante_atacante}/${manaMax}`;
+                        manaText.textContent = `Mana: ${turno.mana_restante_atacante}/${manaMax}`;
                     }
                 }
 
