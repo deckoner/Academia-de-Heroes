@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrenar Personaje | Academia de Heroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2>Entrenar Héroe</h2>
+    <p>Selecciona un héroe para entrenar y subir de nivel.</p>
+
+    {% if personajes %}
+    <form method="post" action="{% url 'entrenar' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="personaje_id">héroe a entrenar:</label>
+            <select name="personaje_id" id="personaje_id" required>
+                <option value="">Seleccionar...</option>
+                {% for p in personajes %}
+                <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }} - Vida: {{ p.vida }}/{{ p.vida_max }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Entrenar</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Volver</a>
+    </form>
+    {% else %}
+    <p>No hay héroes disponibles. Crea uno primero.</p>
+    <a href="{% url 'crear_personaje' %}" class="btn btn-primary">Crear héroe</a>
+    {% endif %}
+</div>
+{% endblock %}
