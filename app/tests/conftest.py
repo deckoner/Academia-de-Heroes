@@ -1,5 +1,6 @@
 import pytest
 from playwright.sync_api import Browser
+from playwright.sync_api import sync_playwright
 
 
 @pytest.fixture(scope="session")
@@ -9,8 +10,6 @@ def django_db_setup(django_db_blocker):
 
 @pytest.fixture(scope="session")
 def browser():
-    from playwright.sync_api import sync_playwright
-
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         yield browser

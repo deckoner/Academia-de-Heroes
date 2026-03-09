@@ -6,6 +6,7 @@ from app.views import (
     ListaPersonajesView,
     EliminarPersonajeView,
     EditarPersonajeView,
+    CombatirView,
 )
 
 urlpatterns = [
@@ -24,7 +25,7 @@ urlpatterns = [
     ),
     path(
         "combate/",
-        TemplateView.as_view(template_name="combate/index.html"),
+        CombatirView.as_view(),
         name="combate",
     ),
     path(
