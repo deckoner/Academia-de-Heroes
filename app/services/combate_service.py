@@ -277,8 +277,6 @@ def guardar_resultado_combate(personaje1_id, personaje2_id, vida1_final, vida2_f
     if p1:
         p1.vida = vida1_final
         p1.save(update_fields=["vida"])
-        print(f"  Guardado p1: vida={p1.vida}")
     if p2:
         p2.vida = vida2_final
         p2.save(update_fields=["vida"])
-        print(f"  Guardado p2: vida={p2.vida}")

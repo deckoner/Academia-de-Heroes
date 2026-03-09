@@ -279,7 +279,7 @@ class TestGuardarResultadoCombate:
             tipo="GUERRERO",
             nombre="GuerreroSave1",
             nivel=1,
-            vida=100,
+            vida=0,
             vida_max=100,
             armadura=5,
             mana=None,
@@ -299,8 +299,9 @@ class TestGuardarResultadoCombate:
         vida_original_p1 = p1.vida
         vida_original_p2 = p2.vida
 
-        simular_combate(p1.id, p2.id)
-        guardar_resultado_combate(p1.id, p2.id)
+        resultado = simular_combate(p1.id, p2.id)
+        
+        guardar_resultado_combate(p1.id, p2.id, resultado.vida1_final, resultado.vida2_final)
 
         p1.refresh_from_db()
         p2.refresh_from_db()
