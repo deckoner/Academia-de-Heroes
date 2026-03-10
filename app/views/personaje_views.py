@@ -327,3 +327,40 @@ class CombatirView(View):
         except ValueError as e:
             messages.error(request, str(e))
             return redirect("combate")
+
+
+class EntrenarPersonajeView(View):
+    """Vista para entrenar un personaje (subir nivel)."""
+    template_name = "personajes/entrenar.html"
+
+    def get(self, request):
+        personajes = service_listar()
+        return render(request, self.template_name, {"personajes": personajes})
+
+    def post(self, request):
+        personaje_id = request.POST.get("personaje_id")
+        
+        if not personaje_id:
+            messages.error(request, "Selecciona un personaje para entrenar.")
+            return redirect("entrenar")
+
+        try:
+            personaje_id = int(personaje_id)
+        except ValueError:
+            messages.error(request, "ID inválido.")
+            return redirect("entrenar")
+
+        personaje = service_obtener(personaje_id)
+        
+        if not personaje:
+            messages.error(request, "Personaje no encontrado.")
+            return redirect("entrenar")
+
+        try:
+            personaje.subir_nivel()
+            personaje.save()
+            messages.success(request, f"{personaje.nombre} ha subido al nivel {personaje.nivel}.")
+        except Exception as e:
+            messages.error(request, f"Error al entrenar: {str(e)}")
+
+        return redirect("entrenar")

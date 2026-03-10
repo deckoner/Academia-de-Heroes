@@ -7,6 +7,7 @@ from app.views import (
     EliminarPersonajeView,
     EditarPersonajeView,
     CombatirView,
+    EntrenarPersonajeView,
 )
 
 urlpatterns = [
@@ -27,6 +28,11 @@ urlpatterns = [
         "combate/",
         CombatirView.as_view(),
         name="combate",
+    ),
+    path(
+        "entrenar/",
+        EntrenarPersonajeView.as_view(),
+        name="entrenar",
     ),
     path(
         "estadisticas/",

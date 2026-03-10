@@ -5,4 +5,5 @@ from .personaje_views import (
     EliminarPersonajeView,
     EditarPersonajeView,
     CombatirView,
+    EntrenarPersonajeView,
 )

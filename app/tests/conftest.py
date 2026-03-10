@@ -1,11 +1,14 @@
 import pytest
+from django.test.utils import setup_test_environment, teardown_test_environment
 from playwright.sync_api import Browser
 from playwright.sync_api import sync_playwright
 
 
-@pytest.fixture(scope="session")
-def django_db_setup(django_db_blocker):
-    django_db_blocker.unblock()
+@pytest.fixture(scope="session", autouse=True)
+def django_test_environment():
+    setup_test_environment()
+    yield
+    teardown_test_environment()
 
 
 @pytest.fixture(scope="session")
