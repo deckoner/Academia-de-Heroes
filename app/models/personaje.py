@@ -51,6 +51,13 @@ class Personaje(models.Model):
         ("ARQUERO", "Arquero"),
     ]
 
+    id_usuario = models.ForeignKey(
+        "app.Usuario",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="personajes",
+    )
     tipo = models.CharField(
         max_length=20, choices=TIPO_CHOICES, default="PERSONAJE", db_index=True
     )
@@ -61,6 +68,7 @@ class Personaje(models.Model):
     armadura = models.PositiveIntegerField(null=True, blank=True)
     mana = models.PositiveIntegerField(null=True, blank=True)
     precision = models.PositiveIntegerField(null=True, blank=True)
+    vivo = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
