@@ -1,4 +1,7 @@
 from .personaje import Personaje, PersonajeManager
+from .usuario import Usuario, UsuarioManager
+from .batalla import Batalla, BatallaManager
+from .amigo import Amigo, AmigoManager
 
 
 def get_personaje_tipo(tipo):
