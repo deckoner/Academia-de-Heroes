@@ -300,8 +300,10 @@ class TestGuardarResultadoCombate:
         vida_original_p2 = p2.vida
 
         resultado = simular_combate(p1.id, p2.id)
-        
-        guardar_resultado_combate(p1.id, p2.id, resultado.vida1_final, resultado.vida2_final)
+
+        guardar_resultado_combate(
+            p1.id, p2.id, resultado.vida1_final, resultado.vida2_final
+        )
 
         p1.refresh_from_db()
         p2.refresh_from_db()

@@ -1,14 +1,9 @@
 import pytest
-from django.test.utils import setup_test_environment, teardown_test_environment
 from playwright.sync_api import Browser
 from playwright.sync_api import sync_playwright
+import os
 
-
-@pytest.fixture(scope="session", autouse=True)
-def django_test_environment():
-    setup_test_environment()
-    yield
-    teardown_test_environment()
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 
 @pytest.fixture(scope="session")

@@ -5,7 +5,6 @@ import os
 import sys
 
 
-# TODO cuando fran termine la funcion arreglar placesholder
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "academia_de_heroes.settings")
