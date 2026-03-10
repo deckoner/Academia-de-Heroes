@@ -7,23 +7,62 @@
     <title>{% block title %}Academia de Heroes{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .user-info span {
+            color: var(--nav-text);
+        }
+        .logout-btn, .login-btn, .register-btn {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+        }
+        .logout-btn {
+            background: var(--accent);
+        }
+        .login-btn, .register-btn {
+            background: var(--nav-hover);
+            color: var(--nav-text);
+        }
+        .auth-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.5rem;
+        }
+    </style>
 </head>
 
 <body>
+    {% if user.is_authenticated %}
     <aside>
         <header>
             <h1>Academia De Héroes</h1>
+            <div class="user-info">
+                <span>Hola, {{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="logout-btn">Cerrar sesión</a>
+            </div>
         </header>
+
         <nav>
             <ul class="sidebar-nav">
                 <li><a href="{% url 'home' %}" class="nav-home">Inicio</a></li>
-                <li><a href="{% url 'lista_personajes' %}" class="nav-chars">héroes</a></li>
+                <li><a href="{% url 'lista_personajes' %}" class="nav-chars">Héroes</a></li>
                 <li><a href="{% url 'combate' %}" class="nav-combat">Simulación de combate</a></li>
                 <li><a href="{% url 'entrenar' %}" class="nav-train">Entrenar</a></li>
                 <li><a href="{% url 'estadisticas' %}" class="nav-stats">Estadísticas</a></li>
             </ul>
         </nav>
     </aside>
+    {% endif %}
 
     <main>
         {% if messages %}
