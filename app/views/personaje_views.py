@@ -331,6 +331,7 @@ class CombatirView(View):
 
 class EntrenarPersonajeView(View):
     """Vista para entrenar un personaje (subir nivel)."""
+
     template_name = "personajes/entrenar.html"
 
     def get(self, request):
@@ -339,7 +340,7 @@ class EntrenarPersonajeView(View):
 
     def post(self, request):
         personaje_id = request.POST.get("personaje_id")
-        
+
         if not personaje_id:
             messages.error(request, "Selecciona un personaje para entrenar.")
             return redirect("entrenar")
@@ -351,7 +352,7 @@ class EntrenarPersonajeView(View):
             return redirect("entrenar")
 
         personaje = service_obtener(personaje_id)
-        
+
         if not personaje:
             messages.error(request, "Personaje no encontrado.")
             return redirect("entrenar")
@@ -359,7 +360,9 @@ class EntrenarPersonajeView(View):
         try:
             personaje.subir_nivel()
             personaje.save()
-            messages.success(request, f"{personaje.nombre} ha subido al nivel {personaje.nivel}.")
+            messages.success(
+                request, f"{personaje.nombre} ha subido al nivel {personaje.nivel}."
+            )
         except Exception as e:
             messages.error(request, f"Error al entrenar: {str(e)}")
 
