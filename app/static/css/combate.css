@@ -60,15 +60,15 @@
 }
 
 .effect-overlay.hit {
-    background-image: url("../../img/efectos/hit.gif");
+    background-image: url("../img/efectos/hit.gif");
 }
 
 .effect-overlay.slash {
-    background-image: url("../../img/efectos/slash.gif");
+    background-image: url("../img/efectos/slash.gif");
 }
 
 .effect-overlay.magia {
-    background-image: url("../../img/efectos/magia.gif");
+    background-image: url("../img/efectos/magia.gif");
 }
 
 @keyframes playEffect {

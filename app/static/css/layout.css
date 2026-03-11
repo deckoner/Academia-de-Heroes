@@ -161,7 +161,7 @@ main::after {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(to top, rgba(43, 31, 21, 0.95) 0%, rgba(43, 31, 21, 0) 100%);
+    background: linear-gradient(to top, var(--bg-color) 0%, transparent 100%);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     opacity: 0;
