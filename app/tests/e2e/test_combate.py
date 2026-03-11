@@ -7,14 +7,13 @@ from app.models import Personaje
 class TestCombate:
     """Tests de la página de combate."""
 
-    def test_combate_sin_personajes(self):
+    def test_combate_sin_personajes(self, client):
         """Si no hay personajes muestra mensaje."""
-        client = Client()
         response = client.get("/combate/")
         assert response.status_code == 200
         assert "Se necesitan al menos dos personajes" in response.content.decode()
 
-    def test_combate_muestra_formulario(self):
+    def test_combate_muestra_formulario(self, client):
         """Con personajes muestra el formulario."""
         Personaje.objects.create(
             tipo="GUERRERO",
@@ -37,14 +36,13 @@ class TestCombate:
             precision=None,
         )
 
-        client = Client()
         response = client.get("/combate/")
         assert response.status_code == 200
         assert "Atacante" in response.content.decode()
         assert "Defensor" in response.content.decode()
         assert "VS" in response.content.decode()
 
-    def test_checkbox_guardar(self):
+    def test_checkbox_guardar(self, client):
         """Tiene el checkbox para guardar."""
         Personaje.objects.create(
             tipo="GUERRERO",
@@ -67,13 +65,12 @@ class TestCombate:
             precision=80,
         )
 
-        client = Client()
         response = client.get("/combate/")
         content = response.content.decode()
         assert "Guardar cambios en la base de datos" in content
         assert 'name="guardar"' in content
 
-    def test_no_permite_mismo_personaje(self):
+    def test_no_permite_mismo_personaje(self, client):
         """No permite seleccionar el mismo personaje."""
         p1 = Personaje.objects.create(
             tipo="GUERRERO",
@@ -86,7 +83,6 @@ class TestCombate:
             precision=None,
         )
 
-        client = Client()
         response = client.post(
             "/combate/",
             {

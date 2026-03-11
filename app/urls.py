@@ -1,5 +1,6 @@
 from django.urls import path
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 from app.views import (
     HomeView,
     CrearPersonajeView,
@@ -11,32 +12,40 @@ from app.views import (
 )
 
 urlpatterns = [
-    path("", HomeView.as_view(), name="home"),
-    path("personajes/crear/", CrearPersonajeView.as_view(), name="crear_personaje"),
-    path("personajes/", ListaPersonajesView.as_view(), name="lista_personajes"),
+    path("", login_required(HomeView.as_view()), name="home"),
+    path(
+        "personajes/crear/",
+        login_required(CrearPersonajeView.as_view()),
+        name="crear_personaje",
+    ),
+    path(
+        "personajes/",
+        login_required(ListaPersonajesView.as_view()),
+        name="lista_personajes",
+    ),
     path(
         "personajes/<int:personaje_id>/editar/",
-        EditarPersonajeView.as_view(),
+        login_required(EditarPersonajeView.as_view()),
         name="editar_personaje",
     ),
     path(
         "personajes/<int:personaje_id>/eliminar/",
-        EliminarPersonajeView.as_view(),
+        login_required(EliminarPersonajeView.as_view()),
         name="eliminar_personaje",
     ),
     path(
         "combate/",
-        CombatirView.as_view(),
+        login_required(CombatirView.as_view()),
         name="combate",
     ),
     path(
         "entrenar/",
-        EntrenarPersonajeView.as_view(),
+        login_required(EntrenarPersonajeView.as_view()),
         name="entrenar",
     ),
     path(
         "estadisticas/",
-        TemplateView.as_view(template_name="estadisticas/index.html"),
+        login_required(TemplateView.as_view(template_name="estadisticas/index.html")),
         name="estadisticas",
     ),
 ]

@@ -7,15 +7,14 @@ from app.models import Personaje
 class TestEntrenar:
     """Tests de la página de entrenamiento."""
 
-    def test_entrenar_sin_personajes(self):
+    def test_entrenar_sin_personajes(self, client):
         """Si no hay personajes muestra mensaje."""
-        client = Client()
         response = client.get("/entrenar/")
         assert response.status_code == 200
         assert "No hay" in response.content.decode()
         assert "disponibles" in response.content.decode()
 
-    def test_entrenar_muestra_personajes(self):
+    def test_entrenar_muestra_personajes(self, client):
         """Muestra los personajes disponibles."""
         Personaje.objects.create(
             tipo="GUERRERO",
@@ -28,12 +27,11 @@ class TestEntrenar:
             precision=None,
         )
 
-        client = Client()
         response = client.get("/entrenar/")
         assert response.status_code == 200
         assert "G1" in response.content.decode()
 
-    def test_entrenar_aumenta_nivel(self):
+    def test_entrenar_aumenta_nivel(self, client):
         """Entrenar aumenta el Nivel del personaje."""
         p = Personaje.objects.create(
             tipo="GUERRERO",
@@ -46,7 +44,6 @@ class TestEntrenar:
             precision=None,
         )
 
-        client = Client()
         response = client.post(
             "/entrenar/",
             {

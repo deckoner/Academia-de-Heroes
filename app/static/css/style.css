@@ -98,6 +98,19 @@ aside:hover header::before {
     opacity: 0;
 }
 
+.user-info {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+aside:hover .user-info,
+aside:focus-within .user-info {
+    opacity: 1;
+    max-height: 100px;
+}
+
 /* Navegación */
 nav ul {
     list-style: none;
@@ -132,6 +145,10 @@ nav ul a.nav-chars::before {
 
 nav ul a.nav-combat::before {
     content: "⚔️";
+}
+
+nav ul a.nav-train::before {
+    content: "🏋️";
 }
 
 nav ul a.nav-stats::before {
