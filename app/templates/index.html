@@ -1,11 +1,39 @@
 {% extends 'base.html' %}
 
-{% block title %}Inicio | Academia de Heroes{% endblock %}
+{% block title %}Inicio | Academia de Héroes{% endblock %}
 
 {% block content %}
 <div class="content">
-    <h2>Bienvenido a la Academia de Héroes</h2>
-    <p>Este es el dashboard de Academia de Héroes, donde podrás crear personajes, modificarlos, borrarlos, simular
-        combates y ver estadísticas del juego.</p>
+    <div class="rpg-card">
+        <h2 style="text-align: center;">🏰 Academia de Héroes</h2>
+        <p style="text-align: center; color: var(--text-secondary); font-style: italic; margin-top: 0.5rem;">
+            "Donde los héroes forjan su destino"
+        </p>
+        
+        <hr style="border: none; border-top: 1px solid var(--border-light); margin: 1.5rem 0;">
+        
+        <p>
+            Bienvenido, aventurero, a la <strong>Academia de Héroes</strong>. Aquí podrás:
+        </p>
+        
+        <ul style="list-style: none; padding: 0; margin: 1.5rem 0;">
+            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.2rem;">🛡️</span>
+                <span>Crear y gestionar tus personajes heroes</span>
+            </li>
+            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.2rem;">⚔️</span>
+                <span>Simular combates épicos</span>
+            </li>
+            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.2rem;">🏋️</span>
+                <span>Entrenar a tus héroes para volvéros más fuertes</span>
+            </li>
+        </ul>
+        
+        <p style="text-align: center; margin-top: 1.5rem;">
+            <a href="{% url 'lista_personajes' %}" class="btn btn-primary">Comenzar Aventura</a>
+        </p>
+    </div>
 </div>
 {% endblock %}

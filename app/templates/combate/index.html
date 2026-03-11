@@ -1,85 +1,117 @@
 {% extends 'base.html' %}
 
-{% block title %}Simulación de Combate | Academia de Heroes{% endblock %}
+{% block title %}Simulación de Combate | Academia de Héroes{% endblock %}
 
 {% block content %}
 <div class="content">
-    <h2>Simulación de Combate</h2>
+    <div class="page-header">
+        <h2>⚔️ Simulación de Combate</h2>
+    </div>
 
-    {% if personajes|length < 2 %} <p>Se necesitan al menos dos personajes para iniciar un combate.</p>
-        <a href="{% url 'crear_personaje' %}">Crear personaje</a>
-        {% else %}
+    {% if personajes|length < 2 %}
+    <div class="rpg-card">
+        <div class="empty-state">
+            <span class="empty-icon">⚔️</span>
+            <h3>Se necesitan al menos dos personajes</h3>
+            <p>Crea más héroes para poder luchar</p>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">➕ Crear personaje</a>
+        </div>
+    </div>
+    {% else %}
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">⚔️ Selección de Combatientes</h3>
+        <p class="card-description">Selecciona dos héroes diferentes para el combate (click para seleccionar/deseleccionar)</p>
+        
         <form method="post" action="{% url 'combate' %}" id="combate-form">
             {% csrf_token %}
+            <input type="hidden" name="personaje1" id="personaje1" value="">
+            <input type="hidden" name="personaje2" id="personaje2" value="">
 
-            <div class="combat-selection">
-                <div class="combatant-select">
-                    <h3>Atacante</h3>
-                    <select name="personaje1" id="personaje1" required>
-                        <option value="">Seleccionar...</option>
-                        {% for p in personajes %}
-                        <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}
-                        </option>
-                        {% endfor %}
-                    </select>
+            <div class="combat-selection-single">
+                {% for p in personajes %}
+                <div class="hero-card-select" data-id="{{ p.id }}">
+                    <span class="hero-type">
+                        {% if p.tipo == 'GUERRERO' %}⚔️
+                        {% elif p.tipo == 'MAGO' %}🔮
+                        {% elif p.tipo == 'ARQUERO' %}🏹
+                        {% else %}👤{% endif %}
+                    </span>
+                    <span class="hero-name">{{ p.nombre }}</span>
+                    <span class="hero-level">NVL {{ p.nivel }}</span>
+                    <span class="hero-slot">?</span>
                 </div>
-
-                <div class="vs-divider">VS</div>
-
-                <div class="combatant-select">
-                    <h3>Defensor</h3>
-                    <select name="personaje2" id="personaje2" required>
-                        <option value="">Seleccionar...</option>
-                        {% for p in personajes %}
-                        <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
+                {% endfor %}
             </div>
 
-            <p id="combate-error" style="color:#e74c3c; display:none; margin-top:8px;">
-                No puedes enfrentar a un personaje contra sí mismo.
+            <p id="combate-error" class="error-text" style="display:none;">
+                Selecciona dos personajes diferentes para el combate.
             </p>
 
-            <button type="submit" class="btn btn-primary">Iniciar Combate</button>
+            <div class="form-actions" style="justify-content: center;">
+                <button type="submit" class="btn btn-primary" id="btn-iniciar" disabled>⚔️ Iniciar Combate</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary">⬅️ Volver</a>
+            </div>
         </form>
+    </div>
 
-        <script>
-            const sel1 = document.getElementById('personaje1');
-            const sel2 = document.getElementById('personaje2');
-            const errorMsg = document.getElementById('combate-error');
+    <script>
+        const heroCards = document.querySelectorAll('.hero-card-select');
+        const input1 = document.getElementById('personaje1');
+        const input2 = document.getElementById('personaje2');
+        const errorMsg = document.getElementById('combate-error');
+        const btnIniciar = document.getElementById('btn-iniciar');
 
-            function sincronizarSelects() {
-                const val1 = sel1.value;
-                const val2 = sel2.value;
+        let selectedIds = [];
 
-                // Deshabilitar en cada select la opcion elegida en el otro
-                for (const opt of sel2.options) {
-                    opt.disabled = opt.value !== '' && opt.value === val1;
-                }
-                for (const opt of sel1.options) {
-                    opt.disabled = opt.value !== '' && opt.value === val2;
-                }
-
-                // Si por alguna razon coinciden, limpiar el segundo
-                if (val1 && val2 && val1 === val2) {
-                    sel2.value = '';
-                }
-
-                errorMsg.style.display = 'none';
-            }
-
-            sel1.addEventListener('change', sincronizarSelects);
-            sel2.addEventListener('change', sincronizarSelects);
-
-            document.getElementById('combate-form').addEventListener('submit', function (e) {
-                if (sel1.value && sel2.value && sel1.value === sel2.value) {
-                    e.preventDefault();
-                    errorMsg.style.display = 'block';
+        function updateSelection() {
+            heroCards.forEach((card, index) => {
+                const id = card.dataset.id;
+                const pos = selectedIds.indexOf(id);
+                
+                card.classList.remove('selected', 'selected-1', 'selected-2');
+                
+                if (pos !== -1) {
+                    card.classList.add('selected');
+                    card.classList.add('selected-' + (pos + 1));
+                    card.querySelector('.hero-slot').textContent = pos + 1;
+                } else {
+                    card.querySelector('.hero-slot').textContent = '?';
                 }
             });
-        </script>
-        {% endif %}
+
+            while (selectedIds.length > 2) {
+                selectedIds.shift();
+            }
+
+            input1.value = selectedIds[0] || '';
+            input2.value = selectedIds[1] || '';
+            
+            btnIniciar.disabled = selectedIds.length !== 2;
+            errorMsg.style.display = 'none';
+        }
+
+        heroCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                const pos = selectedIds.indexOf(id);
+                
+                if (pos !== -1) {
+                    selectedIds.splice(pos, 1);
+                } else if (selectedIds.length < 2) {
+                    selectedIds.push(id);
+                }
+                
+                updateSelection();
+            });
+        });
+
+        document.getElementById('combate-form').addEventListener('submit', function(e) {
+            if (selectedIds.length !== 2) {
+                e.preventDefault();
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+    {% endif %}
 </div>
 {% endblock %}

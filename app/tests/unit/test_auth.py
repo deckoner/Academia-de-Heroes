@@ -99,7 +99,7 @@ class TestRegisterView(TestCase):
         self.assertTrue(User.objects.filter(username="nuevouser").exists())
         self.assertTrue(Usuario.objects.filter(DNI="12345678Z").exists())
 
-    def test_register_nuevo_usuario_recibe_10_monedass(self):
+    def test_register_nuevo_usuario_recibe_10_monedas(self):
         """Verifica que nuevos usuarios reciben 10 monedas."""
         response = self.client.post(
             self.register_url,
