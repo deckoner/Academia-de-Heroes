@@ -117,8 +117,7 @@ class ListaPersonajesView(View):
     """
     Vista para listar los personajes del usuario logueado.
 
-    Muestra únicamente los personajes belonging al usuario actual,
-    con información sobre su estado (vivo/muerto).
+    Muestra únicamente los personajes del usuario actual.
     """
 
     template_name = "personajes/lista.html"
