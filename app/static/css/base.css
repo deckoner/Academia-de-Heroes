@@ -1,0 +1,49 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: clamp(14px, 0.9vw, 16px);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    color: var(--nav-text);
+    margin-bottom: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+h1 {
+    font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+h2 {
+    font-size: clamp(1.3rem, 1.8vw, 1.6rem);
+}
+
+h3 {
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+}
+
+p {
+    margin-bottom: clamp(0.8rem, 1vw, 1rem);
+    line-height: 1.6;
+    font-size: clamp(0.9rem, 1vw, 1rem);
+}
+
+a {
+    color: var(--nav-text);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

@@ -7,48 +7,7 @@
     <title>{% block title %}Academia de Héroes{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-        }
-        .user-info span {
-            color: var(--nav-text);
-        }
-        .user-info .coins {
-            color: #d4af37;
-            font-weight: bold;
-        }
-        .logout-btn, .login-btn, .register-btn {
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 0.3rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-        }
-        .logout-btn {
-            background: var(--accent);
-        }
-        .login-btn, .register-btn {
-            background: var(--nav-hover);
-            color: var(--nav-text);
-        }
-        .auth-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 0.5rem;
-        }
-        .nav-retar::before {
-            content: "⚔️" !important;
-        }
-        .nav-ranking::before {
-            content: "🏆" !important;
-        }
-    </style>
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>

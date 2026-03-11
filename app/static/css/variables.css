@@ -1,0 +1,35 @@
+:root {
+    /* Colores principales */
+    --bg-color: #2b1f15;
+    --text-color: #fcebc7;
+    --nav-bg: #1f140c;
+    --nav-text: #d4af37;
+    --nav-hover: #4a2c11;
+    --accent: #8b0000;
+    --accent-hover: #b30000;
+    --border-color: #5c3e23;
+    --table-header: #352112;
+
+    /* Dimensiones del sidebar */
+    --sidebar-width: clamp(14rem, 18vw, 16rem);
+    --sidebar-collapsed-width: clamp(3.5rem, 4vw, 4rem);
+
+    /* Colores de combate */
+    --combat-health: #e74c3c;
+    --combat-health-bg: #4c110a;
+    --combat-mana: #3498db;
+    --combat-mana-bg: #1a1a2e;
+    --combat-armor: #d4af37;
+    --combat-armor-bg: #2d240e;
+    --combat-precision: #c070e0;
+    --combat-precision-bg: #1e1529;
+    --combat-log-bg: #1a1410;
+    --combat-log-border: #5c3e23;
+    --combat-vs: #e74c3c;
+
+    /* Colores de autenticación */
+    --auth-bg-error: #ffebee;
+    --auth-text-error: #c62828;
+    --auth-bg-success: #e8f5e9;
+    --auth-text-success: #2e7d32;
+}

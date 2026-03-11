@@ -1,0 +1,120 @@
+/* ===== BOTONES ===== */
+.btn,
+button,
+input[type="submit"] {
+    background-color: var(--accent);
+    color: var(--text-color);
+    padding: clamp(0.6rem, 1vw, 0.8rem) clamp(1rem, 1.5vw, 1.25rem);
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    transition: background-color 0.2s;
+}
+
+.btn:hover,
+button:hover,
+input[type="submit"]:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-primary {
+    background-color: var(--accent);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: var(--nav-hover);
+}
+
+.btn-secondary:hover {
+    background-color: var(--nav-bg);
+}
+
+/* ===== TABLAS ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    background-color: var(--nav-bg);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+table th,
+table td {
+    border: 0.0625rem solid var(--border-color);
+    padding: clamp(0.6rem, 1vw, 0.8rem);
+    text-align: left;
+}
+
+table th {
+    background-color: var(--table-header);
+    color: var(--nav-text);
+}
+
+/* ===== MENSAJES ===== */
+.messages {
+    list-style: none;
+    margin-bottom: clamp(1rem, 2vw, 1.25rem);
+    padding: clamp(0.8rem, 1vw, 1rem);
+    background-color: var(--nav-bg);
+    border-left: clamp(0.3rem, 0.5vw, 0.4rem) solid var(--accent);
+}
+
+.messages li {
+    margin-bottom: 0.3rem;
+}
+
+/* ===== PAGINACIÓN ===== */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--nav-bg);
+    padding: clamp(0.6rem, 1vw, 0.8rem);
+    border: 0.0625rem solid var(--border-color);
+    margin-top: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+/* ===== FORMULARIOS ===== */
+.form-group {
+    margin-bottom: clamp(0.8rem, 1vw, 1rem);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: clamp(0.5rem, 0.8vw, 0.6rem);
+    background-color: var(--nav-bg);
+    color: var(--text-color);
+    border: 0.0625rem solid var(--border-color);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    border-radius: 0.25rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--nav-text);
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+}

@@ -1,0 +1,56 @@
+/* ===== CONTENEDOR DE AUTENTICACIÓN ===== */
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: var(--nav-bg);
+    padding: 2rem;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.5rem;
+}
+
+.auth-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.auth-container button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* ===== ENLACES DE AUTENTICACIÓN ===== */
+.auth-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-link a {
+    color: var(--nav-text);
+    text-decoration: underline;
+}
+
+/* ===== MENSAJES DE ERROR ===== */
+.error-message {
+    background: var(--auth-bg-error);
+    color: var(--auth-text-error);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.success-message {
+    background: var(--auth-bg-success);
+    color: var(--auth-text-success);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Alias para compatibilidad */
+.error {
+    background: var(--auth-bg-error);
+    color: var(--auth-text-error);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}

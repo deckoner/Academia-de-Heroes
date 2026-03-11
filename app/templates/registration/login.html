@@ -1,61 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Iniciar Sesión - Academia de Héroes{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
 {% block content %}
-<style>
-.auth-container {
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: var(--nav-bg);
-    padding: 2rem;
-    border: 0.0625rem solid var(--border-color);
-    border-radius: 0.5rem;
-}
-
-.auth-container h1 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
-}
-
-.auth-container button {
-    width: 100%;
-    margin-top: 1rem;
-}
-
-.auth-link {
-    text-align: center;
-    margin-top: 1rem;
-}
-
-.auth-link a {
-    color: var(--nav-text);
-    text-decoration: underline;
-}
-
-.error {
-    background: #ffebee;
-    color: #c62828;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1rem;
-}
-</style>
-
 <div class="auth-container">
     <h1>Iniciar Sesión</h1>
     
