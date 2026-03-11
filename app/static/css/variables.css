@@ -1,14 +1,14 @@
 :root {
     /* Colores principales */
-    --bg-color: #2b1f15;
-    --text-color: #fcebc7;
-    --nav-bg: #1f140c;
-    --nav-text: #d4af37;
-    --nav-hover: #4a2c11;
-    --accent: #8b0000;
-    --accent-hover: #b30000;
-    --border-color: #5c3e23;
-    --table-header: #352112;
+    --bg-color: #3E2B2A;
+    --text-color: #EAD7B7;
+    --nav-bg: #2A1E1C;
+    --nav-text: #D9B44A;
+    --nav-hover: #7B4B3A;
+    --accent: #7B4B3A;
+    --accent-hover: #F5A623;
+    --border-color: #5D4037;
+    --table-header: #4A322C;
 
     /* Dimensiones del sidebar */
     --sidebar-width: clamp(14rem, 18vw, 16rem);
@@ -19,13 +19,13 @@
     --combat-health-bg: #4c110a;
     --combat-mana: #3498db;
     --combat-mana-bg: #1a1a2e;
-    --combat-armor: #d4af37;
+    --combat-armor: #D9B44A;
     --combat-armor-bg: #2d240e;
     --combat-precision: #c070e0;
     --combat-precision-bg: #1e1529;
-    --combat-log-bg: #1a1410;
-    --combat-log-border: #5c3e23;
-    --combat-vs: #e74c3c;
+    --combat-log-bg: #2A1E1C;
+    --combat-log-border: #5D4037;
+    --combat-vs: #F5A623;
 
     /* Colores de autenticación */
     --auth-bg-error: #ffebee;
