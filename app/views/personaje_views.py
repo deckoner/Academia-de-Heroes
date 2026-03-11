@@ -10,7 +10,26 @@ from app.services import (
     borrar_personaje as service_borrar,
     actualizar_personaje as service_actualizar,
 )
-from app.services.combate_service import simular_combate, guardar_resultado_combate
+from app.services.combate_service import simular_combate
+from app.models import Usuario, Personaje
+
+
+def get_usuario_perfil(request):
+    """
+    Obtiene el perfil de usuario logueado.
+
+    Args:
+        request: Objeto HttpRequest con la sesión del usuario.
+
+    Returns:
+        Objeto Usuario si existe el perfil, None en caso contrario.
+    """
+    if not request.user.is_authenticated:
+        return None
+    try:
+        return request.user.perfil
+    except Usuario.DoesNotExist:
+        return None
 
 
 class HomeView(View):
@@ -29,12 +48,30 @@ class HomeView(View):
         return render(request, self.template_name)
 
 
+class EnConstruccionView(View):
+    """
+    Controlador para páginas en construcción.
+
+    Muestra un mensaje indicando que la funcionalidad
+    está actualmente en desarrollo.
+    """
+
+    template_name = "en_construccion.html"
+
+    def get(self, request):
+        """
+        Renderiza la página de construcción.
+        """
+        return render(request, self.template_name)
+
+
 class CrearPersonajeView(View):
     """
     Vista para crear un nuevo personaje.
 
     Gestiona tanto la visualización del formulario como el procesamiento
-    de los datos enviados.
+    de los datos enviados. El personaje se asocia automáticamente
+    al usuario logueado.
     """
 
     template_name = "personajes/crear.html"
@@ -47,12 +84,24 @@ class CrearPersonajeView(View):
         return render(request, self.template_name, {"form": form})
 
     def post(self, request):
-        """Procesa los datos del formulario y crea el personaje."""
+        """
+        Procesa los datos del formulario y crea el personaje.
+
+        El personaje se asocia automáticamente al usuario logueado.
+        """
         form = self.form_class(request.POST)
 
         if form.is_valid():
             try:
-                form.save()
+                perfil = get_usuario_perfil(request)
+                if not perfil:
+                    messages.error(request, "No tienes un perfil de usuario válido.")
+                    return render(request, self.template_name, {"form": form})
+
+                personaje = form.save(commit=False)
+                personaje.id_usuario = perfil
+                personaje.save()
+
                 messages.success(
                     request,
                     f'Personaje "{form.cleaned_data["nombre"]}" creado correctamente.',
@@ -66,22 +115,36 @@ class CrearPersonajeView(View):
 
 class ListaPersonajesView(View):
     """
-    Vista para listar todos los personajes disponibles.
+    Vista para listar los personajes del usuario logueado.
+
+    Muestra únicamente los personajes belonging al usuario actual,
+    con información sobre su estado (vivo/muerto).
     """
 
     template_name = "personajes/lista.html"
 
     def get(self, request):
         """
-        Obtiene todos los personajes y los envía a la plantilla.
+        Obtiene los personajes del usuario logueado y los envía a la plantilla.
+
+        Returns:
+            HttpResponse con la lista de personajes del usuario.
         """
-        personajes = service_listar()
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect("home")
+
+        personajes = Personaje.objects.filter(id_usuario=perfil)
         return render(request, self.template_name, {"personajes": personajes})
 
 
 class EliminarPersonajeView(View):
     """
     Vista para eliminar un personaje existente.
+
+    Verifica que el personaje pertenece al usuario logueado
+    antes de eliminarlo.
     """
 
     success_url = reverse_lazy("lista_personajes")
@@ -90,12 +153,22 @@ class EliminarPersonajeView(View):
         """
         Elimina un personaje dado su ID.
 
+        Solo permite eliminar personajes propios.
         Muestra mensajes de éxito o error según corresponda.
         """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect(self.success_url)
+
         personaje = service_obtener(personaje_id)
 
         if not personaje:
             messages.error(request, "Personaje no encontrado.")
+            return redirect(self.success_url)
+
+        if personaje.id_usuario != perfil:
+            messages.error(request, "No puedes eliminar personajes de otros usuarios.")
             return redirect(self.success_url)
 
         try:
@@ -113,6 +186,7 @@ class EditarPersonajeView(View):
     Vista para editar un personaje existente.
 
     Permite mostrar el formulario con los datos actuales y actualizarlo.
+    Solo permite editar personajes propios.
     """
 
     template_name = "personajes/editar.html"
@@ -121,11 +195,22 @@ class EditarPersonajeView(View):
     def get(self, request, personaje_id):
         """
         Muestra el formulario de edición con los datos actuales del personaje.
+
+        Solo permite editar personajes propios.
         """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect(self.success_url)
+
         personaje = service_obtener(personaje_id)
 
         if not personaje:
             messages.error(request, "Personaje no encontrado.")
+            return redirect(self.success_url)
+
+        if personaje.id_usuario != perfil:
+            messages.error(request, "No puedes editar personajes de otros usuarios.")
             return redirect(self.success_url)
 
         initial_data = {
@@ -147,11 +232,22 @@ class EditarPersonajeView(View):
     def post(self, request, personaje_id):
         """
         Procesa los datos del formulario y actualiza el personaje.
+
+        Solo permite actualizar personajes propios.
         """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect(self.success_url)
+
         personaje = service_obtener(personaje_id)
 
         if not personaje:
             messages.error(request, "Personaje no encontrado.")
+            return redirect(self.success_url)
+
+        if personaje.id_usuario != perfil:
+            messages.error(request, "No puedes editar personajes de otros usuarios.")
             return redirect(self.success_url)
 
         form = PersonajeForm(request.POST, instance=personaje)
@@ -176,26 +272,42 @@ class CombatirView(View):
     """
     Vista para gestionar combates entre personajes.
 
-    Permite seleccionar dos personajes y simular el combate.
+    Permite seleccionar dos personajes del mismo usuario y simular el combate.
+    Los combates son simulaciones y no se guardan en el servidor.
     """
 
     template_name = "combate/index.html"
 
     def get(self, request):
-        """Muestra el formulario de combate con todos los personajes."""
-        personajes = service_listar()
+        """
+        Muestra el formulario de combate con los personajes del usuario.
+
+        Returns:
+            HttpResponse con el formulario de combate.
+        """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect("home")
+
+        personajes = Personaje.objects.filter(id_usuario=perfil)
         return render(request, self.template_name, {"personajes": personajes})
 
     def post(self, request):
         """
         Procesa la selección de personajes y simula el combate.
-        Guarda los resultados si el usuario lo indica.
+
+        Los combates son simulaciones y no se guardan en la base de datos.
+        No se otorgan monedas por ganar.
         """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect("home")
+
         personaje1_id = request.POST.get("personaje1")
         personaje2_id = request.POST.get("personaje2")
-        guardar = request.POST.get("guardar") == "on"
 
-        # Validaciones básicas
         if not personaje1_id or not personaje2_id:
             messages.error(request, "Selecciona dos personajes para el combate.")
             return redirect("combate")
@@ -205,6 +317,17 @@ class CombatirView(View):
             personaje2_id = int(personaje2_id)
         except ValueError:
             messages.error(request, "IDs inválidos.")
+            return redirect("combate")
+
+        personaje1 = service_obtener(personaje1_id)
+        personaje2 = service_obtener(personaje2_id)
+
+        if not personaje1 or not personaje2:
+            messages.error(request, "Personaje no encontrado.")
+            return redirect("combate")
+
+        if personaje1.id_usuario != perfil or personaje2.id_usuario != perfil:
+            messages.error(request, "Solo puedes combatir con tus propios personajes.")
             return redirect("combate")
 
         if service_listar().count() < 2:
@@ -219,15 +342,6 @@ class CombatirView(View):
 
         try:
             resultado = simular_combate(personaje1_id, personaje2_id)
-
-            if guardar:
-                guardar_resultado_combate(
-                    personaje1_id,
-                    personaje2_id,
-                    resultado.vida1_final,
-                    resultado.vida2_final,
-                )
-
             return render(request, "combate/simulacion.html", {"resultado": resultado})
         except ValueError as e:
             messages.error(request, str(e))
@@ -237,19 +351,91 @@ class CombatirView(View):
 class EntrenarPersonajeView(View):
     """
     Vista para entrenar un personaje y subirlo de nivel.
+
+    Solo permite entrenar personajes propios utilizando mercenarios.
+    Los mercenarios se pueden comprar con oro.
     """
 
     template_name = "personajes/entrenar.html"
+    COSTO_MERCENARIO = 1
 
     def get(self, request):
-        """Muestra la lista de personajes disponibles para entrenamiento."""
-        personajes = service_listar()
-        return render(request, self.template_name, {"personajes": personajes})
+        """
+        Muestra la lista de personajes disponibles para entrenamiento.
+
+        Returns:
+            HttpResponse con la lista de personajes del usuario y su información de mercenarios.
+        """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect("home")
+
+        personajes = Personaje.objects.filter(id_usuario=perfil)
+        return render(
+            request,
+            self.template_name,
+            {
+                "personajes": personajes,
+                "monedas": perfil.monedas,
+                "mercenarios": perfil.mercenarios,
+                "costo_mercanario": self.COSTO_MERCENARIO,
+            },
+        )
 
     def post(self, request):
         """
         Procesa el entrenamiento de un personaje seleccionado.
-        Incrementa su nivel y guarda los cambios.
+
+        Utiliza mercenarios para subir el nivel del personaje.
+        """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            messages.error(request, "No tienes un perfil de usuario válido.")
+            return redirect("entrenar")
+
+        accion = request.POST.get("accion")
+
+        if accion == "comprar":
+            return self.comprar_mercanario(request, perfil)
+
+        return self.entrenar_personaje(request, perfil)
+
+    def comprar_mercanario(self, request, perfil):
+        """
+        Compra un mercenario usando monedas de oro.
+
+        Args:
+            request: Objeto HttpRequest con los datos de la petición.
+            perfil: Objeto Usuario con el perfil del usuario.
+
+        Returns:
+            Redirección a la página de entrenar.
+        """
+        if perfil.monedas < self.COSTO_MERCENARIO:
+            messages.error(request, "No tienes suficientes monedas.")
+            return redirect("entrenar")
+
+        try:
+            perfil.monedas -= self.COSTO_MERCENARIO
+            perfil.mercenarios += 1
+            perfil.save()
+            messages.success(request, "¡Mercenario contratado correctamente!")
+        except Exception as e:
+            messages.error(request, f"Error al comprar mercenario: {str(e)}")
+
+        return redirect("entrenar")
+
+    def entrenar_personaje(self, request, perfil):
+        """
+        Entrena un personaje usando un mercenario.
+
+        Args:
+            request: Objeto HttpRequest con los datos de la petición.
+            perfil: Objeto Usuario con el perfil del usuario.
+
+        Returns:
+            Redirección a la página de entrenar.
         """
         personaje_id = request.POST.get("personaje_id")
 
@@ -269,9 +455,21 @@ class EntrenarPersonajeView(View):
             messages.error(request, "Personaje no encontrado.")
             return redirect("entrenar")
 
+        if personaje.id_usuario != perfil:
+            messages.error(request, "No puedes entrenar personajes de otros usuarios.")
+            return redirect("entrenar")
+
+        if perfil.mercenarios < 1:
+            messages.error(request, "No tienes mercenarios suficientes. ¡Compra uno!")
+            return redirect("entrenar")
+
         try:
+            perfil.mercenarios -= 1
+            perfil.save()
+
             personaje.subir_nivel()
             personaje.save()
+
             messages.success(
                 request, f"{personaje.nombre} ha subido al nivel {personaje.nivel}."
             )

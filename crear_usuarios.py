@@ -31,6 +31,7 @@ def crear_usuarios():
         fecha_nacimiento=date(1995, 5, 15),
         telefono="612345678",
         email="gk@academiaheroes.com",
+        monedas=10,
     )
     print("Usuario gk creado")
 
@@ -44,6 +45,7 @@ def crear_usuarios():
         fecha_nacimiento=date(2020, 3, 10),
         telefono="612345679",
         email="gkchiquito@academiaheroes.com",
+        monedas=10,
     )
     print("Usuario gkChiquito creado (menor de edad)")
 
