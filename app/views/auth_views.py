@@ -19,7 +19,7 @@ def validar_telefono(telefono):
 def validar_email(email):
     """Valida que el email tenga un formato válido."""
     if not email:
-        return True
+        return False
     patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return bool(re.match(patron, email))
 
@@ -27,7 +27,7 @@ def validar_email(email):
 def validar_dni(dni):
     """Valida que el DNI tenga un formato válido (8 números + 1 letra)."""
     if not dni:
-        return True
+        return False
     patron = r'^\d{8}[A-Z]$'
     return bool(re.match(patron, dni.upper()))
 
@@ -147,6 +147,42 @@ class RegisterView(View):
                 "registration/register.html"
             )
 
+        if not dni:
+
+            messages.error(
+                request,
+                "El DNI es obligatorio."
+            )
+
+            return render(
+                request,
+                "registration/register.html"
+            )
+
+        if not email:
+
+            messages.error(
+                request,
+                "El email es obligatorio."
+            )
+
+            return render(
+                request,
+                "registration/register.html"
+            )
+
+        if not fecha_nacimiento:
+
+            messages.error(
+                request,
+                "La fecha de nacimiento es obligatoria."
+            )
+
+            return render(
+                request,
+                "registration/register.html"
+            )
+
         if telefono and not validar_telefono(telefono):
 
             messages.error(
@@ -186,15 +222,17 @@ class RegisterView(View):
         user = User.objects.create_user(
             username=username,
             password=password,
-            email=email if email else ""
+            email=email
         )
 
         Usuario.objects.create(
             user=user,
-            DNI=dni.upper() if dni else "",
+            DNI=dni.upper(),
             fecha_nacimiento=fecha_nacimiento,
             telefono=telefono,
-            email=email
+            email=email,
+            monedas=10,
+            mercenarios=0
         )
 
         login(request, user)
