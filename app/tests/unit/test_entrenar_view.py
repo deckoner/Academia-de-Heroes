@@ -1,7 +1,9 @@
 import pytest
 from django.test import Client
 from django.urls import reverse
-from app.models import Personaje
+from django.contrib.auth.models import User
+from app.models import Personaje, Usuario
+from datetime import date
 
 
 @pytest.mark.unit
@@ -10,8 +12,19 @@ class TestEntrenarPersonajeView:
     """Tests para la vista de entrenar personajes."""
 
     def test_entrenar_vista_get(self, client):
-        """Verifica que la vista GET muestra los personajes."""
+        """Verifica que la vista GET muestra los personajes del usuario."""
+        user = User.objects.create_user(username="testentrenar", password="pass123")
+        perfil = Usuario.objects.create(
+            user=user,
+            DNI="99999999A",
+            email="entrenar@test.com",
+            fecha_nacimiento=date(2000, 1, 1),
+            mercenarios=1,
+        )
+        client.login(username="testentrenar", password="pass123")
+        
         p = Personaje.objects.create(
+            id_usuario=perfil,
             tipo="GUERRERO",
             nombre="GuerreroTestEntrenar",
             nivel=1,
@@ -36,8 +49,19 @@ class TestEntrenarPersonajeView:
         assert response.status_code == 200
 
     def test_entrenar_post_exitoso(self, client):
-        """Verifica que entrenar un personaje aumenta su nivel."""
+        """Verifica que entrenar un personaje aumenta su nivel usando mercenarios."""
+        user = User.objects.create_user(username="testentrenar2", password="pass123")
+        perfil = Usuario.objects.create(
+            user=user,
+            DNI="99999998A",
+            email="entrenar2@test.com",
+            fecha_nacimiento=date(2000, 1, 1),
+            mercenarios=1,
+        )
+        client.login(username="testentrenar2", password="pass123")
+        
         p = Personaje.objects.create(
+            id_usuario=perfil,
             tipo="MAGO",
             nombre="MagoEntrenarTest",
             nivel=1,
@@ -56,6 +80,9 @@ class TestEntrenarPersonajeView:
 
         assert p.nivel == 2
         assert p.vida_max == vida_max_original + 10
+        
+        perfil.refresh_from_db()
+        assert perfil.mercenarios == 0
 
     def test_entrenar_post_personaje_inexistente(self, client):
         """Verifica el error al entrenar un personaje inexistente."""
@@ -72,8 +99,19 @@ class TestEntrenarPersonajeView:
         assert response.url == reverse("entrenar")
 
     def test_entrenar_multiple_niveles(self, client):
-        """Verifica que se puede entrenar varias veces."""
+        """Verifica que se puede entrenar varias veces usando mercenarios."""
+        user = User.objects.create_user(username="testentrenar3", password="pass123")
+        perfil = Usuario.objects.create(
+            user=user,
+            DNI="99999997A",
+            email="entrenar3@test.com",
+            fecha_nacimiento=date(2000, 1, 1),
+            mercenarios=3,
+        )
+        client.login(username="testentrenar3", password="pass123")
+        
         p = Personaje.objects.create(
+            id_usuario=perfil,
             tipo="ARQUERO",
             nombre="ArqueroMultiTest",
             nivel=1,
@@ -90,3 +128,6 @@ class TestEntrenarPersonajeView:
 
         assert p.nivel == 4
         assert p.vida_max == 110
+        
+        perfil.refresh_from_db()
+        assert perfil.mercenarios == 0

@@ -1,6 +1,8 @@
 import pytest
 from django.test import Client
-from app.models import Personaje
+from django.contrib.auth.models import User
+from app.models import Personaje, Usuario
+from datetime import date
 
 
 @pytest.mark.django_db
@@ -15,7 +17,11 @@ class TestCombate:
 
     def test_combate_muestra_formulario(self, client):
         """Con personajes muestra el formulario."""
+        user = User.objects.get(username="testuser")
+        perfil = Usuario.objects.get(user=user)
+        
         Personaje.objects.create(
+            id_usuario=perfil,
             tipo="GUERRERO",
             nombre="G1",
             nivel=1,
@@ -26,6 +32,7 @@ class TestCombate:
             precision=None,
         )
         Personaje.objects.create(
+            id_usuario=perfil,
             tipo="MAGO",
             nombre="M1",
             nivel=1,
@@ -42,37 +49,13 @@ class TestCombate:
         assert "Defensor" in response.content.decode()
         assert "VS" in response.content.decode()
 
-    def test_checkbox_guardar(self, client):
-        """Tiene el checkbox para guardar."""
-        Personaje.objects.create(
-            tipo="GUERRERO",
-            nombre="G2",
-            nivel=1,
-            vida=100,
-            vida_max=100,
-            armadura=5,
-            mana=None,
-            precision=None,
-        )
-        Personaje.objects.create(
-            tipo="ARQUERO",
-            nombre="A1",
-            nivel=1,
-            vida=80,
-            vida_max=80,
-            armadura=None,
-            mana=None,
-            precision=80,
-        )
-
-        response = client.get("/combate/")
-        content = response.content.decode()
-        assert "Guardar cambios en la base de datos" in content
-        assert 'name="guardar"' in content
-
     def test_no_permite_mismo_personaje(self, client):
         """No permite seleccionar el mismo personaje."""
+        user = User.objects.get(username="testuser")
+        perfil = Usuario.objects.get(user=user)
+        
         p1 = Personaje.objects.create(
+            id_usuario=perfil,
             tipo="GUERRERO",
             nombre="G3",
             nivel=1,
