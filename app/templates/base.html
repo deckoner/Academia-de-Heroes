@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Academia de Héroes{% endblock %}</title>    {% load static %}
+    <title>{% block title %}Academia de Héroes{% endblock %}</title>
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
         .user-info {
@@ -16,6 +17,10 @@
         }
         .user-info span {
             color: var(--nav-text);
+        }
+        .user-info .coins {
+            color: #d4af37;
+            font-weight: bold;
         }
         .logout-btn, .login-btn, .register-btn {
             color: var(--text-color);
@@ -37,6 +42,12 @@
             gap: 0.5rem;
             padding: 0.5rem;
         }
+        .nav-retar::before {
+            content: "⚔️" !important;
+        }
+        .nav-ranking::before {
+            content: "🏆" !important;
+        }
     </style>
 </head>
 
@@ -47,6 +58,9 @@
             <h1>Academia De Héroes</h1>
             <div class="user-info">
                 <span>Hola, {{ user.username }}</span>
+                {% if user.perfil %}
+                <span class="coins">💰 {{ user.perfil.monedas }} | 🛡️ {{ user.perfil.mercenarios }}</span>
+                {% endif %}
                 <a href="{% url 'logout' %}" class="logout-btn">Cerrar sesión</a>
             </div>
         </header>
@@ -55,9 +69,14 @@
             <ul class="sidebar-nav">
                 <li><a href="{% url 'home' %}" class="nav-home">Inicio</a></li>
                 <li><a href="{% url 'lista_personajes' %}" class="nav-chars">Héroes</a></li>
+                <li><a href="{% url 'en_construccion' %}" class="nav-retar">Retar</a></li>
                 <li><a href="{% url 'combate' %}" class="nav-combat">Simulación de combate</a></li>
                 <li><a href="{% url 'entrenar' %}" class="nav-train">Entrenar</a></li>
+                {% if user.perfil and user.perfil.es_admin %}
                 <li><a href="{% url 'estadisticas' %}" class="nav-stats">Estadísticas</a></li>
+                {% else %}
+                <li><a href="{% url 'en_construccion' %}" class="nav-ranking">Ranking</a></li>
+                {% endif %}
             </ul>
         </nav>
     </aside>
