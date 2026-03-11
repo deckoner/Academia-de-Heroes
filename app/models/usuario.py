@@ -41,7 +41,9 @@ class Usuario(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name="perfil"
+        related_name="perfil",
+        null=True,
+        blank=True
     )
 
     DNI = models.CharField(max_length=20, unique=True)
@@ -56,6 +58,11 @@ class Usuario(models.Model):
     telefono = models.CharField(
         max_length=20,
         blank=True
+    )
+    
+    email = models.EmailField(
+        blank=True,
+        null=True
     )
 
     monedas = models.PositiveIntegerField(default=0)
