@@ -592,3 +592,47 @@ input[type="submit"]:active {
     border-color: #3498DB;
     color: #3498DB;
 }
+
+.hero-stats {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* ===== FORM ROW ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    margin-bottom: 0;
+}
+
+/* ===== RPG FORM STYLED ===== */
+.rpg-form-styled {
+    max-width: 100%;
+}
+
+.rpg-form-styled .form-group input,
+.rpg-form-styled .form-group select {
+    background: var(--bg-dark);
+    border: 2px solid var(--border-light);
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.rpg-form-styled .form-group input:focus,
+.rpg-form-styled .form-group select:focus {
+    border-color: var(--text-gold);
+    box-shadow: 0 0 10px var(--shadow-glow);
+    outline: none;
+}
+
+.rpg-form-styled .form-group input::placeholder {
+    color: var(--text-muted);
+}
