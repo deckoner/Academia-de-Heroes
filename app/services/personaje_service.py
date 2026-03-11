@@ -1,34 +1,41 @@
-"""
-Servicio para gestionar las operaciones CRUD de personajes.
-Proporciona una capa de abstraccion sobre los modelos de Django.
-"""
-
 from app.models import Personaje, get_personaje_tipo
 
 
 def crear_personaje(tipo, nombre, nivel=1, vida=None, vida_max=None, **kwargs):
     """
-    Crea un nuevo personaje en la base de datos.
+    Crea un nuevo personaje en la base de datos según su tipo.
 
-    Args:
-        tipo: Tipo de personaje ('PERSONAJE', 'GUERRERO', 'MAGO', 'ARQUERO').
-        nombre: Nombre identificativo del personaje.
-        nivel: Nivel inicial del personaje (por defecto 1).
-        vida: Puntos de vida actuales.
-        vida_max: Puntos de vida maximos.
-        **kwargs: Argumentos adicionales segun el tipo de personaje.
-            - Guerrero: armadura
-            - Mago: mana
-            - Arquero: precision
+    Parameters
+    ----------
+    tipo : str
+        Tipo de personaje ('PERSONAJE', 'GUERRERO', 'MAGO', 'ARQUERO').
+    nombre : str
+        Nombre identificativo del personaje.
+    nivel : int, optional
+        Nivel inicial del personaje (por defecto 1).
+    vida : int, optional
+        Puntos de vida actuales.
+    vida_max : int, optional
+        Puntos de vida máximos.
+    **kwargs : dict
+        Argumentos adicionales según el tipo de personaje:
+        - Guerrero: armadura
+        - Mago: mana
+        - Arquero: precision
 
-    Returns:
+    Returns
+    -------
+    Personaje
         Instancia del personaje creado.
 
-    Raises:
-        ValueError: Si el tipo no es valido o los datos son invalidos.
+    Raises
+    ------
+    ValueError
+        Si el tipo no es válido.
     """
     tipo = get_personaje_tipo(tipo)
 
+    # Crear el personaje según su tipo, usando valores por defecto si no se proporcionan
     if tipo == "GUERRERO":
         return Personaje.objects.create(
             tipo="GUERRERO",
@@ -79,13 +86,17 @@ def crear_personaje(tipo, nombre, nivel=1, vida=None, vida_max=None, **kwargs):
 
 def obtener_personaje(personaje_id):
     """
-    Obtiene un personaje por su identificador unico.
+    Obtiene un personaje por su ID.
 
-    Args:
-        personaje_id: Identificador numerico del personaje.
+    Parameters
+    ----------
+    personaje_id : int
+        id del personaje.
 
-    Returns:
-        Instancia de Personaje o None si no existe.
+    Returns
+    -------
+    Personaje | None
+        Instancia del personaje o None si no existe.
     """
     return Personaje.objects.obtener_por_id(personaje_id)
 
@@ -94,27 +105,35 @@ def listar_personajes():
     """
     Lista todos los personajes de la base de datos.
 
-    Returns:
-        QuerySet con todos los personajes ordenados por nombre.
+    Returns
+    -------
+    QuerySet
+        Conjunto de todos los personajes ordenados por nombre.
     """
     return Personaje.objects.listar_todos()
 
 
 def actualizar_personaje(personaje_id, **kwargs):
     """
-    Actualiza los datos de un personaje existente.
+    Actualiza los atributos de un personaje existente.
 
-    Args:
-        personaje_id: Identificador del personaje a actualizar.
-        **kwargs: Campos a actualizar.
+    Parameters
+    ----------
+    personaje_id : int
+        id del personaje a actualizar.
+    **kwargs : dict
+        Campos y valores a actualizar.
 
-    Returns:
-        Instancia del personaje actualizado o None si no existe.
+    Returns
+    -------
+    Personaje | None
+        Instancia actualizada del personaje, o None si no existe.
     """
     personaje = obtener_personaje(personaje_id)
     if not personaje:
         return None
 
+    # Asignar los valores proporcionados solo si existen como atributos
     for key, value in kwargs.items():
         if hasattr(personaje, key):
             setattr(personaje, key, value)
@@ -127,11 +146,15 @@ def borrar_personaje(personaje_id):
     """
     Elimina un personaje de la base de datos.
 
-    Args:
-        personaje_id: Identificador del personaje a eliminar.
+    Parameters
+    ----------
+    personaje_id : int
+        id del personaje a eliminar.
 
-    Returns:
-        True si se elimino correctamente, False si no existia.
+    Returns
+    -------
+    bool
+        True si se eliminó correctamente, False si no existía.
     """
     personaje = obtener_personaje(personaje_id)
     if not personaje:
@@ -143,13 +166,19 @@ def borrar_personaje(personaje_id):
 
 def personaje_a_dict(personaje):
     """
-    Convierte una instancia de personaje a un diccionario.
+    Convierte una instancia de personaje en un diccionario.
 
-    Args:
-        personaje: Instancia del modelo Personaje.
+    Incluye atributos específicos según el tipo de personaje.
 
-    Returns:
-        Diccionario con los datos del personaje.
+    Parameters
+    ----------
+    personaje : Personaje
+        Instancia del modelo Personaje.
+
+    Returns
+    -------
+    dict
+        Diccionario con los atributos del personaje.
     """
     data = {
         "id": personaje.id,
@@ -172,13 +201,17 @@ def personaje_a_dict(personaje):
 
 def dict_a_personaje(data):
     """
-    Crea una instancia de personaje a partir de un diccionario.
+    Crea una instancia de Personaje a partir de un diccionario.
 
-    Args:
-        data: Diccionario con los datos del personaje.
+    Parameters
+    ----------
+    data : dict
+        Diccionario con los atributos del personaje.
 
-    Returns:
-        Instancia del modelo correspondiente.
+    Returns
+    -------
+    Personaje
+        Instancia del modelo Personaje (no guardada en BD).
     """
     tipo = get_personaje_tipo(data.get("tipo", "PERSONAJE"))
 

@@ -17,48 +17,24 @@ class HomeView(View):
     """
     Controlador para la página de inicio.
 
-    Muestra un índice de las principales funcionalidades disponibles.
-
-    Attributes
-    ----------
-    template_name : str
-        Ruta de la plantilla HTML utilizada para renderizar la vista.
+    Muestra un índice de funcionalidades principales.
     """
 
     template_name = "index.html"
 
     def get(self, request):
         """
-        Maneja las peticiones GET mostrando la página de inicio.
-
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta HTML con el índice de funcionalidades.
+        Renderiza la página de inicio.
         """
         return render(request, self.template_name)
 
 
 class CrearPersonajeView(View):
     """
-    Controlador para la creación de nuevos personajes.
+    Vista para crear un nuevo personaje.
 
-    Maneja tanto la muestra del formulario (GET) como el procesamiento
-    de datos para crear un nuevo personaje (POST).
-
-    Attributes
-    ----------
-    template_name : str
-        Ruta de la plantilla HTML utilizada para renderizar la vista.
-    form_class : PersonajeForm
-        Clase del formulario asociado a la vista.
-    success_url : str
-        URL a la que se redirige después de una creación exitosa.
+    Gestiona tanto la visualización del formulario como el procesamiento
+    de los datos enviados.
     """
 
     template_name = "personajes/crear.html"
@@ -66,36 +42,12 @@ class CrearPersonajeView(View):
     success_url = reverse_lazy("lista_personajes")
 
     def get(self, request):
-        """
-        Maneja las peticiones GET mostrando el formulario de creación.
-
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta HTML con el formulario renderizado.
-        """
+        """Muestra el formulario vacío para crear un personaje."""
         form = self.form_class()
         return render(request, self.template_name, {"form": form})
 
     def post(self, request):
-        """
-        Maneja las peticiones POST procesando los datos del formulario.
-
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante con los datos del formulario.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta de redirección si es válido, o el formulario con errores.
-        """
+        """Procesa los datos del formulario y crea el personaje."""
         form = self.form_class(request.POST)
 
         if form.is_valid():
@@ -114,29 +66,14 @@ class CrearPersonajeView(View):
 
 class ListaPersonajesView(View):
     """
-    Controlador para mostrar el listado de todos los personajes.
-
-    Attributes
-    ----------
-    template_name : str
-        Ruta de la plantilla HTML utilizada para renderizar la lista.
+    Vista para listar todos los personajes disponibles.
     """
 
     template_name = "personajes/lista.html"
 
     def get(self, request):
         """
-        Maneja las peticiones GET obteniendo todos los personajes.
-
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta HTML con la lista de personajes.
+        Obtiene todos los personajes y los envía a la plantilla.
         """
         personajes = service_listar()
         return render(request, self.template_name, {"personajes": personajes})
@@ -144,31 +81,16 @@ class ListaPersonajesView(View):
 
 class EliminarPersonajeView(View):
     """
-    Controlador para eliminar un personaje existente.
-
-    Attributes
-    ----------
-    success_url : str
-        URL a la que se redirige después de la eliminación.
+    Vista para eliminar un personaje existente.
     """
 
     success_url = reverse_lazy("lista_personajes")
 
     def post(self, request, personaje_id):
         """
-        Maneja las peticiones POST eliminando el personaje especificado.
+        Elimina un personaje dado su ID.
 
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante.
-        personaje_id : int
-            Identificador único del personaje a eliminar.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta de redirección a la lista de personajes.
+        Muestra mensajes de éxito o error según corresponda.
         """
         personaje = service_obtener(personaje_id)
 
@@ -188,14 +110,9 @@ class EliminarPersonajeView(View):
 
 class EditarPersonajeView(View):
     """
-    Controlador para editar un personaje existente.
+    Vista para editar un personaje existente.
 
-    Attributes
-    ----------
-    template_name : str
-        Ruta de la plantilla HTML utilizada para renderizar la vista.
-    success_url : str
-        URL a la que se redirige después de una edición exitosa.
+    Permite mostrar el formulario con los datos actuales y actualizarlo.
     """
 
     template_name = "personajes/editar.html"
@@ -203,19 +120,7 @@ class EditarPersonajeView(View):
 
     def get(self, request, personaje_id):
         """
-        Maneja las peticiones GET mostrando el formulario de edición.
-
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante.
-        personaje_id : int
-            Identificador único del personaje a editar.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta HTML con el formulario de edición.
+        Muestra el formulario de edición con los datos actuales del personaje.
         """
         personaje = service_obtener(personaje_id)
 
@@ -241,19 +146,7 @@ class EditarPersonajeView(View):
 
     def post(self, request, personaje_id):
         """
-        Maneja las peticiones POST procesando los datos del formulario.
-
-        Parameters
-        ----------
-        request : HttpRequest
-            Objeto de petición HTTP entrante con los datos del formulario.
-        personaje_id : int
-            Identificador único del personaje a editar.
-
-        Returns
-        -------
-        HttpResponse
-            Respuesta de redirección si es válido, o el formulario con errores.
+        Procesa los datos del formulario y actualiza el personaje.
         """
         personaje = service_obtener(personaje_id)
 
@@ -280,17 +173,29 @@ class EditarPersonajeView(View):
 
 
 class CombatirView(View):
+    """
+    Vista para gestionar combates entre personajes.
+
+    Permite seleccionar dos personajes y simular el combate.
+    """
+
     template_name = "combate/index.html"
 
     def get(self, request):
+        """Muestra el formulario de combate con todos los personajes."""
         personajes = service_listar()
         return render(request, self.template_name, {"personajes": personajes})
 
     def post(self, request):
+        """
+        Procesa la selección de personajes y simula el combate.
+        Guarda los resultados si el usuario lo indica.
+        """
         personaje1_id = request.POST.get("personaje1")
         personaje2_id = request.POST.get("personaje2")
         guardar = request.POST.get("guardar") == "on"
 
+        # Validaciones básicas
         if not personaje1_id or not personaje2_id:
             messages.error(request, "Selecciona dos personajes para el combate.")
             return redirect("combate")
@@ -330,15 +235,22 @@ class CombatirView(View):
 
 
 class EntrenarPersonajeView(View):
-    """Vista para entrenar un personaje (subir nivel)."""
+    """
+    Vista para entrenar un personaje y subirlo de nivel.
+    """
 
     template_name = "personajes/entrenar.html"
 
     def get(self, request):
+        """Muestra la lista de personajes disponibles para entrenamiento."""
         personajes = service_listar()
         return render(request, self.template_name, {"personajes": personajes})
 
     def post(self, request):
+        """
+        Procesa el entrenamiento de un personaje seleccionado.
+        Incrementa su nivel y guarda los cambios.
+        """
         personaje_id = request.POST.get("personaje_id")
 
         if not personaje_id:
