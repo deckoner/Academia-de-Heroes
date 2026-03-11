@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from app.views import (
     HomeView,
+    EnConstruccionView,
     CrearPersonajeView,
     ListaPersonajesView,
     EliminarPersonajeView,
@@ -13,6 +14,11 @@ from app.views import (
 
 urlpatterns = [
     path("", login_required(HomeView.as_view()), name="home"),
+    path(
+        "en-construccion/",
+        login_required(EnConstruccionView.as_view()),
+        name="en_construccion",
+    ),
     path(
         "personajes/crear/",
         login_required(CrearPersonajeView.as_view()),

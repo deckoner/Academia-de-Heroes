@@ -5,14 +5,31 @@
 {% block content %}
 <div class="content">
     <h2>Entrenar Héroe</h2>
-    <p>Selecciona un héroe para entrenar y subir de nivel.</p>
+    
+    <div style="margin-bottom: 20px; padding: 15px; background: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 5px;">
+        <h3 style="margin-bottom: 10px;">Recursos</h3>
+        <p><strong>Monedas:</strong> 💰 {{ monedas }}</p>
+        <p><strong>Mercenarios:</strong> 🛡️ {{ mercanarios }}</p>
+        <p style="font-size: 0.9em; color: #888;">Costo por entrenamiento: {{ costo_mercanario }} mercenario</p>
+        
+        <form method="post" action="{% url 'entrenar' %}" style="margin-top: 15px;">
+            {% csrf_token %}
+            <input type="hidden" name="accion" value="comprar">
+            <button type="submit" class="btn" {% if monedas < costo_mercanario %}disabled{% endif %}>
+                Contratar Mercenario ({{ costo_mercanario }} 💰)
+            </button>
+        </form>
+    </div>
+
+    <p>Selecciona un héroe para entrenar y subir de nivel usando un mercenario.</p>
 
     {% if personajes %}
     <form method="post" action="{% url 'entrenar' %}">
         {% csrf_token %}
+        <input type="hidden" name="accion" value="entrenar">
 
         <div class="form-group">
-            <label for="personaje_id">héroe a entrenar:</label>
+            <label for="personaje_id">Héroe a entrenar:</label>
             <select name="personaje_id" id="personaje_id" required>
                 <option value="">Seleccionar...</option>
                 {% for p in personajes %}
@@ -21,7 +38,9 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Entrenar</button>
+        <button type="submit" class="btn btn-primary" {% if mercanarios < 1 %}disabled{% endif %}>
+            Entrenar (1 🛡️)
+        </button>
         <a href="{% url 'home' %}" class="btn btn-secondary">Volver</a>
     </form>
     {% else %}
