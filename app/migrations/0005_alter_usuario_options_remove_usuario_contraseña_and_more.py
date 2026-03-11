@@ -8,31 +8,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0004_auto_20260311_1546'),
+        ("app", "0004_auto_20260311_1546"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='usuario',
-            options={'ordering': ['user__username']},
+            name="usuario",
+            options={"ordering": ["user__username"]},
         ),
         migrations.RemoveField(
-            model_name='usuario',
-            name='contraseña',
+            model_name="usuario",
+            name="contraseña",
         ),
         migrations.RemoveField(
-            model_name='usuario',
-            name='nombre_usuario',
+            model_name="usuario",
+            name="nombre_usuario",
         ),
         migrations.AddField(
-            model_name='usuario',
-            name='email',
+            model_name="usuario",
+            name="email",
             field=models.EmailField(blank=True, max_length=254, null=True),
         ),
         migrations.AddField(
-            model_name='usuario',
-            name='user',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='perfil', to=settings.AUTH_USER_MODEL),
+            model_name="usuario",
+            name="user",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="perfil",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

@@ -5,19 +5,22 @@ import random
 
 class PersonajeManager(models.Manager):
     """
-    Gestor personalizado para el modelo Personaje.
-    Proporciona metodos de utilidad para interacturar con la base de datos.
+    Manager para gestionar los personajes del juego.
     """
 
     def obtener_por_id(self, personaje_id):
         """
-        Obtiene un personaje por su identificador unico.
+        Obtiene un personaje a partir de su id.
 
-        Args:
-            personaje_id: Identificador numerico del personaje.
+        Parameters
+        ----------
+        personaje_id : int
+            id del personaje.
 
-        Returns:
-            Instancia de Personaje o None si no existe.
+        Returns
+        -------
+        Personaje | None
+            Instancia del modelo Personaje si existe, en caso contrario None.
         """
         try:
             return self.get(id=personaje_id)
@@ -28,18 +31,47 @@ class PersonajeManager(models.Manager):
         """
         Lista todos los personajes ordenados por nombre.
 
-        Returns:
-            QuerySet con todos los personajes.
+        Returns
+        -------
+        QuerySet
+            Conjunto de personajes ordenados por nombre.
         """
         return self.all().order_by("nombre")
 
 
 class Personaje(models.Model):
     """
-    Clase base que representa a un personaje dentro del juego.
+    Modelo que representa a un personaje dentro del juego.
 
-    Proporciona los atributos y metodos fundamentales para el sistema de combate,
-    experiencia y persistencia de datos en la base de datos.
+    Define los atributos principales utilizados en el sistema de combate
+    como nivel, vida, armadura, mana y precision.
+
+    Attributes
+    ----------
+    id_usuario : ForeignKey
+        Usuario propietario del personaje.
+    tipo : CharField
+        Tipo de personaje (Personaje, Guerrero, Mago o Arquero).
+    nombre : CharField
+        Nombre unico del personaje.
+    nivel : PositiveIntegerField
+        Nivel actual del personaje.
+    vida : PositiveIntegerField
+        Puntos de vida actuales.
+    vida_max : PositiveIntegerField
+        Puntos de vida maximos del personaje.
+    armadura : PositiveIntegerField
+        Valor de defensa utilizado para reducir dano recibido (guerreros).
+    mana : PositiveIntegerField
+        Recurso utilizado para ataques especiales (magos).
+    precision : PositiveIntegerField
+        Probabilidad de acierto (arqueros).
+    vivo : BooleanField
+        Indica si el personaje sigue con vida.
+    created_at : DateTimeField
+        Fecha de creacion del registro.
+    updated_at : DateTimeField
+        Fecha de la ultima actualizacion.
     """
 
     VIDA_MAX_BASE = 100
@@ -83,6 +115,15 @@ class Personaje(models.Model):
         ]
 
     def clean(self):
+        """
+        Realiza validaciones antes de guardar el personaje.
+
+        Raises
+        ------
+        ValidationError
+            Si alguno de los valores del personaje no cumple las reglas
+            definidas (nivel minimo, vida negativa, precision fuera de rango).
+        """
         if self.nivel < 1:
             raise ValidationError({"nivel": "El nivel debe ser al menos 1."})
         if self.vida < 0:
@@ -97,6 +138,12 @@ class Personaje(models.Model):
             )
 
     def save(self, *args, **kwargs):
+        """
+        Guarda el personaje en la base de datos.
+
+        Si no existen valores de vida maxima o vida actual, se calculan
+        automaticamente en funcion del nivel del personaje.
+        """
         if not self.vida_max:
             self.vida_max = self.VIDA_MAX_BASE + (self.nivel - 1) * 10
         if not self.vida:
@@ -107,8 +154,10 @@ class Personaje(models.Model):
         """
         Verifica el estado actual del personaje.
 
-        Returns:
-            bool: True si la vida es mayor a cero, False en caso contrario.
+        Returns
+        -------
+        bool
+            True si la vida es mayor a cero, False en caso contrario.
         """
         return self.vida > 0
 
@@ -116,22 +165,45 @@ class Personaje(models.Model):
         """
         Aplica dano directo a los puntos de vida del personaje.
 
-        Args:
-            cantidad: Puntos de dano a restar de la vida actual.
+        Si el personaje es un guerrero y tiene armadura, el dano
+        recibido se reduce en funcion de ese valor.
+
+        Parameters
+        ----------
+        cantidad : int
+            Puntos de dano a restar de la vida actual.
+
+        Raises
+        ------
+        ValueError
+            Si la cantidad de dano es negativa.
         """
         if cantidad < 0:
             raise ValueError("La cantidad de dano no puede ser negativa.")
+
         dano = cantidad
+
         if self.tipo == "GUERRERO" and self.armadura:
             dano = max(0, cantidad - self.armadura)
+
         self.vida = max(0, self.vida - dano)
+
+        if self.vida == 0:
+            self.vivo = False
 
     def curar(self, cantidad):
         """
-        Restaura puntos de vida del personaje hasta el maximo permitido.
+        Restaura puntos de vida del personaje hasta su limite maximo.
 
-        Args:
-            cantidad: Puntos de vida a restaurar.
+        Parameters
+        ----------
+        cantidad : int
+            Puntos de vida a restaurar.
+
+        Raises
+        ------
+        ValueError
+            Si la cantidad de curacion es negativa.
         """
         if cantidad < 0:
             raise ValueError("La cantidad de curacion no puede ser negativa.")
@@ -141,10 +213,10 @@ class Personaje(models.Model):
 
     def subir_nivel(self):
         """
-        Incrementa el Nivel del personaje.
+        Incrementa el nivel del personaje.
 
-        Sube el nivel en 1 unidad, aumenta la vida maxima en 10 puntos fijos
-        y cura al personaje parcialmente (50% de su vida maxima).
+        Aumenta el nivel en una unidad, incrementa la vida maxima
+        en 10 puntos y cura al personaje parcialmente.
         """
         self.nivel += 1
         incremento_vida = 10
@@ -155,8 +227,13 @@ class Personaje(models.Model):
         """
         Calcula el dano base que inflige el personaje.
 
-        Returns:
-            int: Puntos de dano calculados como 10 mas el nivel del personaje.
+        Los arqueros tienen una probabilidad de fallar el ataque
+        dependiendo de su precision.
+
+        Returns
+        -------
+        int
+            Puntos de dano generados por el ataque.
         """
         dano_base = 10 + self.nivel
 
@@ -170,10 +247,14 @@ class Personaje(models.Model):
     def ataque_especial(self):
         """
         Ejecuta una habilidad especial con dano critico.
-        Consume 10 unidades de mana para efectuar un dano equivalente al doble del ataque normal.
 
-        Returns:
-            int: Cantidad de dano generado. Si no dispone de mana suficiente retorna 0.
+        Solo los magos pueden realizar este ataque y requiere
+        consumir 10 puntos de mana.
+
+        Returns
+        -------
+        int
+            Cantidad de dano generado. Si no dispone de mana suficiente retorna 0.
         """
         if self.tipo != "MAGO" or not self.mana or self.mana < 10:
             return 0
@@ -182,7 +263,23 @@ class Personaje(models.Model):
         return self.ataque() * 2
 
     def __str__(self):
+        """
+        Devuelve una representacion legible del personaje.
+
+        Returns
+        -------
+        str
+            Cadena con el nombre, nivel y estado de vida.
+        """
         return f"{self.nombre} (Nivel {self.nivel}) - Vida: {self.vida}/{self.vida_max}"
 
     def __repr__(self):
+        """
+        Devuelve una representacion tecnica del objeto.
+
+        Returns
+        -------
+        str
+            Representacion interna del objeto Personaje.
+        """
         return f"<Personaje(id={self.id}, nombre='{self.nombre}', nivel={self.nivel}, vida={self.vida}/{self.vida_max}, tipo={self.tipo})>"
