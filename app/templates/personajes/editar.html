@@ -3,61 +3,71 @@
 {% block title %}Editar Personaje - Academia de Héroes{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>Editar Personaje</h2>
-    
-    <form method="post">
-        {% csrf_token %}
+<div class="content">
+    <div class="page-header">
+        <h2>✏️ Editar Héroe</h2>
+    </div>
+
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">✏️ Editar Personaje</h3>
         
-        <div class="form-group">
-            <label for="id_tipo">Tipo de Personaje</label>
-            <select name="tipo" id="id_tipo" required onchange="actualizarCampos()">
-                <option value="">Selecciona un tipo</option>
-                <option value="GUERRERO" {% if personaje.tipo == 'GUERRERO' %}selected{% endif %}>Guerrero</option>
-                <option value="MAGO" {% if personaje.tipo == 'MAGO' %}selected{% endif %}>Mago</option>
-                <option value="ARQUERO" {% if personaje.tipo == 'ARQUERO' %}selected{% endif %}>Arquero</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="id_nombre">Nombre</label>
-            <input type="text" name="nombre" id="id_nombre" maxlength="100" required placeholder="Introduce el nombre del personaje" value="{{ personaje.nombre }}">
-        </div>
-        
-        <div class="form-group">
-            <label for="id_nivel">Nivel</label>
-            <input type="number" name="nivel" id="id_nivel" min="1" max="100" value="{{ personaje.nivel }}" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="id_vida">Puntos de Vida</label>
-            <input type="number" name="vida" id="id_vida" min="0" value="{{ personaje.vida }}" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="id_vida_max">Vida Máxima</label>
-            <input type="number" name="vida_max" id="id_vida_max" min="1" value="{{ personaje.vida_max }}" required>
-        </div>
-        
-        <div class="form-group" id="campo_armadura">
-            <label for="id_armadura">Armadura (solo Guerrero)</label>
-            <input type="number" name="armadura" id="id_armadura" min="0" value="{{ personaje.armadura|default:'' }}">
-        </div>
-        
-        <div class="form-group" id="campo_mana">
-            <label for="id_mana">Mana (solo Mago)</label>
-            <input type="number" name="mana" id="id_mana" min="0" value="{{ personaje.mana|default:'' }}">
-        </div>
-        
-        <div class="form-group" id="campo_precision">
-            <label for="id_precision">Precisión (solo Arquero)</label>
-            <input type="number" name="precision" id="id_precision" min="0" max="100" value="{{ personaje.precision|default:'' }}">
-        </div>
-        
-        <button type="submit">Guardar Cambios</button>
-        <a href="{% url 'lista_personajes' %}" class="btn-secondary">Cancelar</a>
-    </form>
-    
+        <form method="post" class="rpg-form-styled">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_tipo">Tipo de Personaje</label>
+                <select name="tipo" id="id_tipo" required onchange="actualizarCampos()">
+                    <option value="">Selecciona un tipo</option>
+                    <option value="GUERRERO" {% if personaje.tipo == 'GUERRERO' %}selected{% endif %}>⚔️ Guerrero</option>
+                    <option value="MAGO" {% if personaje.tipo == 'MAGO' %}selected{% endif %}>🔮 Mago</option>
+                    <option value="ARQUERO" {% if personaje.tipo == 'ARQUERO' %}selected{% endif %}>🏹 Arquero</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_nombre">Nombre del Héroe</label>
+                <input type="text" name="nombre" id="id_nombre" maxlength="100" required placeholder="Nombre de tu héroe" value="{{ personaje.nombre }}">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_nivel">Nivel</label>
+                    <input type="number" name="nivel" id="id_nivel" min="1" max="100" value="{{ personaje.nivel }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_vida">Puntos de Vida</label>
+                    <input type="number" name="vida" id="id_vida" min="0" value="{{ personaje.vida }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_vida_max">Vida Máxima</label>
+                    <input type="number" name="vida_max" id="id_vida_max" min="1" value="{{ personaje.vida_max }}" required>
+                </div>
+            </div>
+            
+            <div class="form-group" id="campo_armadura">
+                <label for="id_armadura">🛡️ Armadura</label>
+                <input type="number" name="armadura" id="id_armadura" min="0" value="{{ personaje.armadura|default:'' }}" placeholder="Puntos de armadura">
+            </div>
+            
+            <div class="form-group" id="campo_mana">
+                <label for="id_mana">💧 Mana</label>
+                <input type="number" name="mana" id="id_mana" min="0" value="{{ personaje.mana|default:'' }}" placeholder="Puntos de mana">
+            </div>
+            
+            <div class="form-group" id="campo_precision">
+                <label for="id_precision">🎯 Precisión</label>
+                <input type="number" name="precision" id="id_precision" min="0" max="100" value="{{ personaje.precision|default:'' }}" placeholder="Porcentaje de precisión">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+                <a href="{% url 'lista_personajes' %}" class="btn btn-secondary">⬅️ Cancelar</a>
+            </div>
+        </form>
+    </div>
+
     <script>
         function actualizarCampos() {
             var tipo = document.getElementById('id_tipo').value;

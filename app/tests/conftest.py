@@ -19,7 +19,7 @@ def browser():
 
 
 @pytest.fixture
-def page(browser: Browser):
+def page(browser):
     page = browser.new_page()
     yield page
     page.close()

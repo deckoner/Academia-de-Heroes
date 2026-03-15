@@ -1,0 +1,382 @@
+/* ===== ARENA DE COMBATE ===== */
+.combat-arena {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.combat-arena .rpg-card {
+    padding: 2rem;
+}
+
+/* ===== CONTENDORES DE COMBATIENTES ===== */
+.combatants {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    justify-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.combatant {
+    display: grid;
+    grid-template-rows: auto auto;
+    justify-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 2px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.combatant:hover {
+    border-color: var(--text-gold);
+    box-shadow: 0 0 20px var(--shadow-glow);
+}
+
+/* ===== IMAGEN DEL PERSONAJE ===== */
+.character-image {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.character-img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    transition: all 0.5s ease;
+    filter: drop-shadow(0 4px 8px var(--shadow-dark));
+}
+
+/* El personaje de la derecha mira hacia la izquierda */
+#combatant-2 .character-img {
+    transform: scaleX(-1);
+}
+
+.combatant.hit .character-img {
+    animation: vibrate 0.3s ease;
+}
+
+#combatant-2.hit .character-img {
+    animation: vibrate-r 0.3s ease;
+}
+
+@keyframes vibrate {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}
+
+@keyframes vibrate-r {
+    0%, 100% { transform: scaleX(-1) translateX(0); }
+    20%, 60% { transform: scaleX(-1) translateX(-8px); }
+    40%, 80% { transform: scaleX(-1) translateX(8px); }
+}
+
+/* ===== EFECTOS VISUALES ===== */
+.effect-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    pointer-events: none;
+    opacity: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.effect-overlay.active {
+    animation: playEffect 0.6s forwards;
+}
+
+.effect-overlay.hit {
+    background-image: url("../img/efectos/hit.gif");
+}
+
+.effect-overlay.slash {
+    background-image: url("../img/efectos/slash.gif");
+}
+
+.effect-overlay.magia {
+    background-image: url("../img/efectos/magia.gif");
+}
+
+@keyframes playEffect {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* ===== ANIMACIÓN DE MUERTE ===== */
+.combatant.dead .character-img {
+    filter: grayscale(100%) brightness(0.5);
+    transition: all 0.5s ease;
+}
+
+.combatant.dead .character-img.dissolving {
+    animation: dissolve 1.5s forwards;
+}
+
+@keyframes dissolve {
+    0% { 
+        filter: grayscale(100%) brightness(0.5);
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% { 
+        filter: grayscale(100%) brightness(0);
+        transform: scale(0.5) translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* ===== INFORMACIÓN DEL PERSONAJE ===== */
+.character-info {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    min-width: 220px;
+}
+
+.character-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px var(--shadow-dark);
+}
+
+/* ===== BARRAS DE ESTADO ===== */
+.health-bar,
+.stat-bar {
+    width: 200px;
+    height: 24px;
+    background: var(--health-bg);
+    border: 2px solid #6B2A2A;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.health-fill {
+    height: 100%;
+    background: linear-gradient(180deg, #E74C3C 0%, #C0392B 50%, #A93226 100%);
+    transition: width 0.4s ease;
+    border-radius: 10px;
+    position: relative;
+}
+
+.health-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+    border-radius: 10px 10px 0 0;
+}
+
+.health-text,
+.mana-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px var(--shadow-dark);
+}
+
+/* ===== BARRA DE MANÁ ===== */
+.stat-bar {
+    height: 18px;
+    margin-top: 0.5rem;
+}
+
+.stat-bar.mana {
+    background: var(--mana-bg);
+    border-color: #2A4A6B;
+}
+
+.stat-bar.mana .bar-fill {
+    background: linear-gradient(180deg, #3498DB 0%, #2980B9 50%, #2471A3 100%);
+    border-radius: 9px;
+}
+
+.stat-bar.mana .bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+    border-radius: 9px 9px 0 0;
+}
+
+.mana-text {
+    color: #5DADE2;
+}
+
+/* ===== ESTADÍSTICAS (ARMADURA, PRECISIÓN) ===== */
+.character-stat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+}
+
+.stat-icon {
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+}
+
+.stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px var(--shadow-dark);
+}
+
+.character-stat.armor .stat-value {
+    color: var(--armor-color);
+    text-shadow: 0 0 8px rgba(217, 180, 74, 0.5);
+}
+
+.character-stat.precision .stat-value {
+    color: var(--precision-color);
+    text-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
+}
+
+/* ===== VS DISPLAY ===== */
+.vs-display {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-accent);
+    padding: 1rem;
+    text-shadow: 
+        0 0 20px var(--shadow-fire),
+        0 2px 4px var(--shadow-dark);
+    animation: pulse-vs 2s infinite;
+}
+
+@keyframes pulse-vs {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===== LOG DE COMBATE ===== */
+.combat-log {
+    background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.7) 100%);
+    border: 2px solid var(--border-light);
+    padding: 1rem;
+    height: 180px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.combat-log::-webkit-scrollbar {
+    width: 8px;
+}
+
+.combat-log::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.combat-log::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 4px;
+}
+
+.log-entry {
+    margin: 0.4rem 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    padding: 0.3rem 0.5rem;
+    border-left: 2px solid var(--border-gold);
+    background: rgba(217, 180, 74, 0.05);
+}
+
+.log-entry:first-child {
+    color: var(--text-gold);
+    font-weight: 600;
+}
+
+/* ===== CONTROLES DE COMBATE ===== */
+.combat-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.combat-controls .btn {
+    min-width: 150px;
+    padding: 0.75rem 2rem;
+}
+
+.combat-controls #volver-btn {
+    display: none;
+}
+
+/* ===== SELECCIÓN DE COMBATE ===== */
+.combat-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.combatant-select {
+    text-align: center;
+}
+
+.combatant-select h3 {
+    margin-bottom: 1rem;
+    color: var(--text-gold);
+}
+
+.combatant-select select {
+    min-width: 200px;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+}
+
+.vs-divider {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--text-accent);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .combatants {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .vs-display {
+        order: -1;
+        font-size: 2rem;
+    }
+    
+    .character-img {
+        width: 140px;
+        height: 140px;
+    }
+}

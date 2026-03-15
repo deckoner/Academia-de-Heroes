@@ -4,69 +4,90 @@
 
 {% block content %}
 <div class="content">
-    <h2>Lista de Personajes</h2>
+    <div class="page-header">
+        <h2>🛡️ Mis Héroes</h2>
+    </div>
 
-    <div class="pagination-controls" style="margin-bottom: 20px;">
-        <div>
-            <label for="per_page">Mostrar:</label>
-            <select name="per_page" id="per_page">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-            </select>
-            <span>personajes</span>
+    <div class="rpg-table-container">
+        {% if personajes %}
+        <div class="table-header-controls">
+            <div class="pagination-info">
+                <label for="per_page">Mostrar:</label>
+                <select name="per_page" id="per_page" class="rpg-select-sm">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <span>personajes</span>
+            </div>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">
+                ➕ Nuevo Héroe
+            </a>
         </div>
-        <a href="{% url 'crear_personaje' %}" class="btn">Crear Nuevo Personaje</a>
+
+        <table class="rpg-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Nivel</th>
+                    <th>Vida</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for personaje in personajes %}
+                <tr>
+                    <td><strong>{{ personaje.nombre }}</strong></td>
+                    <td>
+                        {% if personaje.tipo == 'GUERRERO' %}⚔️ Guerrero
+                        {% elif personaje.tipo == 'MAGO' %}🔮 Mago
+                        {% elif personaje.tipo == 'ARQUERO' %}🏹 Arquero
+                        {% else %}👤 Personaje{% endif %}
+                    </td>
+                    <td>Nivel {{ personaje.nivel }}</td>
+                    <td>
+                        <div class="mini-stat-bar">
+                            <div class="mini-stat-fill" style="width: {{ personaje.vida|floatformat:0 }}%;"></div>
+                        </div>
+                        <span class="stat-text">{{ personaje.vida }}/{{ personaje.vida_max }}</span>
+                    </td>
+                    <td>
+                        {% if personaje.vivo %}
+                        <span class="status-badge alive">✓ Vivo</span>
+                        {% else %}
+                        <span class="status-badge dead">✗ Muerto</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'editar_personaje' personaje.id %}" class="btn btn-sm">✏️ Editar</a>
+                            <form method="post" action="{% url 'eliminar_personaje' personaje.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('¿Estás seguro de eliminar este personaje?')">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination-controls">
+            <button class="btn btn-sm" disabled>◀ Anterior</button>
+            <span class="pagination-page">Página 1 de 1</span>
+            <button class="btn btn-sm" disabled>Siguiente ▶</button>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">🛡️</span>
+            <h3>No tienes héroes</h3>
+            <p>Crea tu primer héroe para comenzar la aventura</p>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">➕ Crear Héroe</a>
+        </div>
+        {% endif %}
     </div>
-
-    {% if personajes %}
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Nivel</th>
-                <th>Vida</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for personaje in personajes %}
-            <tr>
-                <td>{{ personaje.nombre }}</td>
-                <td>{{ personaje.get_tipo_display }}</td>
-                <td>{{ personaje.nivel }}</td>
-                <td>{{ personaje.vida }}/{{ personaje.vida_max }}</td>
-                <td>
-                    {% if personaje.vivo %}
-                    <span style="color: green;">Vivo</span>
-                    {% else %}
-                    <span style="color: red;">Muerto</span>
-                    {% endif %}
-                </td>
-                <td class="actions">
-                    <a href="{% url 'editar_personaje' personaje.id %}" class="btn"
-                        style="padding: 5px 10px;">Editar</a>
-                    <form method="post" action="{% url 'eliminar_personaje' personaje.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn" style="background-color: var(--accent); padding: 5px 10px;"
-                            onclick="return confirm('¿Estás seguro de eliminar este personaje?')">Borrar</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="pagination-controls">
-        <button class="btn" disabled>Anterior</button>
-        <span>Página 1 de 1</span>
-        <button class="btn" disabled>Siguiente</button>
-    </div>
-    {% else %}
-    <p>No hay personajes disponibles.</p>
-    {% endif %}
-
 </div>
 {% endblock %}

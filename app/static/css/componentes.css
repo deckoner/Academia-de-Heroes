@@ -1,0 +1,638 @@
+/* ===== BOTONES ===== */
+.btn,
+button,
+input[type="submit"],
+input[type="button"] {
+    background: linear-gradient(180deg, #8B5A3C 0%, #5C3D28 100%);
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #A0694B;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 3px 6px var(--shadow-dark),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before,
+button::before,
+input[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn:hover,
+button:hover,
+input[type="submit"]:hover {
+    background: linear-gradient(180deg, #A0694B 0%, #6E4A33 100%);
+    border-color: var(--text-gold);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 15px var(--shadow-dark),
+        0 0 15px var(--shadow-glow);
+}
+
+.btn:hover::before,
+button:hover::before,
+input[type="submit"]:hover::before {
+    left: 100%;
+}
+
+.btn:active,
+button:active,
+input[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px var(--shadow-dark);
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, #C9A227 0%, #8B6914 100%);
+    border-color: #D9B44A;
+    color: var(--text-primary);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(180deg, #D9B44A 0%, #A07818 100%);
+    color: var(--text-primary);
+}
+
+.btn-secondary {
+    background: linear-gradient(180deg, #4A4035 0%, #2E2820 100%);
+    border-color: #5D5045;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(180deg, #5D5045 0%, #3A332B 100%);
+}
+
+/* ===== TARJETAS/PANELES ===== */
+.rpg-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 
+        0 4px 20px var(--shadow-dark),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.rpg-card::before {
+    content: '⚜';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-dark);
+    padding: 0 10px;
+    color: var(--text-gold);
+    font-size: 1rem;
+}
+
+.rpg-card-title {
+    font-family: 'Cinzel', serif;
+    color: var(--text-gold);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+/* ===== TABLAS ===== */
+.rpg-table-container {
+    background: var(--bg-card);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow-dark);
+}
+
+.rpg-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+    font-size: 1rem;
+}
+
+.rpg-table th {
+    background: linear-gradient(180deg, #3A2E28 0%, #2A201A 100%);
+    color: var(--text-gold);
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border-gold);
+    position: relative;
+}
+
+.rpg-table th::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--text-gold);
+    opacity: 0.3;
+}
+
+.rpg-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.rpg-table tr:last-child td {
+    border-bottom: none;
+}
+
+.rpg-table tr:hover td {
+    background: rgba(217, 180, 74, 0.08);
+    color: var(--text-primary);
+}
+
+/* ===== FORMULARIOS ===== */
+.rpg-form {
+    background: var(--bg-card);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 600px;
+    box-shadow: 0 4px 20px var(--shadow-dark);
+}
+
+.rpg-form-title {
+    font-family: 'Cinzel', serif;
+    color: var(--text-gold);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-gold);
+    position: relative;
+}
+
+.rpg-form-title::after {
+    content: '⚜';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    padding: 0 10px;
+    color: var(--text-gold);
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Cinzel', serif;
+    color: var(--text-gold);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    border: 2px solid var(--border-light);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'Crimson Text', serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--text-gold);
+    box-shadow: 0 0 10px var(--shadow-glow);
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Select personalizado */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D9B44A' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    padding: 0.5rem;
+}
+
+/* ===== PAGINACIÓN ===== */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 1rem 1.5rem;
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    font-family: 'Cinzel', serif;
+}
+
+.pagination-controls .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+/* ===== ICONOS DE ESTADO ===== */
+.status-alive {
+    color: #27AE60;
+    text-shadow: 0 0 8px rgba(39, 174, 96, 0.5);
+}
+
+.status-dead {
+    color: #C0392B;
+    text-shadow: 0 0 8px rgba(192, 57, 43, 0.5);
+}
+
+/* ===== ERROR TEXT ===== */
+.error-text {
+    color: #E74C3C;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(192, 57, 43, 0.1);
+    border-radius: 4px;
+    border-left: 3px solid #C0392B;
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ===== ENLACES ESPECIALES ===== */
+.action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-gold);
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.action-link:hover {
+    background: rgba(217, 180, 74, 0.1);
+    color: var(--text-accent);
+    text-decoration: none;
+    transform: translateX(5px);
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* ===== TABLE HEADER CONTROLS ===== */
+.table-header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.pagination-info select {
+    padding: 0.4rem 0.8rem;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+}
+
+.pagination-page {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ===== MINI STAT BAR ===== */
+.mini-stat-bar {
+    width: 80px;
+    height: 8px;
+    background: var(--health-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+.mini-stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--health-color), #E74C3C);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.stat-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* ===== STATUS BADGE ===== */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+}
+
+.status-badge.alive {
+    background: rgba(39, 174, 96, 0.2);
+    color: #27AE60;
+    border: 1px solid #27AE60;
+}
+
+.status-badge.dead {
+    background: rgba(192, 57, 43, 0.2);
+    color: #C0392B;
+    border: 1px solid #C0392B;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+.btn-danger {
+    background: linear-gradient(180deg, #8B3A3A 0%, #5C2828 100%);
+    border-color: #A04545;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(180deg, #A04545 0%, #6B3030 100%);
+    border-color: #C0392B;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.empty-state h3 {
+    color: var(--text-gold);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+/* ===== RESOURCE GRID ===== */
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+}
+
+.resource-icon {
+    font-size: 2rem;
+}
+
+.resource-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.resource-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--text-gold);
+    font-weight: 600;
+}
+
+.resource-hint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.resource-action {
+    margin-top: 1rem;
+}
+
+/* ===== FORM ACTIONS ===== */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.card-description {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* ===== COMBAT SELECTION SINGLE ===== */
+.combat-selection-single {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero-card-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.hero-card-select:hover {
+    border-color: var(--text-gold);
+    background: rgba(217, 180, 74, 0.1);
+    transform: translateY(-2px);
+}
+
+.hero-card-select.selected {
+    border-color: var(--text-gold);
+    background: rgba(217, 180, 74, 0.2);
+    box-shadow: 0 0 15px var(--shadow-glow);
+}
+
+.hero-card-select.selected-1 {
+    border-color: #E74C3C;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+}
+
+.hero-card-select.selected-2 {
+    border-color: #3498DB;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+}
+
+.hero-slot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    border: 2px solid var(--border-light);
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+.hero-card-select.selected-1 .hero-slot {
+    border-color: #E74C3C;
+    color: #E74C3C;
+}
+
+.hero-card-select.selected-2 .hero-slot {
+    border-color: #3498DB;
+    color: #3498DB;
+}
+
+.hero-stats {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* ===== FORM ROW ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    margin-bottom: 0;
+}
+
+/* ===== RPG FORM STYLED ===== */
+.rpg-form-styled {
+    max-width: 100%;
+}
+
+.rpg-form-styled .form-group input,
+.rpg-form-styled .form-group select {
+    background: var(--bg-dark);
+    border: 2px solid var(--border-light);
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.rpg-form-styled .form-group input:focus,
+.rpg-form-styled .form-group select:focus {
+    border-color: var(--text-gold);
+    box-shadow: 0 0 10px var(--shadow-glow);
+    outline: none;
+}
+
+.rpg-form-styled .form-group input::placeholder {
+    color: var(--text-muted);
+}

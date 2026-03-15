@@ -45,9 +45,8 @@ class TestCombate:
 
         response = client.get("/combate/")
         assert response.status_code == 200
-        assert "Atacante" in response.content.decode()
-        assert "Defensor" in response.content.decode()
-        assert "VS" in response.content.decode()
+        assert "⚔️" in response.content.decode()
+        assert "Simulación" in response.content.decode()
 
     def test_no_permite_mismo_personaje(self, client):
         """No permite seleccionar el mismo personaje."""

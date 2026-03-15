@@ -4,48 +4,123 @@
 
 {% block content %}
 <div class="content">
-    <h2>Entrenar Héroe</h2>
-    
-    <div style="margin-bottom: 20px; padding: 15px; background: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 5px;">
-        <h3 style="margin-bottom: 10px;">Recursos</h3>
-        <p><strong>Monedas:</strong> 💰 {{ monedas }}</p>
-        <p><strong>Mercenarios:</strong> 🛡️ {{ mercanarios }}</p>
-        <p style="font-size: 0.9em; color: #888;">Costo por entrenamiento: {{ costo_mercanario }} mercenario</p>
+    <div class="page-header">
+        <h2>🏋️ Entrenar Héroe</h2>
+    </div>
+
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">⚔️ Recursos de Guerra</h3>
         
-        <form method="post" action="{% url 'entrenar' %}" style="margin-top: 15px;">
+        <div class="resource-grid">
+            <div class="resource-item">
+                <span class="resource-icon">🪙</span>
+                <div class="resource-info">
+                    <span class="resource-label">Oro</span>
+                    <span class="resource-value">{{ monedas }}</span>
+                </div>
+            </div>
+            <div class="resource-item">
+                <span class="resource-icon">💂</span>
+                <div class="resource-info">
+                    <span class="resource-label">Mercenarios</span>
+                    <span class="resource-value">{{ mercenarios }}</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="resource-hint">Costo por entrenamiento: {{ costo_mercenario }} mercenario</p>
+        
+        <form method="post" action="{% url 'entrenar' %}" class="resource-action">
             {% csrf_token %}
             <input type="hidden" name="accion" value="comprar">
-            <button type="submit" class="btn" {% if monedas < costo_mercanario %}disabled{% endif %}>
-                Contratar Mercenario ({{ costo_mercanario }} 💰)
+            <button type="submit" class="btn btn-secondary" {% if monedas < costo_mercenario %}disabled{% endif %}>
+                💂 Contratar Mercenario ({{ costo_mercenario }} 🪙)
             </button>
         </form>
     </div>
 
-    <p>Selecciona un héroe para entrenar y subir de nivel usando un mercenario.</p>
-
     {% if personajes %}
-    <form method="post" action="{% url 'entrenar' %}">
-        {% csrf_token %}
-        <input type="hidden" name="accion" value="entrenar">
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">🛡️ Seleccionar Héroe</h3>
+        <p class="card-description">Selecciona un héroe para entrenar (click para seleccionar)</p>
+        
+        <form method="post" action="{% url 'entrenar' %}" id="entrenar-form">
+            {% csrf_token %}
+            <input type="hidden" name="accion" value="entrenar">
+            <input type="hidden" name="personaje_id" id="personaje_id" value="">
 
-        <div class="form-group">
-            <label for="personaje_id">Héroe a entrenar:</label>
-            <select name="personaje_id" id="personaje_id" required>
-                <option value="">Seleccionar...</option>
+            <div class="combat-selection-single">
                 {% for p in personajes %}
-                <option value="{{ p.id }}">{{ p.nombre }} ({{ p.get_tipo_display }}) - NVL {{ p.nivel }} - Vida: {{ p.vida }}/{{ p.vida_max }}</option>
+                <div class="hero-card-select hero-card-entrenar" data-id="{{ p.id }}">
+                    <span class="hero-type">
+                        {% if p.tipo == 'GUERRERO' %}⚔️
+                        {% elif p.tipo == 'MAGO' %}🔮
+                        {% elif p.tipo == 'ARQUERO' %}🏹
+                        {% else %}👤{% endif %}
+                    </span>
+                    <span class="hero-name">{{ p.nombre }}</span>
+                    <span class="hero-level">NVL {{ p.nivel }}</span>
+                    <div class="hero-stats">
+                        <span>❤️ {{ p.vida }}/{{ p.vida_max }}</span>
+                    </div>
+                </div>
                 {% endfor %}
-            </select>
-        </div>
+            </div>
 
-        <button type="submit" class="btn btn-primary" {% if mercanarios < 1 %}disabled{% endif %}>
-            Entrenar (1 🛡️)
-        </button>
-        <a href="{% url 'home' %}" class="btn btn-secondary">Volver</a>
-    </form>
+            <p id="entrenar-error" class="error-text" style="display:none;">
+                Selecciona un héroe para entrenar.
+            </p>
+
+            <div class="form-actions" style="justify-content: center;">
+                <button type="submit" class="btn btn-primary" id="btn-entrenar" disabled>🏋️ Entrenar (1 💂)</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary">⬅️ Volver</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const heroCards = document.querySelectorAll('.hero-card-entrenar');
+        const inputPersonaje = document.getElementById('personaje_id');
+        const btnEntrenar = document.getElementById('btn-entrenar');
+        const errorMsg = document.getElementById('entrenar-error');
+
+        let selectedId = null;
+
+        heroCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                
+                heroCards.forEach(c => c.classList.remove('selected', 'selected-1'));
+                
+                if (selectedId === id) {
+                    selectedId = null;
+                } else {
+                    selectedId = id;
+                    card.classList.add('selected', 'selected-1');
+                }
+                
+                inputPersonaje.value = selectedId || '';
+                btnEntrenar.disabled = !selectedId;
+                errorMsg.style.display = 'none';
+            });
+        });
+
+        document.getElementById('entrenar-form').addEventListener('submit', function(e) {
+            if (!selectedId) {
+                e.preventDefault();
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
     {% else %}
-    <p>No hay héroes disponibles. Crea uno primero.</p>
-    <a href="{% url 'crear_personaje' %}" class="btn btn-primary">Crear héroe</a>
+    <div class="rpg-card">
+        <div class="empty-state">
+            <span class="empty-icon">🛡️</span>
+            <h3>No hay héroes disponibles</h3>
+            <p>Crea uno primero para comenzar a entrenar</p>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">➕ Crear héroe</a>
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

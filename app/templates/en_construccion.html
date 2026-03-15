@@ -4,8 +4,16 @@
 
 {% block content %}
 <div class="content">
-    <h2>🚧 En Construcción</h2>
-    <p>Esta funcionalidad aún está en desarrollo. ¡Pronto estará disponible!</p>
-    <a href="{% url 'home' %}" class="btn">Volver al inicio</a>
+    <div class="rpg-card" style="max-width: 500px; margin: 3rem auto; text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🚧</div>
+        <h2 style="color: var(--text-gold);">En Construcción</h2>
+        <p style="color: var(--text-secondary); margin: 1.5rem 0;">
+            Los artesanos están trabajando en esta sección del reino.<br>
+            <em style="color: var(--text-muted);">Pronto estará disponible para los héroes.</em>
+        </p>
+        <div style="margin-top: 2rem;">
+            <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
