@@ -21,7 +21,7 @@ class TestCrearPersonaje:
         """El formulario de crear personaje carga."""
         response = client.get("/personajes/crear/")
         assert response.status_code == 200
-        assert "Crear Nuevo Personaje" in response.content.decode()
+        assert "Crear Nuevo Héroe" in response.content.decode()
 
     def test_crear_guerrero(self, client):
         """Se puede crear un guerrero."""

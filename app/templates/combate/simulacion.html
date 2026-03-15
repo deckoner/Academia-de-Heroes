@@ -24,9 +24,21 @@
                 <span class="health-text" id="health-text-p1">Vida: {{ resultado.p1.vida }}/{{ resultado.p1.vida_max }}</span>
                 {% if resultado.p1.tipo == 'MAGO' %}
                 <div class="stat-bar mana" style="width: 240px;">
-                    <div class="bar-fill" id="mana-fill-p1" style="width: {{ resultado.p1.mana_pct }}%"></div>
+                    <div class="bar-fill" id="mana-fill-p1" style="width: 100%"></div>
                 </div>
-                <span class="mana-text" id="mana-text-p1">Mana: {{ resultado.p1.mana|default:0 }}/{{ resultado.p1.mana_max }}</span>
+                <span class="mana-text" id="mana-text-p1">Mana: {{ resultado.p1.mana }}/{{ resultado.p1.mana_max }}</span>
+                {% endif %}
+                {% if resultado.p1.tipo == 'GUERRERO' %}
+                <div class="character-stat armor">
+                    <span class="stat-icon">🛡️</span>
+                    <span class="stat-value">{{ resultado.p1.armadura }}</span>
+                </div>
+                {% endif %}
+                {% if resultado.p1.tipo == 'ARQUERO' %}
+                <div class="character-stat precision">
+                    <span class="stat-icon">🎯</span>
+                    <span class="stat-value">{{ resultado.p1.precision }}%</span>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -47,9 +59,21 @@
                 <span class="health-text" id="health-text-p2">Vida: {{ resultado.p2.vida }}/{{ resultado.p2.vida_max }}</span>
                 {% if resultado.p2.tipo == 'MAGO' %}
                 <div class="stat-bar mana" style="width: 240px;">
-                    <div class="bar-fill" id="mana-fill-p2" style="width: {{ resultado.p2.mana_pct }}%"></div>
+                    <div class="bar-fill" id="mana-fill-p2" style="width: 100%"></div>
                 </div>
-                <span class="mana-text" id="mana-text-p2">Mana: {{ resultado.p2.mana|default:0 }}/{{ resultado.p2.mana_max }}</span>
+                <span class="mana-text" id="mana-text-p2">Mana: {{ resultado.p2.mana }}/{{ resultado.p2.mana_max }}</span>
+                {% endif %}
+                {% if resultado.p2.tipo == 'GUERRERO' %}
+                <div class="character-stat armor">
+                    <span class="stat-icon">🛡️</span>
+                    <span class="stat-value">{{ resultado.p2.armadura }}</span>
+                </div>
+                {% endif %}
+                {% if resultado.p2.tipo == 'ARQUERO' %}
+                <div class="character-stat precision">
+                    <span class="stat-icon">🎯</span>
+                    <span class="stat-value">{{ resultado.p2.precision }}%</span>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -73,9 +97,8 @@
     const p2Nombre = "{{ resultado.p2.nombre }}";
     const p1VidaMax = {{ resultado.p1.vida_max }};
     const p2VidaMax = {{ resultado.p2.vida_max }};
-    const p1ManaMax = {% if resultado.p1.mana_max %}{{ resultado.p1.mana_max }} {% else %} 0{% endif %};
-    const p2ManaMax = {% if resultado.p2.mana_max %}{{ resultado.p2.mana_max }} {% else %} 0{% endif %};
-    // Vida actual inicial para mostrar en las barras al inicio
+    const p1ManaMax = {{ resultado.p1.mana_max }};
+    const p2ManaMax = {{ resultado.p2.mana_max }};
     const p1VidaInicial = {{ resultado.p1.vida }};
     const p2VidaInicial = {{ resultado.p2.vida }};
 
@@ -97,18 +120,18 @@
         if (p2HealthFill) p2HealthFill.style.width = ((p2VidaInicial / p2VidaMax) * 100) + '%';
         if (p1HealthText) p1HealthText.textContent = `Vida: ${p1VidaInicial}/${p1VidaMax}`;
         if (p2HealthText) p2HealthText.textContent = `Vida: ${p2VidaInicial}/${p2VidaMax}`;
-        
+
         // Inicializa las barras de mana
         const p1ManaFill = document.getElementById('mana-fill-p1');
         const p2ManaFill = document.getElementById('mana-fill-p2');
         const p1ManaText = document.getElementById('mana-text-p1');
         const p2ManaText = document.getElementById('mana-text-p2');
         if (p1ManaFill && p1ManaMax > 0) {
-            const p1ManaInicial = {{ resultado.p1.mana|default:0 }};
+            const p1ManaInicial = {{ resultado.p1.mana }};
             p1ManaFill.style.width = (p1ManaInicial / p1ManaMax * 100) + '%';
         }
         if (p2ManaFill && p2ManaMax > 0) {
-            const p2ManaInicial = {{ resultado.p2.mana|default:0 }};
+            const p2ManaInicial = {{ resultado.p2.mana }};
             p2ManaFill.style.width = (p2ManaInicial / p2ManaMax * 100) + '%';
         }
     } catch (e) {
