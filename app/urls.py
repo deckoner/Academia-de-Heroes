@@ -19,6 +19,10 @@ from app.views import (
     RechazarSolicitudView,
     EliminarAmigoView,
 )
+from app.views import (
+    RetarUsuarioView,
+    HistorialRetosView,
+)
 
 urlpatterns = [
     path("", login_required(HomeView.as_view()), name="home"),
@@ -86,6 +90,16 @@ urlpatterns = [
         "amigos/eliminar/<int:amigo_id>/",
         login_required(EliminarAmigoView.as_view()),
         name="eliminar_amigo",
+    ),
+    path(
+        "retos/",
+        login_required(RetarUsuarioView.as_view()),
+        name="retar_usuario",
+    ),
+    path(
+        "retos/historial/",
+        login_required(HistorialRetosView.as_view()),
+        name="historial_retos",
     ),
     path(
         "estadisticas/",

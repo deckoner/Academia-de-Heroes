@@ -16,3 +16,7 @@ from .amigo_views import (
     RechazarSolicitudView,
     EliminarAmigoView,
 )
+from .reto_views import (
+    RetarUsuarioView,
+    HistorialRetosView,
+)

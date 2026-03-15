@@ -49,9 +49,9 @@
                     <td>Nivel {{ personaje.nivel }}</td>
                     <td>
                         <div class="mini-stat-bar">
-                            <div class="mini-stat-fill" style="width: {{ personaje.vida|floatformat:0 }}%;"></div>
+                            <div class="mini-stat-fill" style="width: {% if personaje.vivo %}{{ personaje.vida|floatformat:0 }}{% else %}0{% endif %}%;"></div>
                         </div>
-                        <span class="stat-text">{{ personaje.vida }}/{{ personaje.vida_max }}</span>
+                        <span class="stat-text">{% if personaje.vivo %}{{ personaje.vida }}{% else %}0{% endif %}/{{ personaje.vida_max }}</span>
                     </td>
                     <td>
                         {% if personaje.vivo %}

@@ -5,6 +5,25 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/combate.css' %}">
+<style>
+.resultado-reto {
+    margin-top: 1rem;
+    text-align: center;
+    border-color: #4CAF50;
+    background: linear-gradient(180deg, rgba(76, 175, 80, 0.1) 0%, transparent 100%);
+}
+.resultado-reto.derrota {
+    border-color: #f44336;
+    background: linear-gradient(180deg, rgba(244, 67, 54, 0.1) 0%, transparent 100%);
+}
+.recompensa-oro {
+    font-size: 1.5rem;
+    color: #FFD700;
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    margin: 0.5rem 0;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -86,7 +105,11 @@
     <div class="combat-controls">
         <button id="next-turn" class="btn btn-primary">Siguiente Turno</button>
         <button id="auto-play" class="btn btn-secondary">Auto</button>
+        {% if es_reto %}
+        <a href="{% url 'retar_usuario' %}" id="volver-btn" class="btn btn-secondary">Nuevo Reto</a>
+        {% else %}
         <a href="{% url 'combate' %}" id="volver-btn" class="btn btn-secondary">Volver</a>
+        {% endif %}
     </div>
 </div>
 
@@ -245,6 +268,20 @@
         turnoIndex++;
 
         if (turnoIndex >= turnos.length) {
+            // Mostrar resultado del reto al final del combate
+            {% if es_reto %}
+            setTimeout(() => {
+                const resultadoDiv = document.createElement('div');
+                resultadoDiv.className = 'rpg-card resultado-reto';
+                {% if batalla.resultado == True %}
+                resultadoDiv.innerHTML = '<h3 class="rpg-card-title">¡Victoria en el Reto!</h3><p class="recompensa-oro">+1 Oro ganado</p>';
+                {% else %}
+                resultadoDiv.innerHTML = '<h3 class="rpg-card-title">Derrota en el Reto</h3>';
+                {% endif %}
+                document.getElementById('combat-arena').prepend(resultadoDiv);
+            }, 500);
+            {% endif %}
+            
             nextTurnBtn.style.display = 'none';
             autoPlayBtn.style.display = 'none';
             volverBtn.style.display = 'inline-block';

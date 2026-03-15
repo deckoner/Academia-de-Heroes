@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Historial de Retos - Academia de Héroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h2>Historial de Retos</h2>
+        <a href="{% url 'retar_usuario' %}" class="btn btn-primary">Nuevo Reto</a>
+    </div>
+
+    <div class="rpg-card">
+        {% if batallas %}
+        <div class="retos-list">
+            {% for batalla in batallas %}
+            <div class="reto-item {% if batalla.resultado == True %}victoria{% elif batalla.resultado == False %}derrota{% endif %}">
+                <div class="reto-combatientes">
+                    <span class="atacante">{{ batalla.id_atacante.user.username }}</span>
+                    <span class="vs">vs</span>
+                    <span class="defensor">{{ batalla.id_defensor.user.username }}</span>
+                </div>
+                <div class="reto-personajes">
+                    <span class="personaje-atacante">{{ batalla.personaje_atacante.nombre }}</span>
+                    <span class="vs">vs</span>
+                    <span class="personaje-defensor">{{ batalla.personaje_defensor.nombre }}</span>
+                </div>
+                <div class="reto-resultado">
+                    {% if batalla.resultado == True %}
+                    <span class="resultado-badge ganado">Ganado</span>
+                    {% elif batalla.resultado == False %}
+                    <span class="resultado-badge perdido">Perdido</span>
+                    {% else %}
+                    <span class="resultado-badge empatado">Empate</span>
+                    {% endif %}
+                </div>
+                <div class="reto-fecha">
+                    {{ batalla.fecha_batalla|date:"d/m/Y H:i" }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">--</span>
+            <h3>No hay retos</h3>
+            <p>Aún no has participado en ningún reto.</p>
+            <a href="{% url 'retar_usuario' %}" class="btn btn-primary">Crear un Reto</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.retos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.reto-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 100px 120px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+.reto-item:hover {
+    background: rgba(217, 180, 74, 0.05);
+    border-color: var(--text-gold);
+}
+.reto-item.victoria {
+    border-left: 3px solid #4CAF50;
+}
+.reto-item.derrota {
+    border-left: 3px solid #f44336;
+}
+.reto-combatientes, .reto-personajes {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.atacante, .personaje-atacante {
+    color: var(--text-gold);
+    font-weight: 600;
+}
+.defensor, .personaje-defensor {
+    color: var(--text-primary);
+}
+.vs {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+.resultado-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.resultado-badge.ganado {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+.resultado-badge.perdido {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+.resultado-badge.empatado {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9E9E9E;
+}
+.reto-fecha {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: right;
+}
+</style>
+{% endblock %}
