@@ -8,3 +8,11 @@ from .personaje_views import (
     CombatirView,
     EntrenarPersonajeView,
 )
+from .amigo_views import (
+    ListaAmigosView,
+    BuscarUsuariosView,
+    EnviarSolicitudView,
+    AceptarSolicitudView,
+    RechazarSolicitudView,
+    EliminarAmigoView,
+)

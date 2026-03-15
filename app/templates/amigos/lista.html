@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Amigos - Academia de Héroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h2>Mis Amigos</h2>
+        <a href="{% url 'buscar_amigos' %}" class="btn btn-primary">Buscar Amigos</a>
+    </div>
+
+    {% if solicitudes_pendientes %}
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Solicitudes Recibidas</h3>
+        <div class="amigos-grid-3col">
+            {% for solicitud in solicitudes_pendientes %}
+            <div class="amigo-card solicitud-card">
+                <div class="amigo-main">
+                    <div class="amigo-avatar"></div>
+                    <div class="amigo-details">
+                        <h4>{{ solicitud.id_usuario.user.username }}</h4>
+                        <span class="amigo-fecha">{{ solicitud.fecha_creacion|date:"d/m/Y" }}</span>
+                    </div>
+                </div>
+                <div class="amigo-actions">
+                    <form method="post" action="{% url 'aceptar_solicitud' solicitud.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success">Aceptar</button>
+                    </form>
+                    <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm">Rechazar</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if solicitudes_enviadas %}
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Solicitudes Enviadas</h3>
+        <div class="amigos-grid-3col">
+            {% for solicitud in solicitudes_enviadas %}
+            <div class="amigo-card pending-card">
+                <div class="amigo-main">
+                    <div class="amigo-avatar"></div>
+                    <div class="amigo-details">
+                        <h4>{{ solicitud.id_amigo.user.username }}</h4>
+                        <span class="amigo-fecha">Pendiente</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Mis Amigos</h3>
+        {% if amigos %}
+        <div class="amigos-grid-3col">
+            {% for amigo in amigos|dictsort:"user.username" %}
+            <div class="amigo-card">
+                <div class="amigo-main">
+                    <div class="amigo-avatar"></div>
+                    <div class="amigo-details">
+                        <h4>{{ amigo.user.username }}</h4>
+                    </div>
+                </div>
+                <div class="amigo-actions">
+                    <form method="post" action="{% url 'eliminar_amigo' amigo.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('¿Eliminar amigo?')">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">--</span>
+            <h3>No tienes amigos aún</h3>
+            <p>Busca amigos para compartir tu aventura</p>
+            <a href="{% url 'buscar_amigos' %}" class="btn btn-primary">Buscar Amigos</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

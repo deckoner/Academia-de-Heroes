@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Buscar Amigos - Academia de Héroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h2>Buscar Amigos</h2>
+        <a href="{% url 'lista_amigos' %}" class="btn btn-secondary">Volver</a>
+    </div>
+
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Buscar Usuarios</h3>
+        <form method="get" class="search-form">
+            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <input type="text" name="q" id="id_q" value="{{ query|default:'' }}" 
+                       placeholder="Escribe el nombre de usuario..." 
+                       class="search-input">
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    {% if query %}
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Resultados</h3>
+        {% if resultados %}
+        <div class="amigos-grid-3col">
+            {% for item in resultados %}
+            <div class="amigo-card">
+                <div class="amigo-main">
+                    <div class="amigo-avatar"></div>
+                    <div class="amigo-details">
+                        <h4>{{ item.usuario.user.username }}</h4>
+                    </div>
+                </div>
+                <div class="amigo-actions">
+                    {% if item.estado == 'amigos' %}
+                    <span class="btn btn-sm btn-success" disabled>Ya son amigos</span>
+                    {% elif item.estado == 'pendiente_enviada' %}
+                    <span class="btn btn-sm" disabled>Enviada</span>
+                    {% elif item.estado == 'pendiente_recibida' %}
+                    <span class="btn btn-sm btn-warning" disabled>Recibida</span>
+                    {% else %}
+                    <form method="post" action="{% url 'enviar_solicitud' item.usuario.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-primary">Agregar</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">--</span>
+            <h3>No se encontraron usuarios</h3>
+            <p>No hay usuarios con ese nombre</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.search-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #4a4a4a;
+    border-radius: 8px;
+    background: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+.search-input:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+</style>
+{% endblock %}

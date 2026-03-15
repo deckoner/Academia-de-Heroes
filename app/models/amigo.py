@@ -26,35 +26,71 @@ class AmigoManager(models.Manager):
         except self.model.DoesNotExist:
             return None
 
-    def listar_amigos(self, usuario_id):
+    def listar_amigos(self, usuario):
         """
-        Obtiene todas las relaciones de amistad asociadas a un usuario.
+        Obtiene todas las relaciones de amistad aceptadas de un usuario.
 
         Parameters
         ----------
-        usuario_id : int
-            id del usuario a listar sus amigos.
+        usuario : Usuario
+            Usuario del cual obtener sus amigos.
 
         Returns
         -------
         QuerySet
-            Conjunto de amistad del usuario.
+            Conjunto de amistad aceptadas del usuario.
         """
-        return self.filter(id_usuario=usuario_id).select_related("id_amigo")
+        return self.filter(
+            models.Q(id_usuario=usuario, estado="ACEPTADA")
+            | models.Q(id_amigo=usuario, estado="ACEPTADA")
+        ).select_related("id_usuario", "id_amigo")
 
-    def son_amigos(self, usuario_id, amigo_id):
+    def listar_solicitudes_pendientes(self, usuario):
         """
-        Verifica si dos usuarios ya tienen una relación de amistad registrada.
-
-        La comprobación se realiza en ambos sentidos para evitar duplicados,
-        ya que cualquiera de los usuarios pudo haber iniciado la relación.
+        Obtiene las solicitudes de amistad pendientes recibidas por el usuario.
 
         Parameters
         ----------
-        usuario_id : int
-            id del primer usuario.
-        amigo_id : int
-            id del segundo usuario.
+        usuario : Usuario
+            Usuario que recibe las solicitudes.
+
+        Returns
+        -------
+        QuerySet
+            Conjunto de solicitudes pendientes.
+        """
+        return self.filter(
+            id_amigo=usuario, estado="PENDIENTE"
+        ).select_related("id_usuario", "id_amigo")
+
+    def listar_solicitudes_enviadas(self, usuario):
+        """
+        Obtiene las solicitudes de amistad enviadas por el usuario.
+
+        Parameters
+        ----------
+        usuario : Usuario
+            Usuario que envía las solicitudes.
+
+        Returns
+        -------
+        QuerySet
+            Conjunto de solicitudes enviadas pendientes.
+        """
+        return self.filter(
+            id_usuario=usuario, estado="PENDIENTE"
+        ).select_related("id_usuario", "id_amigo")
+
+    def son_amigos(self, usuario, amigo):
+        """
+        Verifica si dos usuarios ya tienen una relación de amistad aceptada.
+
+        Parameters
+        ----------
+        usuario : Usuario
+            Primer usuario.
+        amigo : Usuario
+            Segundo usuario.
 
         Returns
         -------
@@ -62,8 +98,50 @@ class AmigoManager(models.Manager):
             True si los usuarios ya son amigos, False en caso contrario.
         """
         return self.filter(
-            models.Q(id_usuario=usuario_id, id_amigo=amigo_id)
-            | models.Q(id_usuario=amigo_id, id_amigo=usuario_id)
+            models.Q(id_usuario=usuario, id_amigo=amigo, estado="ACEPTADA")
+            | models.Q(id_usuario=amigo, id_amigo=usuario, estado="ACEPTADA")
+        ).exists()
+
+    def tiene_solicitud_pendiente(self, usuario, amigo):
+        """
+        Verifica si existe una solicitud de amistad pendiente entre dos usuarios.
+
+        Parameters
+        ----------
+        usuario : Usuario
+            Usuario que envió o recibirá la solicitud.
+        amigo : Usuario
+            Usuario receptor o emisor de la solicitud.
+
+        Returns
+        -------
+        Amigo | None
+            Retorna la solicitud si existe, None en caso contrario.
+        """
+        return self.filter(
+            models.Q(id_usuario=usuario, id_amigo=amigo, estado="PENDIENTE")
+            | models.Q(id_usuario=amigo, id_amigo=usuario, estado="PENDIENTE")
+        ).first()
+
+    def solicitud_existente(self, usuario, amigo):
+        """
+        Verifica si existe cualquier tipo de relación entre dos usuarios.
+
+        Parameters
+        ----------
+        usuario : Usuario
+            Primer usuario.
+        amigo : Usuario
+            Segundo usuario.
+
+        Returns
+        -------
+        bool
+            True si existe alguna relación, False en caso contrario.
+        """
+        return self.filter(
+            models.Q(id_usuario=usuario, id_amigo=amigo)
+            | models.Q(id_usuario=amigo, id_amigo=usuario)
         ).exists()
 
     def agregar_amigo(self, usuario, amigo):
@@ -73,6 +151,9 @@ class AmigoManager(models.Manager):
         Antes de crear la relación se valida que:
         - El usuario no intente agregarse a sí mismo.
         - La relación de amistad no exista previamente.
+
+        Si ya existe una solicitud pendiente de amigo hacia usuario,
+        se acepta automáticamente.
 
         Parameters
         ----------
@@ -94,46 +175,69 @@ class AmigoManager(models.Manager):
         """
         if usuario.id == amigo.id:
             raise ValidationError("No puedes ser amigo de ti mismo.")
-        if self.son_amigos(usuario.id, amigo.id):
+
+        solicitud_existente = self.tiene_solicitud_pendiente(amigo, usuario)
+        if solicitud_existente:
+            solicitud_existente.estado = "ACEPTADA"
+            solicitud_existente.save()
+            return solicitud_existente
+
+        if self.son_amigos(usuario, amigo):
             raise ValidationError("Ya son amigos.")
-        return self.create(id_usuario=usuario, id_amigo=amigo)
+
+        return self.create(id_usuario=usuario, id_amigo=amigo, estado="PENDIENTE")
 
 
 class Amigo(models.Model):
     """
     Modelo que representa la relación de amistad entre dos usuarios.
 
-    Cada registro indica que un usuario ha agregado a otro como amigo.
-    La combinación de usuario y amigo debe ser única para evitar
-    duplicidades dentro de la tabla.
+    Cada registro indica que un usuario ha enviado una solicitud de amistad
+    a otro. La relación puede estar en estado pendiente, aceptada o rechazada.
 
     Attributes
     ----------
     id_usuario : ForeignKey
-        Usuario que establece la relación de amistad.
+        Usuario que envía la solicitud de amistad.
     id_amigo : ForeignKey
-        Usuario que ha sido agregado como amigo.
+        Usuario que recibe la solicitud de amistad.
+    estado : CharField
+        Estado de la solicitud (PENDIENTE, ACEPTADA, RECHAZADA).
+    fecha_creacion : DateTimeField
+        Fecha en que se creó la solicitud.
     """
 
+    class Estado(models.TextChoices):
+        PENDIENTE = "PENDIENTE", "Pendiente"
+        ACEPTADA = "ACEPTADA", "Aceptada"
+        RECHAZADA = "RECHAZADA", "Rechazada"
+
     id_usuario = models.ForeignKey(
-        "app.Usuario", on_delete=models.CASCADE, related_name="amigos"
+        "app.Usuario",
+        on_delete=models.CASCADE,
+        related_name="solicitudes_enviadas",
     )
     id_amigo = models.ForeignKey(
-        "app.Usuario", on_delete=models.CASCADE, related_name="agregado_por"
+        "app.Usuario",
+        on_delete=models.CASCADE,
+        related_name="solicitudes_recibidas",
     )
+    estado = models.CharField(
+        max_length=20,
+        choices=Estado.choices,
+        default=Estado.PENDIENTE,
+    )
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     objects = AmigoManager()
 
     class Meta:
         db_table = "amigos"
-        unique_together = ["id_usuario", "id_amigo"]
+        ordering = ["-fecha_creacion"]
 
     def clean(self):
         """
         Realiza validaciones adicionales antes de guardar el modelo.
-
-        Comprueba que un usuario no pueda agregarse a sí mismo
-        como amigo.
 
         Raises
         ------
@@ -150,19 +254,17 @@ class Amigo(models.Model):
         Returns
         -------
         str
-            Cadena con el usuario y su amigo asociado.
+            Cadena con el usuario, amigo y estado.
         """
-        return f"{self.id_usuario} - Amigo: {self.id_amigo}"
+        return f"{self.id_usuario} -> {self.id_amigo} ({self.get_estado_display()})"
 
     def __repr__(self):
         """
         Devuelve una representación técnica del objeto.
-
-        Esta representación es útil para depuración y logging.
 
         Returns
         -------
         str
             Representación interna del objeto Amigo.
         """
-        return f"<Amigo(usuario={self.id_usuario}, amigo={self.id_amigo})>"
+        return f"<Amigo(usuario={self.id_usuario}, amigo={self.id_amigo}, estado={self.estado})>"

@@ -11,6 +11,14 @@ from app.views import (
     CombatirView,
     EntrenarPersonajeView,
 )
+from app.views import (
+    ListaAmigosView,
+    BuscarUsuariosView,
+    EnviarSolicitudView,
+    AceptarSolicitudView,
+    RechazarSolicitudView,
+    EliminarAmigoView,
+)
 
 urlpatterns = [
     path("", login_required(HomeView.as_view()), name="home"),
@@ -48,6 +56,36 @@ urlpatterns = [
         "entrenar/",
         login_required(EntrenarPersonajeView.as_view()),
         name="entrenar",
+    ),
+    path(
+        "amigos/",
+        login_required(ListaAmigosView.as_view()),
+        name="lista_amigos",
+    ),
+    path(
+        "amigos/buscar/",
+        login_required(BuscarUsuariosView.as_view()),
+        name="buscar_amigos",
+    ),
+    path(
+        "amigos/enviar/<int:usuario_id>/",
+        login_required(EnviarSolicitudView.as_view()),
+        name="enviar_solicitud",
+    ),
+    path(
+        "amigos/aceptar/<int:solicitud_id>/",
+        login_required(AceptarSolicitudView.as_view()),
+        name="aceptar_solicitud",
+    ),
+    path(
+        "amigos/rechazar/<int:solicitud_id>/",
+        login_required(RechazarSolicitudView.as_view()),
+        name="rechazar_solicitud",
+    ),
+    path(
+        "amigos/eliminar/<int:amigo_id>/",
+        login_required(EliminarAmigoView.as_view()),
+        name="eliminar_amigo",
     ),
     path(
         "estadisticas/",
