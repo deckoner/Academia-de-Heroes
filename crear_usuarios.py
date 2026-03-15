@@ -14,8 +14,33 @@ sys.path.insert(0, ".")
 django.setup()
 
 from django.contrib.auth.models import User
-from app.models import Usuario
+from app.models import Usuario, Personaje
 from datetime import date
+
+
+def crear_heroes(usuario, prefijo_nombre):
+    """Crea un héroe de cada tipo para el usuario."""
+    tipos = [
+        ("GUERRERO", "Guerrero"),
+        ("MAGO", "Mago"),
+        ("ARQUERO", "Arquero"),
+    ]
+    
+    for tipo, nombre_tipo in tipos:
+        nombre = f"{prefijo_nombre}_{nombre_tipo}"
+        Personaje.objects.create(
+            id_usuario=usuario,
+            tipo=tipo,
+            nombre=nombre,
+            nivel=1,
+            vida=100,
+            vida_max=100,
+            armadura=5 if tipo == "GUERRERO" else None,
+            mana=50 if tipo == "MAGO" else None,
+            precision=80 if tipo == "ARQUERO" else None,
+            vivo=True,
+        )
+        print(f"  - Héroe creado: {nombre} ({nombre_tipo})")
 
 
 def crear_usuarios():
@@ -25,7 +50,7 @@ def crear_usuarios():
     user_gk = User.objects.create_user(
         username="gk", password=password, email="gk@academiaheroes.com"
     )
-    Usuario.objects.create(
+    usuario_gk = Usuario.objects.create(
         user=user_gk,
         DNI="12345678A",
         fecha_nacimiento=date(1995, 5, 15),
@@ -33,13 +58,14 @@ def crear_usuarios():
         email="gk@academiaheroes.com",
         monedas=10,
     )
+    crear_heroes(usuario_gk, "gk")
     print("Usuario gk creado")
 
     # gkChiquito - usuario menor de edad (6 años)
     user_gk_chiquito = User.objects.create_user(
         username="gkChiquito", password=password, email="gkchiquito@academiaheroes.com"
     )
-    Usuario.objects.create(
+    usuario_gk_chiquito = Usuario.objects.create(
         user=user_gk_chiquito,
         DNI="12345678B",
         fecha_nacimiento=date(2020, 3, 10),
@@ -47,13 +73,14 @@ def crear_usuarios():
         email="gkchiquito@academiaheroes.com",
         monedas=10,
     )
+    crear_heroes(usuario_gk_chiquito, "gkChiquito")
     print("Usuario gkChiquito creado (menor de edad)")
 
     # illustre - usuario admin
     user_ilustre = User.objects.create_user(
         username="ilustre", password=password, email="ilustre@academiaheroes.com"
     )
-    Usuario.objects.create(
+    usuario_ilustre = Usuario.objects.create(
         user=user_ilustre,
         DNI="12345678C",
         fecha_nacimiento=date(1980, 11, 22),
@@ -62,6 +89,7 @@ def crear_usuarios():
         es_admin=True,
         monedas=1000,
     )
+    crear_heroes(usuario_ilustre, "ilustre")
     print("Usuario illustre creado (admin)")
 
     print("\nTodos los usuarios creados correctamente!")

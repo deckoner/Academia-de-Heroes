@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Retar Usuario - Academia de Héroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h2>Retar a un Usuario</h2>
+        <a href="{% url 'historial_retos' %}" class="btn btn-secondary">Historial</a>
+    </div>
+
+    {% if amigos %}
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Tus Amigos</h3>
+        <div class="amigos-seleccion">
+            {% for amigo in amigos %}
+            <a href="?amigo={{ amigo.id }}" class="amigo-btn {% if amigo_id == amigo.id|stringformat:'s' %}seleccionado{% endif %}">
+                {{ amigo.user.username }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Buscar Usuario</h3>
+        <form method="get" class="search-form">
+            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <input type="text" name="usuario" id="id_usuario" value="{{ username|default:'' }}" 
+                       placeholder="Escribe el nombre de usuario..." 
+                       class="search-input">
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    {% if usuario_encontrado %}
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Usuario: {{ usuario_encontrado.user.username }}</h3>
+        
+        {% if puede_retar %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ username }}">
+            <input type="hidden" name="amigo_id" value="{{ amigo_id|default:'' }}">
+            
+            <div class="form-group">
+                <label for="id_personaje_atacante">Elige tu Héroe</label>
+                <select name="personaje_atacante" id="id_personaje_atacante" required>
+                    <option value="">-- Selecciona tu héroe --</option>
+                    {% for personaje in personajes_atacante %}
+                    <option value="{{ personaje.id }}">
+                        {{ personaje.nombre }} (Nv. {{ personaje.nivel }}) - Vida: {{ personaje.vida }}/{{ personaje.vida_max }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <p class="info-text">El héroe del oponente se seleccionará aleatoriamente</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Iniciar Reto</button>
+        </form>
+        {% else %}
+        <div class="empty-state">
+            <span class="empty-icon">--</span>
+            <h3>El usuario no tiene héroes vivos</h3>
+            <p>Este usuario no puede ser retado porque no tiene héroes vivos.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% elif username and not usuario_encontrado %}
+    <div class="rpg-card">
+        <div class="empty-state">
+            <span class="empty-icon">--</span>
+            <h3>Usuario no encontrado</h3>
+            <p>No existe ningún usuario con ese nombre.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not personajes_atacante and not username and not amigos %}
+    <div class="rpg-card">
+        <div class="empty-state">
+            <span class="empty-icon">--</span>
+            <h3>No tienes héroes vivos</h3>
+            <p>Crea un héroe primero para poder retar a otros usuarios.</p>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">Crear Héroe</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.search-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #4a4a4a;
+    border-radius: 8px;
+    background: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+.search-input:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+.amigos-seleccion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.amigo-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.amigo-btn:hover {
+    background: rgba(217, 180, 74, 0.1);
+    border-color: var(--text-gold);
+}
+.amigo-btn.seleccionado {
+    background: rgba(217, 180, 74, 0.2);
+    border-color: var(--text-gold);
+    color: var(--text-gold);
+}
+.oponente-info {
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+}
+.oponente-personaje {
+    color: var(--text-gold);
+    font-family: 'Cinzel', serif;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultado del Reto - Academia de Héroes{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h2>Resultado del Reto</h2>
+        <a href="{% url 'retar_usuario' %}" class="btn btn-primary">Nuevo Reto</a>
+    </div>
+
+    <div class="rpg-card resultado-card {% if reto.resultado == 'GANADO' %}victoria{% elif reto.resultado == 'PERDIDO' %}derrota{% else %}empate{% endif %}">
+        <h3 class="rpg-card-title">
+            {% if reto.resultado == 'GANADO' %}
+            ¡Victoria!
+            {% elif reto.resultado == 'PERDIDO' %}
+            Derrota
+            {% else %}
+            Empate
+            {% endif %}
+        </h3>
+
+        {% if reto.resultado == 'GANADO' %}
+        <div class="recompensa">
+            <span class="oro-ganado">+{{ reto.recompensa_oro }} Oro</span>
+        </div>
+        {% endif %}
+
+        <div class="combatientes">
+            <div class="combatiente">
+                <h4>{{ personaje_atacante.nombre }}</h4>
+                <p class="tipo">{{ personaje_atacante.get_tipo_display }}</p>
+                <p class="nivel">Nivel {{ personaje_atacante.nivel }}</p>
+                <div class="vida-bar">
+                    <div class="vida-fill" style="width: {% widthratio resultado.vida1_final resultado.p1.vida_max 100 %}%"></div>
+                </div>
+                <p class="vida-text">{{ resultado.vida1_final }}/{{ resultado.p1.vida_max }}</p>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="combatiente">
+                <h4>{{ personaje_defensor.nombre }}</h4>
+                <p class="tipo">{{ personaje_defensor.get_tipo_display }}</p>
+                <p class="nivel">Nivel {{ personaje_defensor.nivel }}</p>
+                <div class="vida-bar">
+                    <div class="vida-fill" style="width: {% widthratio resultado.vida2_final resultado.p2.vida_max 100 %}%"></div>
+                </div>
+                <p class="vida-text">{{ resultado.vida2_final }}/{{ resultado.p2.vida_max }}</p>
+            </div>
+        </div>
+
+        <div class="info-reto">
+            <p><strong>Atacante:</strong> {{ reto.atacante.user.username }}</p>
+            <p><strong>Defensor:</strong> {{ reto.defensor.user.username }}</p>
+        </div>
+    </div>
+
+    <div class="rpg-card">
+        <h3 class="rpg-card-title">Historial del Combate</h3>
+        <div class="turnos">
+            {% for turno in resultado.turnos %}
+            <div class="turno">
+                <span class="turno-num">Turno {{ turno.numero }}</span>
+                <span class="turno-ataque">{{ turno.atacante }} ataca a {{ turno.defensor }}</span>
+                <span class="turno-danio">{% if turno.danio > 0 %}{{ turno.danio }} dmg{% else %}Falló{% endif %}</span>
+                <span class="turno-vida">{{ turno.vida_defensor_restante }} HP</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="acciones">
+        <a href="{% url 'historial_retos' %}" class="btn btn-secondary">Ver Historial</a>
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+</div>
+
+<style>
+.resultado-card {
+    text-align: center;
+}
+.resultado-card.victoria {
+    border-color: #4CAF50;
+    background: linear-gradient(180deg, rgba(76, 175, 80, 0.1) 0%, transparent 100%);
+}
+.resultado-card.derrota {
+    border-color: #f44336;
+    background: linear-gradient(180deg, rgba(244, 67, 54, 0.1) 0%, transparent 100%);
+}
+.resultado-card.empate {
+    border-color: #9E9E9E;
+    background: linear-gradient(180deg, rgba(158, 158, 158, 0.1) 0%, transparent 100%);
+}
+.recompensa {
+    margin: 1rem 0;
+}
+.oro-ganado {
+    font-size: 1.5rem;
+    color: #FFD700;
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+.combatientes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+.combatiente {
+    flex: 1;
+    max-width: 200px;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+.combatiente h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-gold);
+}
+.combatiente .tipo {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+.combatiente .nivel {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+.vida-bar {
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+.vida-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.3s ease;
+}
+.vida-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+.vs {
+    font-size: 1.5rem;
+    font-family: 'Cinzel', serif;
+    color: var(--text-gold);
+}
+.info-reto {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-light);
+}
+.info-reto p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+.turnos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.turno {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px 60px;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+.turno-num {
+    color: var(--text-muted);
+}
+.turno-ataque {
+    color: var(--text-primary);
+}
+.turno-danio {
+    color: #f44336;
+    font-weight: bold;
+}
+.turno-vida {
+    color: var(--text-gold);
+    text-align: right;
+}
+.acciones {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}
