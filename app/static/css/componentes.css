@@ -636,3 +636,209 @@ input[type="submit"]:active {
 .rpg-form-styled .form-group input::placeholder {
     color: var(--text-muted);
 }
+
+/* ===== AMIGOS LIST ===== */
+.amigos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.amigo-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.amigo-item:hover {
+    background: rgba(217, 180, 74, 0.05);
+    border-color: var(--text-gold);
+}
+
+.amigo-item.pending {
+    opacity: 0.6;
+}
+
+.amigo-avatar-small {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    border-radius: 50%;
+    border: 2px solid var(--border-gold);
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--text-gold);
+    font-size: 1rem;
+}
+
+.amigo-info {
+    flex: 1;
+}
+
+.amigo-info h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    text-transform: none;
+    text-shadow: none;
+}
+
+.amigo-fecha {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.amigo-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-success {
+    background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+    border-color: #388E3C;
+}
+
+.btn-success:hover {
+    background: linear-gradient(180deg, #388E3C 0%, #2E7D32 100%);
+    border-color: #4CAF50;
+}
+
+.btn-success:disabled,
+.btn-secondary:disabled,
+.btn-warning:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-warning {
+    background: linear-gradient(180deg, #F57C00 0%, #E65100 100%);
+    border-color: #FF9800;
+    color: white;
+}
+
+/* Estilos anteriores eliminados */
+
+/* ===== AMIGOS GRID ===== */
+.amigos-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.amigo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.amigo-card:hover {
+    background: rgba(217, 180, 74, 0.08);
+    border-color: var(--text-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.amigo-card.solicitud-card {
+    border-color: var(--text-gold);
+    background: rgba(217, 180, 74, 0.05);
+}
+
+.amigo-card.pending-card {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+.amigo-main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.amigo-avatar {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border-radius: 50%;
+    border: 2px solid var(--border-gold);
+    flex-shrink: 0;
+}
+
+.amigo-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.amigo-details h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    text-transform: none;
+    text-shadow: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.amigo-fecha {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.amigo-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.amigo-actions form {
+    flex: 1;
+    min-width: 70px;
+}
+
+.amigo-actions button {
+    width: 100%;
+}
+
+.btn-success {
+    background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+    border-color: #388E3C;
+}
+
+.btn-success:hover {
+    background: linear-gradient(180deg, #388E3C 0%, #2E7D32 100%);
+    border-color: #4CAF50;
+}
+
+.btn-success:disabled,
+.btn-secondary:disabled,
+.btn-warning:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-warning {
+    background: linear-gradient(180deg, #F57C00 0%, #E65100 100%);
+    border-color: #FF9800;
+    color: white;
+}
