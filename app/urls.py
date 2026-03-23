@@ -23,6 +23,7 @@ from app.views import (
     RetarUsuarioView,
     HistorialRetosView,
 )
+from app.views.ranking_views import RankingView
 
 urlpatterns = [
     path("", login_required(HomeView.as_view()), name="home"),
@@ -100,6 +101,11 @@ urlpatterns = [
         "retos/historial/",
         login_required(HistorialRetosView.as_view()),
         name="historial_retos",
+    ),
+    path(
+        "ranking/",
+        login_required(RankingView.as_view()),
+        name="ranking",
     ),
     path(
         "estadisticas/",

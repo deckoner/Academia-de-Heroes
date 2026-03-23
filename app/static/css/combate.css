@@ -380,3 +380,24 @@
         height: 140px;
     }
 }
+
+/* ===== RESULTADO RETO ===== */
+.resultado-reto {
+    margin-top: var(--space-md);
+    text-align: center;
+    border-color: var(--color-victory);
+    background: linear-gradient(180deg, rgba(76, 175, 80, 0.1) 0%, transparent 100%);
+}
+
+.resultado-reto.derrota {
+    border-color: var(--color-defeat);
+    background: linear-gradient(180deg, rgba(244, 67, 54, 0.1) 0%, transparent 100%);
+}
+
+.recompensa-oro {
+    font-size: 1.5rem;
+    color: var(--color-gold);
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    margin: var(--space-sm) 0;
+}

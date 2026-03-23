@@ -1,0 +1,59 @@
+.search-form {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-end;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #4a4a4a;
+    border-radius: var(--radius-lg);
+    background: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-gold);
+}
+
+.amigos-seleccion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.amigo-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(0, 0, 0, 0.3);
+    border: var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.amigo-btn:hover {
+    background: rgba(217, 180, 74, 0.1);
+    border-color: var(--text-gold);
+}
+
+.amigo-btn.seleccionado {
+    background: rgba(217, 180, 74, 0.2);
+    border-color: var(--text-gold);
+    color: var(--text-gold);
+}
+
+.oponente-info {
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: var(--border-subtle);
+    border-radius: var(--radius-md);
+}
+
+.oponente-personaje {
+    color: var(--text-gold);
+    font-family: 'Cinzel', serif;
+}

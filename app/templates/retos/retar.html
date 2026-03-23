@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Retar Usuario - Academia de Héroes{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/retos.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="content">
@@ -90,59 +95,4 @@
         </div>
     </div>
     {% endif %}
-</div>
-
-<style>
-.search-form {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-end;
-}
-.search-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #4a4a4a;
-    border-radius: 8px;
-    background: #2a2a2a;
-    color: #e0e0e0;
-    font-size: 1rem;
-}
-.search-input:focus {
-    outline: none;
-    border-color: #ffd700;
-}
-.amigos-seleccion {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-.amigo-btn {
-    padding: 0.5rem 1rem;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-light);
-    border-radius: 6px;
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-.amigo-btn:hover {
-    background: rgba(217, 180, 74, 0.1);
-    border-color: var(--text-gold);
-}
-.amigo-btn.seleccionado {
-    background: rgba(217, 180, 74, 0.2);
-    border-color: var(--text-gold);
-    color: var(--text-gold);
-}
-.oponente-info {
-    padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-light);
-    border-radius: 6px;
-}
-.oponente-personaje {
-    color: var(--text-gold);
-    font-family: 'Cinzel', serif;
-}
-</style>
 {% endblock %}
