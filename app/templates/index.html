@@ -4,36 +4,241 @@
 
 {% block content %}
 <div class="content">
-    <div class="rpg-card">
-        <h2 style="text-align: center;">🏰 Academia de Héroes</h2>
-        <p style="text-align: center; color: var(--text-secondary); font-style: italic; margin-top: 0.5rem;">
-            "Donde los héroes forjan su destino"
-        </p>
-        
-        <hr style="border: none; border-top: 1px solid var(--border-light); margin: 1.5rem 0;">
-        
-        <p>
-            Bienvenido, aventurero, a la <strong>Academia de Héroes</strong>. Aquí podrás:
-        </p>
-        
-        <ul style="list-style: none; padding: 0; margin: 1.5rem 0;">
-            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
-                <span style="font-size: 1.2rem;">🛡️</span>
-                <span>Crear y gestionar tus personajes heroes</span>
-            </li>
-            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
-                <span style="font-size: 1.2rem;">⚔️</span>
-                <span>Simular combates épicos</span>
-            </li>
-            <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
-                <span style="font-size: 1.2rem;">🏋️</span>
-                <span>Entrenar a tus héroes para volvéros más fuertes</span>
-            </li>
-        </ul>
-        
-        <p style="text-align: center; margin-top: 1.5rem;">
-            <a href="{% url 'lista_personajes' %}" class="btn btn-primary">Comenzar Aventura</a>
-        </p>
+    <div class="page-header">
+        <h2>Inicio</h2>
+    </div>
+
+    <div class="home-layout">
+        <div class="historial-column">
+            <div class="rpg-card">
+                <h3 class="rpg-card-title">Historial de Batallas</h3>
+                {% if batallas %}
+                <div class="batallas-list">
+                    {% for batalla in batallas %}
+                    <div class="batalla-item {% if batalla.resultado == True %}victoria{% elif batalla.resultado == False %}derrota{% endif %}">
+                        <div class="batalla-combatientes">
+                            <span class="{% if batalla.id_atacante.id == usuario_id %}yo{% endif %}">{{ batalla.id_atacante.user.username }}</span>
+                            <span class="batalla-vs">vs</span>
+                            <span class="{% if batalla.id_defensor.id == usuario_id %}yo{% endif %}">{{ batalla.id_defensor.user.username }}</span>
+                        </div>
+                        <div class="batalla-meta">
+                            <span class="batalla-personaje">{{ batalla.personaje_atacante.nombre }} vs {{ batalla.personaje_defensor.nombre }}</span>
+                            <span class="batalla-fecha">{{ batalla.fecha_batalla|date:"d/m/Y H:i" }}</span>
+                        </div>
+                        <div class="batalla-resultado">
+                            {% if batalla.resultado == True %}
+                            <span class="resultado-badge ganado">Ganador</span>
+                            {% elif batalla.resultado == False %}
+                            <span class="resultado-badge perdido">Perdedor</span>
+                            {% else %}
+                            <span class="resultado-badge empatado">Empate</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-text">No hay batallas registradas.</p>
+                {% endif %}
+                <a href="{% url 'historial_retos' %}" class="btn btn-sm" style="margin-top: 1rem;">Ver todo</a>
+            </div>
+        </div>
+
+        <div class="notificaciones-column">
+            <div class="rpg-card">
+                <h3 class="rpg-card-title">Notificaciones</h3>
+                
+                {% if solicitudes_pendientes %}
+                <div class="notificacion-seccion">
+                    <h4>Solicitudes de Amistad</h4>
+                    {% for solicitud in solicitudes_pendientes %}
+                    <div class="notificacion-item">
+                        <span>{{ solicitud.id_usuario.user.username }}</span>
+                        <div class="notificacion-actions">
+                            <form method="post" action="{% url 'aceptar_solicitud' solicitud.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-success">A</button>
+                            </form>
+                            <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm">R</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if batallas_pendientes %}
+                <div class="notificacion-seccion">
+                    <h4>Batallas Recibidas</h4>
+                    {% for batalla in batallas_pendientes %}
+                    <div class="notificacion-item">
+                        <span>{{ batalla.id_atacante.user.username }}</span>
+                        <form method="post" action="{% url 'home' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="batalla_id" value="{{ batalla.id }}">
+                            <button type="submit" class="btn btn-sm">Eliminar notificacion</button>
+                        </form>
+                    </div>
+                    {% empty %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if not solicitudes_pendientes and not batallas_pendientes %}
+                <p class="empty-text">No hay notificaciones.</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+.home-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1.5rem;
+}
+
+.historial-column {
+    min-width: 0;
+}
+
+.notificaciones-column {
+    min-width: 0;
+}
+
+.batallas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.batalla-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    border-left: 3px solid var(--border-light);
+}
+
+.batalla-item.victoria {
+    border-left-color: #4CAF50;
+}
+
+.batalla-item.derrota {
+    border-left-color: #f44336;
+}
+
+.batalla-combatientes {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.batalla-combatientes span {
+    color: var(--text-primary);
+}
+
+.batalla-combatientes span.io {
+    color: var(--text-gold);
+    font-weight: 600;
+}
+
+.batalla-vs {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.batalla-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.batalla-personaje {
+    font-style: italic;
+}
+
+.batalla-resultado {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.25rem;
+}
+
+.resultado-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.resultado-badge.ganado {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.resultado-badge.perdido {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+.resultado-badge.empatado {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9E9E9E;
+}
+
+.empty-text {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+.notificacion-seccion {
+    margin-bottom: 1rem;
+}
+
+.notificacion-seccion:last-child {
+    margin-bottom: 0;
+}
+
+.notificacion-seccion h4 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.notificacion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.notificacion-item:last-child {
+    margin-bottom: 0;
+}
+
+.notificacion-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.notificacion-item span {
+    color: var(--text-primary);
+}
+</style>
 {% endblock %}
