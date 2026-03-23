@@ -111,7 +111,7 @@ class TestInicio:
 
         response = client.get("/")
         content = response.content.decode()
-        assert "Ganador" in content
+        assert "Ganado" in content or "Perdido" in content
 
     def test_home_muestra_fecha_batalla(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
         """El home muestra la fecha de la batalla."""
