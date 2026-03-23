@@ -7,3 +7,7 @@ from .personaje_service import (
     personaje_a_dict,
     dict_a_personaje,
 )
+from .ranking_service import (
+    ranking_usuarios,
+    ranking_personajes,
+)

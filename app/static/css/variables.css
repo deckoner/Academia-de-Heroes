@@ -29,11 +29,35 @@
     --armor-color: #D9B44A;
     --precision-color: #9B59B6;
     
+    /* ===== COLORES DE RESULTADO ===== */
+    --color-victory: #4CAF50;
+    --color-victory-bg: rgba(76, 175, 80, 0.2);
+    --color-defeat: #f44336;
+    --color-defeat-bg: rgba(244, 67, 54, 0.2);
+    --color-draw: #9E9E9E;
+    --color-draw-bg: rgba(158, 158, 158, 0.2);
+    --color-gold: #FFD700;
+    --color-silver: #C0C0C0;
+    --color-bronze: #CD7F32;
+    
     /* ===== DIMENSIONES ===== */
     --sidebar-width: clamp(14rem, 18vw, 16rem);
     --sidebar-collapsed: clamp(3.5rem, 4vw, 4rem);
     
+    /* ===== PADDING/MARGIN ESTÁNDAR ===== */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    
     /* ===== BORDES ESPECIALES ===== */
     --border-ornate: 2px solid var(--border-gold);
     --border-subtle: 1px solid var(--border-light);
+    
+    /* ===== BORDER RADIUS ESTÁNDAR ===== */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-full: 50%;
 }

@@ -1,0 +1,139 @@
+.resultado-card {
+    text-align: center;
+}
+
+.resultado-card.victoria {
+    border-color: var(--color-victory);
+    background: linear-gradient(180deg, rgba(76, 175, 80, 0.1) 0%, transparent 100%);
+}
+
+.resultado-card.derrota {
+    border-color: var(--color-defeat);
+    background: linear-gradient(180deg, rgba(244, 67, 54, 0.1) 0%, transparent 100%);
+}
+
+.resultado-card.empate {
+    border-color: var(--color-draw);
+    background: linear-gradient(180deg, rgba(158, 158, 158, 0.1) 0%, transparent 100%);
+}
+
+.recompensa {
+    margin: var(--space-md) 0;
+}
+
+.oro-ganado {
+    font-size: 1.5rem;
+    color: var(--color-gold);
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.combatientes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xl);
+    margin: var(--space-xl) 0;
+}
+
+.combatiente {
+    flex: 1;
+    max-width: 200px;
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-lg);
+}
+
+.combatiente h4 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--text-gold);
+}
+
+.combatiente .tipo {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.combatiente .nivel {
+    font-size: 0.9rem;
+    margin: var(--space-sm) 0;
+}
+
+.vida-bar {
+    height: 8px;
+    background: #333;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin: var(--space-sm) 0;
+}
+
+.vida-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-victory), #8BC34A);
+    transition: width 0.3s ease;
+}
+
+.vida-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.vs {
+    font-size: 1.5rem;
+    font-family: 'Cinzel', serif;
+    color: var(--text-gold);
+}
+
+.info-reto {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: var(--border-subtle);
+}
+
+.info-reto p {
+    margin: var(--space-xs) 0;
+    font-size: 0.9rem;
+}
+
+.turnos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.turno {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px 60px;
+    gap: var(--space-md);
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+}
+
+.turno-num {
+    color: var(--text-muted);
+}
+
+.turno-ataque {
+    color: var(--text-primary);
+}
+
+.turno-danio {
+    color: var(--color-defeat);
+    font-weight: bold;
+}
+
+.turno-vida {
+    color: var(--text-gold);
+    text-align: right;
+}
+
+.acciones {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    margin-top: var(--space-md);
+}

@@ -1,0 +1,263 @@
+/* ===== HOME PAGE STYLES ===== */
+
+.home-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.historial-column,
+.notificaciones-column {
+    min-width: 0;
+}
+
+.batallas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.batalla-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    border-left: 3px solid var(--border-light);
+}
+
+.batalla-item.victoria {
+    border-left-color: #27AE60;
+}
+
+.batalla-item.derrota {
+    border-left-color: #C0392B;
+}
+
+.batalla-combatientes {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.batalla-combatientes span {
+    color: var(--text-primary);
+}
+
+.batalla-combatientes span.io {
+    color: var(--text-gold);
+    font-weight: 600;
+}
+
+span.yo {
+    color: var(--text-gold) !important;
+    font-weight: 600;
+}
+
+.btn-gold-hover {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-gold-hover:hover {
+    border-color: var(--text-gold);
+    box-shadow: 0 0 15px var(--shadow-glow);
+}
+
+.batalla-vs {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.batalla-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.batalla-personaje {
+    font-style: italic;
+}
+
+.batalla-resultado {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.25rem;
+}
+
+.resultado-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.resultado-badge.ganado {
+    background: rgba(39, 174, 96, 0.2);
+    color: #27AE60;
+    border: 1px solid #27AE60;
+}
+
+.resultado-badge.perdido {
+    background: rgba(192, 57, 43, 0.2);
+    color: #C0392B;
+    border: 1px solid #C0392B;
+}
+
+.resultado-badge.empatado {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9E9E9E;
+    border: 1px solid #9E9E9E;
+}
+
+.empty-text {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+.notificacion-seccion {
+    margin-bottom: 1rem;
+}
+
+.notificacion-seccion:last-child {
+    margin-bottom: 0;
+}
+
+.notificacion-seccion h4 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.notificacion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.notificacion-item:last-child {
+    margin-bottom: 0;
+}
+
+.notificacion-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.notificacion-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-icon {
+    font-size: 1rem;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+.notificacion-item.batalla-notif {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.batalla-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.batalla-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.batalla-nombres {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.batalla-atacante {
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+}
+
+.batalla-vs-small {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+.batalla-defensor {
+    font-weight: 500;
+    color: var(--text-gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.batalla-result-row {
+    margin-top: 0.25rem;
+}
+
+.batalla-resultado-badge {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.batalla-resultado-badge.ganado {
+    background: rgba(39, 174, 96, 0.2);
+    color: #27AE60;
+    border: 1px solid #27AE60;
+}
+
+.batalla-resultado-badge.perdido {
+    background: rgba(192, 57, 43, 0.2);
+    color: #C0392B;
+    border: 1px solid #C0392B;
+}
+
+.btn-xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    min-width: auto;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-ack {
+    background: rgba(100, 100, 100, 0.5);
+    border: 1px solid var(--border-light);
+}
+
+.btn-ack:hover {
+    background: rgba(100, 100, 100, 0.8);
+}

@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Buscar Amigos - Academia de Héroes{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/retos.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="content">
@@ -60,26 +65,4 @@
         {% endif %}
     </div>
     {% endif %}
-</div>
-
-<style>
-.search-form {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-end;
-}
-.search-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #4a4a4a;
-    border-radius: 8px;
-    background: #2a2a2a;
-    color: #e0e0e0;
-    font-size: 1rem;
-}
-.search-input:focus {
-    outline: none;
-    border-color: #ffd700;
-}
-</style>
 {% endblock %}

@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Inicio | Academia de Héroes{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="content">
@@ -15,7 +20,7 @@
                 {% if batallas %}
                 <div class="batallas-list">
                     {% for batalla in batallas %}
-                    <div class="batalla-item {% if batalla.resultado == True %}victoria{% elif batalla.resultado == False %}derrota{% endif %}">
+                    <div class="batalla-item {% if batalla.id_atacante.id == usuario_id %}{% if batalla.resultado %}victoria{% else %}derrota{% endif %}{% else %}{% if batalla.resultado %}derrota{% else %}victoria{% endif %}{% endif %}">
                         <div class="batalla-combatientes">
                             <span class="{% if batalla.id_atacante.id == usuario_id %}yo{% endif %}">{{ batalla.id_atacante.user.username }}</span>
                             <span class="batalla-vs">vs</span>
@@ -26,12 +31,18 @@
                             <span class="batalla-fecha">{{ batalla.fecha_batalla|date:"d/m/Y H:i" }}</span>
                         </div>
                         <div class="batalla-resultado">
-                            {% if batalla.resultado == True %}
-                            <span class="resultado-badge ganado">Ganador</span>
-                            {% elif batalla.resultado == False %}
-                            <span class="resultado-badge perdido">Perdedor</span>
+                            {% if batalla.id_atacante.id == usuario_id %}
+                                {% if batalla.resultado == True %}
+                                <span class="resultado-badge ganado">Ganado</span>
+                                {% else %}
+                                <span class="resultado-badge perdido">Perdido</span>
+                                {% endif %}
                             {% else %}
-                            <span class="resultado-badge empatado">Empate</span>
+                                {% if batalla.resultado == True %}
+                                <span class="resultado-badge perdido">Perdido</span>
+                                {% else %}
+                                <span class="resultado-badge ganado">Ganado</span>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -40,7 +51,7 @@
                 {% else %}
                 <p class="empty-text">No hay batallas registradas.</p>
                 {% endif %}
-                <a href="{% url 'historial_retos' %}" class="btn btn-sm" style="margin-top: 1rem;">Ver todo</a>
+                <a href="{% url 'historial_retos' %}" class="btn btn-sm btn-gold-hover" style="margin-top: 1rem;">Ver todo</a>
             </div>
         </div>
 
@@ -53,15 +64,18 @@
                     <h4>Solicitudes de Amistad</h4>
                     {% for solicitud in solicitudes_pendientes %}
                     <div class="notificacion-item">
-                        <span>{{ solicitud.id_usuario.user.username }}</span>
+                        <div class="notificacion-user">
+                            <span class="user-icon">👤</span>
+                            <span class="user-name">{{ solicitud.id_usuario.user.username }}</span>
+                        </div>
                         <div class="notificacion-actions">
-                            <form method="post" action="{% url 'aceptar_solicitud' solicitud.id %}" style="display:inline;">
+                            <form method="post" action="{% url 'aceptar_solicitud' solicitud.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-success">A</button>
+                                <button type="submit" class="btn btn-xs btn-success" title="Aceptar">✓</button>
                             </form>
-                            <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}" style="display:inline;">
+                            <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm">R</button>
+                                <button type="submit" class="btn btn-xs" title="Rechazar">✗</button>
                             </form>
                         </div>
                     </div>
@@ -74,12 +88,23 @@
                 <div class="notificacion-seccion">
                     <h4>Batallas Recibidas</h4>
                     {% for batalla in batallas_pendientes %}
-                    <div class="notificacion-item">
-                        <span>{{ batalla.id_atacante.user.username }}</span>
+                    <div class="notificacion-item batalla-notif">
+                        <div class="batalla-info-col">
+                            <div class="batalla-nombres">
+                                <span class="batalla-atacante">{{ batalla.id_atacante.user.username }}</span>
+                                <span class="batalla-vs-small">vs</span>
+                                <span class="batalla-defensor">{{ batalla.id_defensor.user.username }}</span>
+                            </div>
+                            <div class="batalla-result-row">
+                                <span class="batalla-resultado-badge {% if batalla.resultado %}perdido{% else %}ganado{% endif %}">
+                                    {% if batalla.resultado %}Perdiste{% else %}Ganaste{% endif %}
+                                </span>
+                            </div>
+                        </div>
                         <form method="post" action="{% url 'home' %}">
                             {% csrf_token %}
                             <input type="hidden" name="batalla_id" value="{{ batalla.id }}">
-                            <button type="submit" class="btn btn-sm">Eliminar notificacion</button>
+                            <button type="submit" class="btn btn-xs btn-ack" title="Marcar como vista">✓</button>
                         </form>
                     </div>
                     {% empty %}
@@ -89,156 +114,5 @@
 
                 {% if not solicitudes_pendientes and not batallas_pendientes %}
                 <p class="empty-text">No hay notificaciones.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-.home-layout {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 1.5rem;
-}
-
-.historial-column {
-    min-width: 0;
-}
-
-.notificaciones-column {
-    min-width: 0;
-}
-
-.batallas-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.batalla-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border-light);
-    border-radius: 6px;
-    border-left: 3px solid var(--border-light);
-}
-
-.batalla-item.victoria {
-    border-left-color: #4CAF50;
-}
-
-.batalla-item.derrota {
-    border-left-color: #f44336;
-}
-
-.batalla-combatientes {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-size: 0.95rem;
-}
-
-.batalla-combatientes span {
-    color: var(--text-primary);
-}
-
-.batalla-combatientes span.io {
-    color: var(--text-gold);
-    font-weight: 600;
-}
-
-.batalla-vs {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
-.batalla-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-.batalla-personaje {
-    font-style: italic;
-}
-
-.batalla-resultado {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 0.25rem;
-}
-
-.resultado-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.resultado-badge.ganado {
-    background: rgba(76, 175, 80, 0.2);
-    color: #4CAF50;
-}
-
-.resultado-badge.perdido {
-    background: rgba(244, 67, 54, 0.2);
-    color: #f44336;
-}
-
-.resultado-badge.empatado {
-    background: rgba(158, 158, 158, 0.2);
-    color: #9E9E9E;
-}
-
-.empty-text {
-    color: var(--text-muted);
-    font-style: italic;
-    text-align: center;
-    padding: 1rem;
-}
-
-.notificacion-seccion {
-    margin-bottom: 1rem;
-}
-
-.notificacion-seccion:last-child {
-    margin-bottom: 0;
-}
-
-.notificacion-seccion h4 {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-}
-
-.notificacion-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    margin-bottom: 0.25rem;
-    font-size: 0.9rem;
-}
-
-.notificacion-item:last-child {
-    margin-bottom: 0;
-}
-
-.notificacion-actions {
-    display: flex;
-    gap: 0.25rem;
-}
-
-.notificacion-item span {
-    color: var(--text-primary);
-}
-</style>
+{% endif %}
 {% endblock %}

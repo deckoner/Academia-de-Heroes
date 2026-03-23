@@ -4,31 +4,100 @@
 
 {% block content %}
 <div class="content">
-    <h2>Ranking de Usuarios</h2>
+    <div class="page-header">
+        <h2>🏆 Ranking</h2>
+    </div>
 
-    {% if usuarios %}
-    <table>
-        <thead>
-            <tr>
-                <th>Posición</th>
-                <th>Usuario</th>
-                <th>Monedas</th>
-                <th>Mercenarios</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in usuarios %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ usuario.user.username }}</td>
-                <td>💰 {{ usuario.monedas }}</td>
-                <td>�️ {{ usuario.mercanarios }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No hay usuarios en el ranking.</p>
-    {% endif %}
+    <div class="ranking-container">
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">⚔️ Ranking de Usuarios</h3>
+            {% if usuarios %}
+            <div class="rpg-table-container">
+                <table class="rpg-table">
+                    <thead>
+                        <tr>
+                            <th class="col-pos">#</th>
+                            <th class="col-user">Usuario</th>
+                            <th class="col-victorias">Victorias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario, victimas in usuarios %}
+                        <tr class="{% if forloop.first %}first-row{% elif forloop.counter == 2 %}second-row{% elif forloop.counter == 3 %}third-row{% endif %}">
+                            <td class="col-pos">
+                                {% if forloop.counter == 1 %}<span class="medal gold">👑</span>
+                                {% elif forloop.counter == 2 %}<span class="medal silver">🥈</span>
+                                {% elif forloop.counter == 3 %}<span class="medal bronze">🥉</span>
+                                {% else %}{{ forloop.counter }}{% endif %}
+                            </td>
+                            <td class="col-user">
+                                <span class="user-icon">⚔️</span>
+                                {{ usuario.user.username }}
+                            </td>
+                            <td class="col-victorias">
+                                <span class="victory-count">{{ victimas }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">🏆</span>
+                <h3>No hay usuarios en el ranking</h3>
+                <p>Gana batallas para aparecer aquí</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">🛡️ Ranking de Personajes</h3>
+            {% if personajes %}
+            <div class="rpg-table-container">
+                <table class="rpg-table">
+                    <thead>
+                        <tr>
+                            <th class="col-pos">#</th>
+                            <th class="col-user">Personaje</th>
+                            <th class="col-info">Info</th>
+                            <th class="col-victorias">Victorias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for personaje, victimas in personajes %}
+                        <tr class="{% if forloop.first %}first-row{% elif forloop.counter == 2 %}second-row{% elif forloop.counter == 3 %}third-row{% endif %}">
+                            <td class="col-pos">
+                                {% if forloop.counter == 1 %}<span class="medal gold">👑</span>
+                                {% elif forloop.counter == 2 %}<span class="medal silver">🥈</span>
+                                {% elif forloop.counter == 3 %}<span class="medal bronze">🥉</span>
+                                {% else %}{{ forloop.counter }}{% endif %}
+                            </td>
+                            <td class="col-user">
+                                <span class="char-icon">
+                                    {% if personaje.tipo == 'GUERRERO' %}🛡️{% elif personaje.tipo == 'MAGO' %}🔮{% elif personaje.tipo == 'ARQUERO' %}🏹{% else %}👤{% endif %}
+                                </span>
+                                {{ personaje.nombre }}
+                            </td>
+                            <td class="col-info">
+                                <span class="char-info">{{ personaje.tipo }} · Nv.{{ personaje.nivel }}</span>
+                            </td>
+                            <td class="col-victorias">
+                                <span class="victory-count">{{ victimas }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">⚔️</span>
+                <h3>No hay personajes en el ranking</h3>
+                <p>Crea personajes y gana batallas para aparecer aquí</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-/* ===== SIDEBAR PANEL ===== */
+/* ===== PANEL LATERAL ===== */
 .sidebar-panel {
     width: var(--sidebar-collapsed);
     background: linear-gradient(180deg, var(--bg-dark) 0%, #1A1210 100%);
@@ -18,7 +18,7 @@
     width: var(--sidebar-width);
 }
 
-/* ===== HEADER DEL SIDEBAR ===== */
+/* ===== ENCABEZADO DEL PANEL ===== */
 .sidebar-header {
     padding: 1.5rem 0.5rem;
     border-bottom: 2px solid var(--border-gold);
@@ -169,8 +169,6 @@
     transform: translateX(0);
 }
 
-/* Iconos de navegación - se definen en HTML ahora */
-
 .nav-icon {
     font-size: 1.2rem;
     width: 2rem;
@@ -178,7 +176,7 @@
     flex-shrink: 0;
 }
 
-/* ===== BOTÓN LOGOUT ===== */
+/* ===== BOTÓN CERRAR SESION ===== */
 .logout-btn {
     display: block;
     text-align: center;
