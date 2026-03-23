@@ -1,4 +1,5 @@
 from app.models import Personaje
+import json
 import random
 
 
@@ -59,8 +60,6 @@ class ResultadoCombate:
     @property
     def turnos_json(self):
         """Devuelve los turnos en formato JSON para uso en frontend."""
-        import json
-
         return json.dumps([t.a_dict() for t in self.turnos])
 
     def a_dict(self):

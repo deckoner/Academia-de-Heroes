@@ -11,7 +11,7 @@ from app.services import (
     actualizar_personaje as service_actualizar,
 )
 from app.services.combate_service import simular_combate
-from app.models import Usuario, Personaje
+from app.models import Usuario, Personaje, Batalla, Amigo
 
 
 def get_usuario_perfil(request):
@@ -45,7 +45,44 @@ class HomeView(View):
         """
         Renderiza la página de inicio.
         """
-        return render(request, self.template_name)
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            return redirect("login")
+
+        batallas = Batalla.objects.listar_por_usuario(perfil.id)[:10]
+        
+        solicitudes_pendientes = Amigo.objects.listar_solicitudes_pendientes(perfil)
+        
+        batallas_pendientes = Batalla.objects.filter(
+            id_defensor=perfil, leido=False
+        )
+
+        return render(request, self.template_name, {
+            "batallas": batallas,
+            "solicitudes_pendientes": solicitudes_pendientes,
+            "batallas_pendientes": batallas_pendientes,
+            "usuario_id": perfil.id,
+        })
+
+    def post(self, request):
+        """
+        Maneja marcar batallas como leídas.
+        """
+        perfil = get_usuario_perfil(request)
+        if not perfil:
+            return redirect("login")
+
+        batalla_id = request.POST.get("batalla_id")
+        if batalla_id:
+            try:
+                batalla = Batalla.objects.get(id=batalla_id, id_defensor=perfil)
+                batalla.leido = True
+                batalla.save()
+                messages.success(request, "Batalla marcada como leída.")
+            except Batalla.DoesNotExist:
+                messages.error(request, "Batalla no encontrada.")
+
+        return redirect("home")
 
 
 class EnConstruccionView(View):
