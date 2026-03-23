@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
-from django.urls import reverse_lazy
 from app.models import Usuario, Amigo
 from app.views.personaje_views import get_usuario_perfil
 

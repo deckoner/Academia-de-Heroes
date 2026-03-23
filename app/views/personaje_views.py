@@ -4,11 +4,9 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from app.forms.personaje_form import PersonajeForm
 from app.services import (
-    crear_personaje as service_crear,
     listar_personajes as service_listar,
     obtener_personaje as service_obtener,
     borrar_personaje as service_borrar,
-    actualizar_personaje as service_actualizar,
 )
 from app.services.combate_service import simular_combate
 from app.models import Usuario, Personaje, Batalla, Amigo
