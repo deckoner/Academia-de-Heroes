@@ -24,6 +24,7 @@ from app.views import (
     HistorialRetosView,
 )
 from app.views.ranking_views import RankingView
+from app.views.estadisticas_views import EstadisticasView
 
 urlpatterns = [
     path("", login_required(HomeView.as_view()), name="home"),
@@ -109,7 +110,7 @@ urlpatterns = [
     ),
     path(
         "estadisticas/",
-        login_required(TemplateView.as_view(template_name="estadisticas/index.html")),
+        login_required(EstadisticasView.as_view()),
         name="estadisticas",
     ),
 ]

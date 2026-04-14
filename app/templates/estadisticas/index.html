@@ -1,10 +1,263 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load json_filter %}
 
 {% block title %}Estadísticas | Academia de Héroes{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estadisticas.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="content">
-    <h2>Estadísticas</h2>
-    <p>En construcción 🚧</p>
+    <div class="page-header">
+        <h2>📊 Estadísticas</h2>
+    </div>
+
+    <div class="stats-grid">
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">Clases Más Seleccionadas</h3>
+            <div class="chart-container" id="chart-clases"></div>
+        </div>
+
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">Clases Que Han Ganado Más Combates</h3>
+            <div class="chart-container" id="chart-ganadores"></div>
+        </div>
+
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">Promedio de Batallas por Usuario</h3>
+            <div class="chart-container" id="chart-batallas"></div>
+        </div>
+
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">Clases Más Entrenadas</h3>
+            <div class="chart-container" id="chart-entrenados"></div>
+        </div>
+
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">Porcentaje de Usuarios por Edad</h3>
+            <div class="chart-container" id="chart-edad"></div>
+        </div>
+
+        <div class="rpg-card">
+            <h3 class="rpg-card-title">Distribución de Niveles</h3>
+            <div class="chart-container" id="chart-niveles"></div>
+            {% if estadisticas.distribucion_niveles.outliers %}
+            <div class="outliers-info">
+                <strong>Outliers:</strong>
+                {% for o in estadisticas.distribucion_niveles.outliers %}
+                    {{ o.nombre }} (Nv. {{ o.nivel }}){% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="rpg-card full-width">
+            <h3 class="rpg-card-title">Ranking de Personajes (Top 10)</h3>
+            <div class="table-container">
+                <table class="rpg-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Personaje</th>
+                            <th>Usuario</th>
+                            <th>Clase</th>
+                            <th>Nivel</th>
+                            <th>Victorias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in estadisticas.ranking_personajes %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ p.nombre }}</td>
+                            <td>{{ p.usuario }}</td>
+                            <td>{{ p.tipo }}</td>
+                            <td>{{ p.nivel }}</td>
+                            <td>{{ p.victorias }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-text">No hay datos suficientes</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+{{ estadisticas.clases_seleccionadas|json_script:"clases-data" }}
+{{ estadisticas.clases_ganadoras|json_script:"ganadores-data" }}
+{{ estadisticas.promedio_batallas|json_script:"promedio-data" }}
+{{ estadisticas.clases_entrenadas|json_script:"entrenados-data" }}
+{{ estadisticas.usuarios_por_edad|json_script:"edad-data" }}
+{{ estadisticas.distribucion_niveles|json_script:"niveles-data" }}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    const goldColor = '#D9B44A';
+    const greenColor = '#27AE60';
+    const blueColor = '#3498DB';
+    const redColor = '#E74C3C';
+    const textColor = '#EAD7B7';
+
+    const clasesData = JSON.parse(document.getElementById('clases-data').textContent);
+    const winnersData = JSON.parse(document.getElementById('ganadores-data').textContent);
+    const entrenadosData = JSON.parse(document.getElementById('entrenados-data').textContent);
+    const edadData = JSON.parse(document.getElementById('edad-data').textContent);
+    const nivelesData = JSON.parse(document.getElementById('niveles-data').textContent);
+    const promedioData = JSON.parse(document.getElementById('promedio-data').textContent);
+
+    if (clasesData && clasesData.length > 0) {
+        Plotly.newPlot('chart-clases', [{
+            x: clasesData.map(x => x[1]),
+            y: clasesData.map(x => x[0]),
+            type: 'bar',
+            orientation: 'h',
+            marker: {
+                color: goldColor,
+                line: { color: '#8B6914', width: 1 }
+            }
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: textColor },
+            margin: { l: 80, r: 20, t: 20, b: 40 },
+            xaxis: { title: 'Cantidad' }
+        }, {responsive: true});
+    }
+
+    if (winnersData && winnersData.length > 0) {
+        Plotly.newPlot('chart-ganadores', [{
+            x: winnersData.map(x => x[1]),
+            y: winnersData.map(x => x[0]),
+            type: 'bar',
+            orientation: 'h',
+            marker: {
+                color: greenColor,
+                line: { color: '#1E8449', width: 1 }
+            }
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: textColor },
+            margin: { l: 80, r: 20, t: 20, b: 40 },
+            xaxis: { title: 'Victorias' }
+        }, {responsive: true});
+    }
+
+    if (promedioData && promedioData.total_usuarios > 0) {
+        Plotly.newPlot('chart-batallas', [{
+            type: "indicator",
+            mode: "gauge+number",
+            value: promedioData.promedio,
+            title: { text: "Promedio de Batallas por Usuario", font: { color: textColor, size: 14 } },
+            gauge: {
+                axis: { range: [0, Math.max(promedioData.promedio * 2, 10)], tickcolor: textColor },
+                bar: { color: goldColor }
+            },
+            number: { 
+                suffix: " avg", 
+                font: { color: goldColor, size: 28 } 
+            }
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: textColor, size: 12 },
+            margin: { l: 20, r: 20, t: 50, b: 30 },
+            height: 220,
+            annotations: [{
+                x: 0.5,
+                y: -0.1,
+                text: `${promedioData.total_batallas} batallas total / ${promedioData.total_usuarios} usuarios`,
+                showarrow: false,
+                font: { color: textColor, size: 11 },
+                xref: 'paper',
+                yref: 'paper'
+            }]
+        }, {responsive: true});
+    }
+
+    if (entrenadosData && entrenadosData.length > 0) {
+        Plotly.newPlot('chart-entrenados', [{
+            x: entrenadosData.map(x => x[1]),
+            y: entrenadosData.map(x => x[0]),
+            type: 'bar',
+            orientation: 'h',
+            marker: {
+                color: goldColor,
+                line: { color: '#8B6914', width: 1 }
+            }
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: textColor },
+            margin: { l: 100, r: 20, t: 20, b: 40 },
+            xaxis: { title: 'Nivel Promedio' }
+        }, {responsive: true});
+    }
+
+    if (edadData && edadData.length > 0) {
+        const edadLabels = edadData.map(x => x.rango);
+        const edadValues = edadData.map(x => x.cantidad);
+        
+        Plotly.newPlot('chart-edad', [{
+            values: edadValues,
+            labels: edadLabels,
+            type: 'pie',
+            textinfo: 'label+percent',
+            textposition: 'outside',
+            hole: 0.4,
+            marker: {
+                colors: ['#C0392B', '#2980B9', '#27AE60', '#D35400', '#8E44AD']
+            },
+            hovertemplate: '%{label}: %{value} usuarios (%{percent})<extra></extra>'
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: textColor, size: 12 },
+            showlegend: true,
+            legend: { orientation: 'h', x: 0.5, xanchor: 'center', y: -0.15 },
+            margin: { t: 20, b: 60, l: 20, r: 20 }
+        }, {responsive: true});
+    }
+
+    if (nivelesData && nivelesData.por_clase) {
+        const traces = [];
+        const colors = { 'Guerrero': '#C0392B', 'Mago': '#2980B9', 'Arquero': '#27AE60' };
+        
+        Object.keys(nivelesData.por_clase).forEach(function(clase) {
+            if (nivelesData.por_clase[clase] && nivelesData.por_clase[clase].length > 0) {
+                traces.push({
+                    y: nivelesData.por_clase[clase],
+                    type: 'box',
+                    name: clase,
+                    marker: { color: colors[clase] || goldColor },
+                    boxpoints: 'all',
+                    jitter: 0.3,
+                    pointpos: -1.8
+                });
+            }
+        });
+        
+        if (traces.length > 0) {
+            const layout = {
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                font: { color: textColor },
+                margin: { l: 50, r: 20, t: 20, b: 40 },
+                yaxis: { 
+                    title: 'Nivel',
+                    gridcolor: '#333'
+                },
+                showlegend: false
+            };
+            
+            Plotly.newPlot('chart-niveles', traces, layout, {responsive: true});
+        }
+    }
+</script>
 {% endblock %}

@@ -11,3 +11,6 @@ from .ranking_service import (
     ranking_usuarios,
     ranking_personajes,
 )
+from .estadisticas_service import (
+    todas_las_estadisticas,
+)
