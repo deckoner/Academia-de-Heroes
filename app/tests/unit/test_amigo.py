@@ -82,14 +82,14 @@ class TestAmigoManager:
     def test_tiene_solicitud_pendiente(self, usuario_a, usuario_b):
         """Verifica si hay solicitud pendiente."""
         assert not Amigo.objects.tiene_solicitud_pendiente(usuario_a, usuario_b)
-        
+
         Amigo.objects.create(
             id_usuario=usuario_a, id_amigo=usuario_b, estado=Amigo.Estado.PENDIENTE
         )
-        
+
         solicitud = Amigo.objects.tiene_solicitud_pendiente(usuario_a, usuario_b)
         assert solicitud is not None
-        
+
         solicitud_inv = Amigo.objects.tiene_solicitud_pendiente(usuario_b, usuario_a)
         assert solicitud_inv is not None
 
@@ -170,7 +170,7 @@ class TestAceptacionAutomatica:
             models.Q(id_usuario=usuario_a, id_amigo=usuario_b)
             | models.Q(id_usuario=usuario_b, id_amigo=usuario_a)
         ).count()
-        
+
         assert total == 1
 
 

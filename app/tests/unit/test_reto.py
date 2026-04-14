@@ -119,9 +119,9 @@ class TestCombateService:
         """Guardar resultado actualiza la vida de los personajes."""
         personaje_a.vida = 50
         personaje_a.save()
-        
+
         guardar_resultado_combate(personaje_a.id, personaje_b.id, 30, 80)
-        
+
         personaje_a.refresh_from_db()
         assert personaje_a.vida == 30
 
@@ -129,9 +129,9 @@ class TestCombateService:
         """Guardar resultado con vida negativa establece a 0."""
         personaje_a.vida = 10
         personaje_a.save()
-        
+
         guardar_resultado_combate(personaje_a.id, personaje_b.id, 5, 50)
-        
+
         personaje_a.refresh_from_db()
         assert personaje_a.vida == 5
 
@@ -148,17 +148,17 @@ class TestCombateConMuerte:
             usar_especial_p1=True,
             usar_especial_p2=True,
         )
-        
+
         guardar_resultado_combate(
             personaje_a.id,
             personaje_b.id,
             resultado.vida1_final,
             resultado.vida2_final,
         )
-        
+
         personaje_a.refresh_from_db()
         personaje_b.refresh_from_db()
-        
+
         if resultado.vida1_final == 0:
             assert personaje_a.vivo == False
         if resultado.vida2_final == 0:
@@ -191,14 +191,14 @@ class TestCombateMago:
             armadura=5,
             vivo=True,
         )
-        
+
         resultado = simular_combate(
             mago.id,
             guerrero.id,
             usar_especial_p1=True,
             usar_especial_p2=True,
         )
-        
+
         assert resultado is not None
 
 
@@ -228,12 +228,12 @@ class TestCombateArquero:
             armadura=5,
             vivo=True,
         )
-        
+
         resultado = simular_combate(
             arquero.id,
             guerrero.id,
             usar_especial_p1=False,
             usar_especial_p2=False,
         )
-        
+
         assert resultado is not None

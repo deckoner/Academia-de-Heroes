@@ -20,7 +20,7 @@ class TestEntrenar:
         """Muestra los personajes disponibles."""
         user = User.objects.get(username="testuser")
         perfil = Usuario.objects.get(user=user)
-        
+
         Personaje.objects.create(
             id_usuario=perfil,
             tipo="GUERRERO",
@@ -43,7 +43,7 @@ class TestEntrenar:
         perfil = Usuario.objects.get(user=user)
         perfil.mercenarios = 1
         perfil.save()
-        
+
         p = Personaje.objects.create(
             id_usuario=perfil,
             tipo="GUERRERO",
@@ -66,6 +66,6 @@ class TestEntrenar:
 
         p.refresh_from_db()
         assert p.nivel == 2
-        
+
         perfil.refresh_from_db()
         assert perfil.mercenarios == 0

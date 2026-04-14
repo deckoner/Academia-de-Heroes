@@ -12,11 +12,12 @@ def clases_mas_seleccionadas():
     list
         Lista de tuplas (clase, cantidad) ordenadas por cantidad descendente.
     """
-    tipos_count = Personaje.objects.exclude(
-        tipo="PERSONAJE"
-    ).values("tipo").annotate(
-        cantidad=Count("id")
-    ).order_by("-cantidad")
+    tipos_count = (
+        Personaje.objects.exclude(tipo="PERSONAJE")
+        .values("tipo")
+        .annotate(cantidad=Count("id"))
+        .order_by("-cantidad")
+    )
 
     result = []
     for item in tipos_count:
@@ -44,8 +45,7 @@ def clases_ganadoras_mas_combates():
     victories = {tipo: 0 for tipo in ["GUERRERO", "MAGO", "ARQUERO"]}
 
     batallas = Batalla.objects.filter(
-        resultado__isnull=False,
-        id_atacante_id__in=usuario_ids
+        resultado__isnull=False, id_atacante_id__in=usuario_ids
     ).select_related("personaje_atacante", "personaje_defensor")
 
     for batalla in batallas:
@@ -83,16 +83,19 @@ def clases_mas_entrenadas():
     if not usuario_ids:
         return []
 
-    tipos_nivel = Personaje.objects.exclude(
-        tipo="PERSONAJE"
-    ).filter(
-        id_usuario_id__in=usuario_ids
-    ).values("tipo").annotate(
-        nivel_promedio=Avg("nivel")
-    ).order_by("-nivel_promedio")
+    tipos_nivel = (
+        Personaje.objects.exclude(tipo="PERSONAJE")
+        .filter(id_usuario_id__in=usuario_ids)
+        .values("tipo")
+        .annotate(nivel_promedio=Avg("nivel"))
+        .order_by("-nivel_promedio")
+    )
 
     return [
-        (dict(Personaje.TIPO_CHOICES).get(item["tipo"], item["tipo"]), int(item["nivel_promedio"]))
+        (
+            dict(Personaje.TIPO_CHOICES).get(item["tipo"], item["tipo"]),
+            int(item["nivel_promedio"]),
+        )
         for item in tipos_nivel
     ]
 
@@ -121,15 +124,18 @@ def ranking_personajes_estadisticas():
     victories = {pid: 0 for pid in personaje_ids}
 
     batallas = Batalla.objects.filter(
-        resultado__isnull=False,
-        id_atacante_id__in=usuario_ids
+        resultado__isnull=False, id_atacante_id__in=usuario_ids
     ).select_related("personaje_atacante", "personaje_defensor")
 
     for batalla in batallas:
         if batalla.resultado:
-            victories[batalla.personaje_atacante_id] = victories.get(batalla.personaje_atacante_id, 0) + 1
+            victories[batalla.personaje_atacante_id] = (
+                victories.get(batalla.personaje_atacante_id, 0) + 1
+            )
         else:
-            victories[batalla.personaje_defensor_id] = victories.get(batalla.personaje_defensor_id, 0) + 1
+            victories[batalla.personaje_defensor_id] = (
+                victories.get(batalla.personaje_defensor_id, 0) + 1
+            )
 
     ranking_list = [
         {
@@ -137,7 +143,7 @@ def ranking_personajes_estadisticas():
             "usuario": p.id_usuario.user.username,
             "tipo": dict(Personaje.TIPO_CHOICES).get(p.tipo, p.tipo),
             "nivel": p.nivel,
-            "victorias": victories.get(p.id, 0)
+            "victorias": victories.get(p.id, 0),
         }
         for p in personajes
     ]
@@ -167,7 +173,7 @@ def promedio_batallas_por_usuario():
     return {
         "promedio": promedio,
         "total_batallas": total_batallas,
-        "total_usuarios": total_usuarios
+        "total_usuarios": total_usuarios,
     }
 
 
@@ -199,7 +205,11 @@ def usuarios_por_edad():
 
     total = sum(rangos.values())
     return [
-        {"rango": rango, "cantidad": cantidad, "porcentaje": round((cantidad / total * 100), 1) if total > 0 else 0}
+        {
+            "rango": rango,
+            "cantidad": cantidad,
+            "porcentaje": round((cantidad / total * 100), 1) if total > 0 else 0,
+        }
         for rango, cantidad in rangos.items()
     ]
 
@@ -220,7 +230,9 @@ def distribucion_niveles():
     if not usuario_ids:
         return {"por_clase": {}, "outliers": []}
 
-    personajes = Personaje.objects.filter(id_usuario_id__in=usuario_ids).select_related("id_usuario")
+    personajes = Personaje.objects.filter(id_usuario_id__in=usuario_ids).select_related(
+        "id_usuario"
+    )
 
     por_clase = {"GUERRERO": [], "MAGO": [], "ARQUERO": []}
     outliers = []
@@ -246,11 +258,15 @@ def distribucion_niveles():
         limite_inferior = max(0, q1 - 1.5 * iqr)
         limite_superior = q3 + 1.5 * iqr
 
-        por_clase[tipo] = [n for n in niveles if limite_inferior <= n <= limite_superior]
+        por_clase[tipo] = [
+            n for n in niveles if limite_inferior <= n <= limite_superior
+        ]
 
     return {
-        "por_clase": {dict(Personaje.TIPO_CHOICES).get(k, k): v for k, v in por_clase.items() if v},
-        "outliers": outliers
+        "por_clase": {
+            dict(Personaje.TIPO_CHOICES).get(k, k): v for k, v in por_clase.items() if v
+        },
+        "outliers": outliers,
     }
 
 

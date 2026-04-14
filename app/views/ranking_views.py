@@ -25,7 +25,11 @@ class RankingView(View):
         ranking_de_usuarios = ranking_usuarios()
         ranking_de_personajes = ranking_personajes()
 
-        return render(request, self.template_name, {
-            "usuarios": ranking_de_usuarios,
-            "personajes": ranking_de_personajes,
-        })
+        return render(
+            request,
+            self.template_name,
+            {
+                "usuarios": ranking_de_usuarios,
+                "personajes": ranking_de_personajes,
+            },
+        )

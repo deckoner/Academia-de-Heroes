@@ -141,7 +141,9 @@ class TestHistorialRetos:
         content = response.content.decode()
         assert "No hay retos" in content or "No has participado" in content
 
-    def test_historial_muestra_batallas(self, client1, client2, usuario1, usuario2, personaje1, personaje2):
+    def test_historial_muestra_batallas(
+        self, client1, client2, usuario1, usuario2, personaje1, personaje2
+    ):
         """El historial muestra las batallas."""
         Batalla.objects.create(
             id_atacante=usuario1,

@@ -59,9 +59,9 @@ class AmigoManager(models.Manager):
         QuerySet
             Conjunto de solicitudes pendientes.
         """
-        return self.filter(
-            id_amigo=usuario, estado="PENDIENTE"
-        ).select_related("id_usuario", "id_amigo")
+        return self.filter(id_amigo=usuario, estado="PENDIENTE").select_related(
+            "id_usuario", "id_amigo"
+        )
 
     def listar_solicitudes_enviadas(self, usuario):
         """
@@ -77,9 +77,9 @@ class AmigoManager(models.Manager):
         QuerySet
             Conjunto de solicitudes enviadas pendientes.
         """
-        return self.filter(
-            id_usuario=usuario, estado="PENDIENTE"
-        ).select_related("id_usuario", "id_amigo")
+        return self.filter(id_usuario=usuario, estado="PENDIENTE").select_related(
+            "id_usuario", "id_amigo"
+        )
 
     def son_amigos(self, usuario, amigo):
         """

@@ -22,7 +22,7 @@ class TestEntrenarPersonajeView:
             mercenarios=1,
         )
         client.login(username="testentrenar", password="pass123")
-        
+
         p = Personaje.objects.create(
             id_usuario=perfil,
             tipo="GUERRERO",
@@ -59,7 +59,7 @@ class TestEntrenarPersonajeView:
             mercenarios=1,
         )
         client.login(username="testentrenar2", password="pass123")
-        
+
         p = Personaje.objects.create(
             id_usuario=perfil,
             tipo="MAGO",
@@ -80,7 +80,7 @@ class TestEntrenarPersonajeView:
 
         assert p.nivel == 2
         assert p.vida_max == vida_max_original + 10
-        
+
         perfil.refresh_from_db()
         assert perfil.mercenarios == 0
 
@@ -109,7 +109,7 @@ class TestEntrenarPersonajeView:
             mercenarios=3,
         )
         client.login(username="testentrenar3", password="pass123")
-        
+
         p = Personaje.objects.create(
             id_usuario=perfil,
             tipo="ARQUERO",
@@ -128,6 +128,6 @@ class TestEntrenarPersonajeView:
 
         assert p.nivel == 4
         assert p.vida_max == 110
-        
+
         perfil.refresh_from_db()
         assert perfil.mercenarios == 0

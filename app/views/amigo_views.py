@@ -164,7 +164,9 @@ class AceptarSolicitudView(View):
         solicitud.estado = Amigo.Estado.ACEPTADA
         solicitud.save()
 
-        messages.success(request, f"Aceptaste la solicitud de {solicitud.id_usuario.user.username}.")
+        messages.success(
+            request, f"Aceptaste la solicitud de {solicitud.id_usuario.user.username}."
+        )
         return redirect("lista_amigos")
 
 
@@ -191,7 +193,9 @@ class RechazarSolicitudView(View):
         solicitud.estado = Amigo.Estado.RECHAZADA
         solicitud.save()
 
-        messages.success(request, f"Rechazaste la solicitud de {solicitud.id_usuario.user.username}.")
+        messages.success(
+            request, f"Rechazaste la solicitud de {solicitud.id_usuario.user.username}."
+        )
         return redirect("lista_amigos")
 
 

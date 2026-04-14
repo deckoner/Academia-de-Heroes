@@ -96,7 +96,11 @@ class TestBuscarAmigos:
         response = client1.get("/amigos/buscar/?q=usuario1")
         assert response.status_code == 200
         content = response.content.decode()
-        assert "usuario1" not in content or "usuario1" in content and "Agregar" not in content
+        assert (
+            "usuario1" not in content
+            or "usuario1" in content
+            and "Agregar" not in content
+        )
 
 
 @pytest.mark.django_db
@@ -128,7 +132,9 @@ class TestAceptarRechazarSolicitud:
 
     def test_aceptar_solicitud(self, client1, client2, usuario1, usuario2):
         """Se puede aceptar una solicitud de amistad."""
-        solicitud = Amigo.objects.create(id_usuario=usuario1, id_amigo=usuario2, estado="PENDIENTE")
+        solicitud = Amigo.objects.create(
+            id_usuario=usuario1, id_amigo=usuario2, estado="PENDIENTE"
+        )
 
         response = client2.post(f"/amigos/aceptar/{solicitud.id}/")
         assert response.status_code == 302
@@ -138,7 +144,9 @@ class TestAceptarRechazarSolicitud:
 
     def test_rechazar_solicitud(self, client1, client2, usuario1, usuario2):
         """Se puede rechazar una solicitud de amistad."""
-        solicitud = Amigo.objects.create(id_usuario=usuario1, id_amigo=usuario2, estado="PENDIENTE")
+        solicitud = Amigo.objects.create(
+            id_usuario=usuario1, id_amigo=usuario2, estado="PENDIENTE"
+        )
 
         response = client2.post(f"/amigos/rechazar/{solicitud.id}/")
         assert response.status_code == 302
@@ -161,7 +169,7 @@ class TestAmistadBidireccional:
         solicitud = Amigo.objects.filter(
             models.Q(id_usuario=usuario1, id_amigo=usuario2)
             | models.Q(id_usuario=usuario2, id_amigo=usuario1),
-            estado="ACEPTADA"
+            estado="ACEPTADA",
         ).exists()
         assert solicitud
 

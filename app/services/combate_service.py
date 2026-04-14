@@ -179,11 +179,21 @@ def simular_combate(
             "tipo": p1.tipo,
             "vida": p1_data["vida_inicial"],
             "vida_max": p1.vida_max,
-            "mana": p1_data["mana_inicial"] if p1_data["mana_inicial"] is not None else 0,
+            "mana": (
+                p1_data["mana_inicial"] if p1_data["mana_inicial"] is not None else 0
+            ),
             "mana_max": p1_mana_max if p1_mana_max is not None else 0,
             "mana_pct": calc_mana_pct(p1_data["mana_inicial"], p1_mana_max),
-            "armadura": p1_data["armadura_inicial"] if p1_data["armadura_inicial"] is not None else 0,
-            "precision": p1_data["precision_inicial"] if p1_data["precision_inicial"] is not None else 0,
+            "armadura": (
+                p1_data["armadura_inicial"]
+                if p1_data["armadura_inicial"] is not None
+                else 0
+            ),
+            "precision": (
+                p1_data["precision_inicial"]
+                if p1_data["precision_inicial"] is not None
+                else 0
+            ),
         },
         p2={
             "id": p2.id,
@@ -191,11 +201,21 @@ def simular_combate(
             "tipo": p2.tipo,
             "vida": p2_data["vida_inicial"],
             "vida_max": p2.vida_max,
-            "mana": p2_data["mana_inicial"] if p2_data["mana_inicial"] is not None else 0,
+            "mana": (
+                p2_data["mana_inicial"] if p2_data["mana_inicial"] is not None else 0
+            ),
             "mana_max": p2_mana_max if p2_mana_max is not None else 0,
             "mana_pct": calc_mana_pct(p2_data["mana_inicial"], p2_mana_max),
-            "armadura": p2_data["armadura_inicial"] if p2_data["armadura_inicial"] is not None else 0,
-            "precision": p2_data["precision_inicial"] if p2_data["precision_inicial"] is not None else 0,
+            "armadura": (
+                p2_data["armadura_inicial"]
+                if p2_data["armadura_inicial"] is not None
+                else 0
+            ),
+            "precision": (
+                p2_data["precision_inicial"]
+                if p2_data["precision_inicial"] is not None
+                else 0
+            ),
         },
         turnos=turnos,
         ganador={"id": ganador.id, "nombre": ganador.nombre},
