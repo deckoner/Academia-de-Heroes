@@ -70,7 +70,9 @@ class TestRankingPage:
 
     def test_ranking_con_batalla_muestra_victoria(self, cliente, usuario, personaje):
         """Con batallas muestra las victorias."""
-        otro_user = User.objects.create_user(username="rankotro", password="testpass123")
+        otro_user = User.objects.create_user(
+            username="rankotro", password="testpass123"
+        )
         otro = Usuario.objects.create(
             user=otro_user,
             DNI="00000002B",

@@ -25,7 +25,7 @@ def crear_heroes(usuario, prefijo_nombre):
         ("MAGO", "Mago"),
         ("ARQUERO", "Arquero"),
     ]
-    
+
     for tipo, nombre_tipo in tipos:
         nombre = f"{prefijo_nombre}_{nombre_tipo}"
         Personaje.objects.create(

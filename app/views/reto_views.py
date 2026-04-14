@@ -25,7 +25,7 @@ class RetarUsuarioView(View):
             return redirect("home")
 
         amigos = self.obtener_amigos(perfil)
-        
+
         username = request.GET.get("usuario", "")
         amigo_id = request.GET.get("amigo", "")
         usuario_encontrado = None
@@ -45,7 +45,7 @@ class RetarUsuarioView(View):
             try:
                 user = User.objects.get(username=username)
                 usuario_encontrado = Usuario.objects.get(user=user)
-                
+
                 if usuario_encontrado.id == perfil.id:
                     messages.error(request, "No puedes retarte a ti mismo.")
                 else:
@@ -57,9 +57,7 @@ class RetarUsuarioView(View):
             except Usuario.DoesNotExist:
                 messages.error(request, "Usuario no encontrado.")
 
-        personajes_atacante = Personaje.objects.filter(
-            id_usuario=perfil, vivo=True
-        )
+        personajes_atacante = Personaje.objects.filter(id_usuario=perfil, vivo=True)
 
         return render(
             request,
@@ -120,7 +118,9 @@ class RetarUsuarioView(View):
                 messages.error(request, "Usuario no encontrado.")
                 return redirect("retar_usuario")
         else:
-            messages.error(request, "Selecciona un amigo o escribe un nombre de usuario.")
+            messages.error(
+                request, "Selecciona un amigo o escribe un nombre de usuario."
+            )
             return redirect("retar_usuario")
 
         if defensor.id == perfil.id:
@@ -135,14 +135,12 @@ class RetarUsuarioView(View):
             messages.error(request, "Personaje del atacante no encontrado.")
             return redirect("retar_usuario")
 
-        personajes_defensor = Personaje.objects.filter(
-            id_usuario=defensor, vivo=True
-        )
+        personajes_defensor = Personaje.objects.filter(id_usuario=defensor, vivo=True)
 
         if not personajes_defensor.exists():
             messages.error(
                 request,
-                f"El usuario {defensor.user.username} no tiene héroes vivos. Elige otro usuario."
+                f"El usuario {defensor.user.username} no tiene héroes vivos. Elige otro usuario.",
             )
             return redirect("retar_usuario")
 
@@ -166,7 +164,7 @@ class RetarUsuarioView(View):
         personaje_defensor.refresh_from_db()
 
         gano_atacante = resultado.ganador["id"] == resultado.p1["id"]
-        
+
         if gano_atacante:
             perfil.monedas += 1
             perfil.save()

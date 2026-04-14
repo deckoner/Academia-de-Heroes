@@ -39,10 +39,9 @@
                 <li><a href="{% url 'combate' %}" class="nav-combat"><span class="nav-icon">⚔️</span><span class="nav-text">Combate Simulado</span></a></li>
                 <li><a href="{% url 'entrenar' %}" class="nav-train"><span class="nav-icon">🏋️</span><span class="nav-text">Entrenar</span></a></li>
                 <li><a href="{% url 'lista_amigos' %}" class="nav-friends"><span class="nav-icon">👥</span><span class="nav-text">Amigos</span></a></li>
+                <li><a href="{% url 'ranking' %}" class="nav-ranking"><span class="nav-icon">🏆</span><span class="nav-text">Ranking</span></a></li>
                 {% if user.perfil and user.perfil.es_admin %}
                 <li><a href="{% url 'estadisticas' %}" class="nav-stats"><span class="nav-icon">📊</span><span class="nav-text">Estadísticas</span></a></li>
-                {% else %}
-                <li><a href="{% url 'ranking' %}" class="nav-ranking"><span class="nav-icon">🏆</span><span class="nav-text">Ranking</span></a></li>
                 {% endif %}
             </ul>
         </nav>

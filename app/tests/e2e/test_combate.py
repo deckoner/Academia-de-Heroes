@@ -19,7 +19,7 @@ class TestCombate:
         """Con personajes muestra el formulario."""
         user = User.objects.get(username="testuser")
         perfil = Usuario.objects.get(user=user)
-        
+
         Personaje.objects.create(
             id_usuario=perfil,
             tipo="GUERRERO",
@@ -52,7 +52,7 @@ class TestCombate:
         """No permite seleccionar el mismo personaje."""
         user = User.objects.get(username="testuser")
         perfil = Usuario.objects.get(user=user)
-        
+
         p1 = Personaje.objects.create(
             id_usuario=perfil,
             tipo="GUERRERO",

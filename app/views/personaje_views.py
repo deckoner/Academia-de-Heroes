@@ -48,19 +48,21 @@ class HomeView(View):
             return redirect("login")
 
         batallas = Batalla.objects.listar_por_usuario(perfil.id)[:10]
-        
-        solicitudes_pendientes = Amigo.objects.listar_solicitudes_pendientes(perfil)
-        
-        batallas_pendientes = Batalla.objects.filter(
-            id_defensor=perfil, leido=False
-        )
 
-        return render(request, self.template_name, {
-            "batallas": batallas,
-            "solicitudes_pendientes": solicitudes_pendientes,
-            "batallas_pendientes": batallas_pendientes,
-            "usuario_id": perfil.id,
-        })
+        solicitudes_pendientes = Amigo.objects.listar_solicitudes_pendientes(perfil)
+
+        batallas_pendientes = Batalla.objects.filter(id_defensor=perfil, leido=False)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "batallas": batallas,
+                "solicitudes_pendientes": solicitudes_pendientes,
+                "batallas_pendientes": batallas_pendientes,
+                "usuario_id": perfil.id,
+            },
+        )
 
     def post(self, request):
         """

@@ -53,10 +53,7 @@ def es_mayor_de_edad_fecha(fecha_nacimiento):
     age = (
         today.year
         - fecha_nacimiento.year
-        - (
-            (today.month, today.day)
-            < (fecha_nacimiento.month, fecha_nacimiento.day)
-        )
+        - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
     )
 
     return age >= 18
@@ -102,9 +99,9 @@ def ranking_usuarios():
 
     victories = {uid: 0 for uid in usuario_ids_mayores}
 
-    batallas = Batalla.objects.filter(
-        resultado__isnull=False
-    ).select_related("id_atacante", "id_defensor")
+    batallas = Batalla.objects.filter(resultado__isnull=False).select_related(
+        "id_atacante", "id_defensor"
+    )
 
     for batalla in batallas:
         attacker = batalla.id_atacante_id
@@ -114,9 +111,7 @@ def ranking_usuarios():
         if winner in usuario_ids_mayores:
             victories[winner] += 1
 
-    usuarios = Usuario.objects.select_related("user").filter(
-        id__in=usuario_ids_mayores
-    )
+    usuarios = Usuario.objects.select_related("user").filter(id__in=usuario_ids_mayores)
 
     ranking_list = []
     for usuario in usuarios:
@@ -144,9 +139,7 @@ def ranking_personajes():
     if not usuario_ids_mayores:
         return []
 
-    personajes = Personaje.objects.filter(
-        id_usuario_id__in=usuario_ids_mayores
-    )
+    personajes = Personaje.objects.filter(id_usuario_id__in=usuario_ids_mayores)
 
     personaje_ids = list(personajes.values_list("id", flat=True))
 
@@ -155,11 +148,8 @@ def ranking_personajes():
 
     victories = {pid: 0 for pid in personaje_ids}
 
-    batallas = Batalla.objects.filter(
-        resultado__isnull=False
-    ).select_related(
-        "personaje_atacante", "personaje_defensor",
-        "id_atacante", "id_defensor"
+    batallas = Batalla.objects.filter(resultado__isnull=False).select_related(
+        "personaje_atacante", "personaje_defensor", "id_atacante", "id_defensor"
     )
 
     for batalla in batallas:

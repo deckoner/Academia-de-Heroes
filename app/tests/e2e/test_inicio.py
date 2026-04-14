@@ -83,7 +83,9 @@ class TestInicio:
         assert "personajes" in content
         assert "combate" in content
 
-    def test_home_muestra_historial_batallas(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_muestra_historial_batallas(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """El home muestra el historial de batallas."""
         Batalla.objects.create(
             id_atacante=usuario_test,
@@ -99,7 +101,9 @@ class TestInicio:
         assert "GuerreroTest" in content
         assert "otrouser" in content
 
-    def test_home_muestra_resultado_batalla(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_muestra_resultado_batalla(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """El home muestra el resultado de la batalla."""
         Batalla.objects.create(
             id_atacante=usuario_test,
@@ -113,7 +117,9 @@ class TestInicio:
         content = response.content.decode()
         assert "Ganado" in content or "Perdido" in content
 
-    def test_home_muestra_fecha_batalla(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_muestra_fecha_batalla(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """El home muestra la fecha de la batalla."""
         Batalla.objects.create(
             id_atacante=usuario_test,
@@ -127,7 +133,9 @@ class TestInicio:
         content = response.content.decode()
         assert "d/m/Y" in content or "/" in content
 
-    def test_home_notificaciones_muestra_solicitudes(self, client, usuario_test, otro_usuario):
+    def test_home_notificaciones_muestra_solicitudes(
+        self, client, usuario_test, otro_usuario
+    ):
         """El home muestra las solicitudes de amistad pendientes."""
         Amigo.objects.create(
             id_usuario=otro_usuario,
@@ -140,7 +148,9 @@ class TestInicio:
         assert "Solicitudes de Amistad" in content
         assert "otrouser" in content
 
-    def test_home_notificaciones_muestra_batallas_recibidas(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_notificaciones_muestra_batallas_recibidas(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """El home muestra las batallas recibidas no leídas."""
         Batalla.objects.create(
             id_atacante=otro_usuario,
@@ -156,7 +166,9 @@ class TestInicio:
         assert "Batallas Recibidas" in content
         assert "otrouser" in content
 
-    def test_home_marcar_batalla_como_leida(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_marcar_batalla_como_leida(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """Se puede marcar una batalla como leída."""
         batalla = Batalla.objects.create(
             id_atacante=otro_usuario,
@@ -180,7 +192,9 @@ class TestInicio:
         assert "Historial de Batallas" in content
         assert "Notificaciones" in content
 
-    def test_home_muestra_yo_en_batalla_como_atacante(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_muestra_yo_en_batalla_como_atacante(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """Se marca 'yo' cuando el usuario es el atacante."""
         Batalla.objects.create(
             id_atacante=usuario_test,
@@ -192,9 +206,11 @@ class TestInicio:
 
         response = client.get("/")
         content = response.content.decode()
-        assert 'class="' in content or 'yo' in content
+        assert 'class="' in content or "yo" in content
 
-    def test_home_limita_batallas_mostradas(self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor):
+    def test_home_limita_batallas_mostradas(
+        self, client, usuario_test, otro_usuario, personaje_atacante, personaje_defensor
+    ):
         """Solo se muestran las últimas 10 batallas."""
         for i in range(15):
             Batalla.objects.create(

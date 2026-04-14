@@ -156,10 +156,14 @@ class TestRankingUsuarios:
         ranking = ranking_usuarios()
 
         assert len(ranking) == 2
-        usuario_mayor_victorias = next((v for u, v in ranking if u.id == usuario_mayor.id), 0)
+        usuario_mayor_victorias = next(
+            (v for u, v in ranking if u.id == usuario_mayor.id), 0
+        )
         assert usuario_mayor_victorias == 1
 
-    def test_ranking_excluye_menores(self, usuario_mayor, usuario_menor, personaje_mayor, personaje_menor):
+    def test_ranking_excluye_menores(
+        self, usuario_mayor, usuario_menor, personaje_mayor, personaje_menor
+    ):
         """Usuario menor no aparece en el ranking, menor puede ganar contra mayor."""
         Batalla.objects.create(
             id_atacante=usuario_menor,
@@ -183,7 +187,9 @@ class TestRankingPersonajes:
         """Sin personajes devuelve lista vacía."""
         assert ranking_personajes() == []
 
-    def test_ranking_con_victorias(self, usuario_mayor, personaje_mayor, personaje_menor):
+    def test_ranking_con_victorias(
+        self, usuario_mayor, personaje_mayor, personaje_menor
+    ):
         """Calcula ranking de personajes correctamente."""
         personaje_mayor_2 = Personaje.objects.create(
             id_usuario=usuario_mayor,
@@ -233,7 +239,9 @@ class TestRankingPersonajes:
 
         assert len(ranking) == 3
 
-    def test_ranking_excluye_personajes_menores(self, usuario_mayor, usuario_menor, personaje_mayor, personaje_menor):
+    def test_ranking_excluye_personajes_menores(
+        self, usuario_mayor, usuario_menor, personaje_mayor, personaje_menor
+    ):
         """No incluye personajes de menores en el ranking."""
         Batalla.objects.create(
             id_atacante=usuario_mayor,
