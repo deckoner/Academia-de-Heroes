@@ -5,11 +5,11 @@
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h2>➕ Crear Nuevo Héroe</h2>
+        <h2><span class="material-icons">add</span> Crear Nuevo Heroe</h2>
     </div>
 
     <div class="rpg-card">
-        <h3 class="rpg-card-title">⚔️ Nuevo Guerrero</h3>
+        <h3 class="rpg-card-title"><span class="material-icons">security</span> Nuevo Guerrero</h3>
         
         <form method="post" class="rpg-form-styled">
             {% csrf_token %}
@@ -18,9 +18,9 @@
                 <label for="id_tipo">Tipo de Personaje</label>
                 <select name="tipo" id="id_tipo" required onchange="actualizarCampos()">
                     <option value="">Selecciona un tipo</option>
-                    <option value="GUERRERO">⚔️ Guerrero</option>
-                    <option value="MAGO">🔮 Mago</option>
-                    <option value="ARQUERO">🏹 Arquero</option>
+                    <option value="GUERRERO"><span class="material-icons">security</span> Guerrero</option>
+                    <option value="MAGO"><span class="material-icons">auto_fix_high</span> Mago</option>
+                    <option value="ARQUERO"><span class="material-icons">gps_fixed</span> Arquero</option>
                 </select>
             </div>
             
@@ -47,23 +47,23 @@
             </div>
             
             <div class="form-group" id="campo_armadura" style="display:none;">
-                <label for="id_armadura">🛡️ Armadura</label>
+                <label for="id_armadura"><span class="material-icons">shield</span> Armadura</label>
                 <input type="number" name="armadura" id="id_armadura" min="0" value="5" placeholder="Puntos de armadura">
             </div>
             
             <div class="form-group" id="campo_mana" style="display:none;">
-                <label for="id_mana">💧 Mana</label>
+                <label for="id_mana"><span class="material-icons">water_drop</span> Mana</label>
                 <input type="number" name="mana" id="id_mana" min="0" value="50" placeholder="Puntos de mana">
             </div>
             
             <div class="form-group" id="campo_precision" style="display:none;">
-                <label for="id_precision">🎯 Precisión</label>
-                <input type="number" name="precision" id="id_precision" min="0" max="100" value="80" placeholder="Porcentaje de precisión">
+                <label for="id_precision"><span class="material-icons">gps_fixed</span> Precision</label>
+                <input type="number" name="precision" id="id_precision" min="0" max="100" value="80" placeholder="Porcentaje de precision">
             </div>
             
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">⚔️ Crear Héroe</button>
-                <a href="{% url 'lista_personajes' %}" class="btn btn-secondary">⬅️ Cancelar</a>
+                <button type="submit" class="btn btn-primary"><span class="material-icons">add</span> Crear Heroe</button>
+                <a href="{% url 'lista_personajes' %}" class="btn btn-secondary"><span class="material-icons">arrow_back</span> Cancelar</a>
             </div>
         </form>
     </div>

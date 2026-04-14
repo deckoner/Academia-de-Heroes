@@ -45,7 +45,7 @@ class TestCombate:
 
         response = client.get("/combate/")
         assert response.status_code == 200
-        assert "⚔️" in response.content.decode()
+        assert "sports_mma" in response.content.decode()
         assert "Simulación" in response.content.decode()
 
     def test_no_permite_mismo_personaje(self, client):

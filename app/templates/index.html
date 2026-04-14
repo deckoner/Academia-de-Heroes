@@ -65,17 +65,17 @@
                     {% for solicitud in solicitudes_pendientes %}
                     <div class="notificacion-item">
                         <div class="notificacion-user">
-                            <span class="user-icon">👤</span>
+                            <span class="user-icon material-icons">person</span>
                             <span class="user-name">{{ solicitud.id_usuario.user.username }}</span>
                         </div>
                         <div class="notificacion-actions">
                             <form method="post" action="{% url 'aceptar_solicitud' solicitud.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-xs btn-success" title="Aceptar">✓</button>
+                                <button type="submit" class="btn btn-xs btn-success" title="Aceptar"><span class="material-icons" style="font-size: 1rem;">check</span></button>
                             </form>
                             <form method="post" action="{% url 'rechazar_solicitud' solicitud.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-xs" title="Rechazar">✗</button>
+                                <button type="submit" class="btn btn-xs" title="Rechazar"><span class="material-icons" style="font-size: 1rem;">close</span></button>
                             </form>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         <form method="post" action="{% url 'home' %}">
                             {% csrf_token %}
                             <input type="hidden" name="batalla_id" value="{{ batalla.id }}">
-                            <button type="submit" class="btn btn-xs btn-ack" title="Marcar como vista">✓</button>
+                            <button type="submit" class="btn btn-xs btn-ack" title="Marcar como vista"><span class="material-icons" style="font-size: 1rem;">check</span></button>
                         </form>
                     </div>
                     {% empty %}

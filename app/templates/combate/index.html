@@ -5,21 +5,21 @@
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h2>⚔️ Simulación de Combate</h2>
+        <h2><span class="material-icons">sports_mma</span> Simulacion de Combate</h2>
     </div>
 
     {% if personajes|length < 2 %}
     <div class="rpg-card">
         <div class="empty-state">
-            <span class="empty-icon">⚔️</span>
+            <span class="empty-icon material-icons">sports_mma</span>
             <h3>Se necesitan al menos dos personajes</h3>
-            <p>Crea más héroes para poder luchar</p>
-            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">➕ Crear personaje</a>
+            <p>Crea más heroes para poder luchar</p>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary"><span class="material-icons">add</span> Crear personaje</a>
         </div>
     </div>
     {% else %}
     <div class="rpg-card">
-        <h3 class="rpg-card-title">⚔️ Selección de Combatientes</h3>
+        <h3 class="rpg-card-title"><span class="material-icons">groups</span> Seleccion de Combatientes</h3>
         <p class="card-description">Selecciona dos héroes diferentes para el combate (click para seleccionar/deseleccionar)</p>
         
         <form method="post" action="{% url 'combate' %}" id="combate-form">
@@ -31,10 +31,10 @@
                 {% for p in personajes %}
                 <div class="hero-card-select" data-id="{{ p.id }}">
                     <span class="hero-type">
-                        {% if p.tipo == 'GUERRERO' %}⚔️
-                        {% elif p.tipo == 'MAGO' %}🔮
-                        {% elif p.tipo == 'ARQUERO' %}🏹
-                        {% else %}👤{% endif %}
+                        {% if p.tipo == 'GUERRERO' %}<span class="material-icons">security</span>
+                        {% elif p.tipo == 'MAGO' %}<span class="material-icons">auto_fix_high</span>
+                        {% elif p.tipo == 'ARQUERO' %}<span class="material-icons">gps_fixed</span>
+                        {% endif %}
                     </span>
                     <span class="hero-name">{{ p.nombre }}</span>
                     <span class="hero-level">NVL {{ p.nivel }}</span>
@@ -48,8 +48,8 @@
             </p>
 
             <div class="form-actions" style="justify-content: center;">
-                <button type="submit" class="btn btn-primary" id="btn-iniciar" disabled>⚔️ Iniciar Combate</button>
-                <a href="{% url 'home' %}" class="btn btn-secondary">⬅️ Volver</a>
+                <button type="submit" class="btn btn-primary" id="btn-iniciar" disabled><span class="material-icons">play_arrow</span> Iniciar Combate</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary"><span class="material-icons">arrow_back</span> Volver</a>
             </div>
         </form>
     </div>

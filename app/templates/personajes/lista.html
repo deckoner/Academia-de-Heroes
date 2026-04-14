@@ -5,7 +5,7 @@
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h2>🛡️ Mis Héroes</h2>
+        <h2><span class="material-icons">shield</span> Mis Heroes</h2>
     </div>
 
     <div class="rpg-table-container">
@@ -21,7 +21,7 @@
                 <span>personajes</span>
             </div>
             <a href="{% url 'crear_personaje' %}" class="btn btn-primary">
-                ➕ Nuevo Héroe
+                <span class="material-icons">add</span> Nuevo Heroe
             </a>
         </div>
 
@@ -41,10 +41,10 @@
                 <tr>
                     <td><strong>{{ personaje.nombre }}</strong></td>
                     <td>
-                        {% if personaje.tipo == 'GUERRERO' %}⚔️ Guerrero
-                        {% elif personaje.tipo == 'MAGO' %}🔮 Mago
-                        {% elif personaje.tipo == 'ARQUERO' %}🏹 Arquero
-                        {% else %}👤 Personaje{% endif %}
+                        {% if personaje.tipo == 'GUERRERO' %}<span class="material-icons" style="font-size: 1rem;">security</span> Guerrero
+                        {% elif personaje.tipo == 'MAGO' %}<span class="material-icons" style="font-size: 1rem;">auto_fix_high</span> Mago
+                        {% elif personaje.tipo == 'ARQUERO' %}<span class="material-icons" style="font-size: 1rem;">gps_fixed</span> Arquero
+                        {% endif %}
                     </td>
                     <td>Nivel {{ personaje.nivel }}</td>
                     <td>
@@ -55,18 +55,18 @@
                     </td>
                     <td>
                         {% if personaje.vivo %}
-                        <span class="status-badge alive">✓ Vivo</span>
+                        <span class="status-badge alive"><span class="material-icons" style="font-size: 0.8rem;">check_circle</span> Vivo</span>
                         {% else %}
-                        <span class="status-badge dead">✗ Muerto</span>
+                        <span class="status-badge dead"><span class="material-icons" style="font-size: 0.8rem;">cancel</span> Muerto</span>
                         {% endif %}
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{% url 'editar_personaje' personaje.id %}" class="btn btn-sm">✏️ Editar</a>
-                            <form method="post" action="{% url 'eliminar_personaje' personaje.id %}" style="display:inline;">
+<a href="{% url 'editar_personaje' personaje.id %}" class="btn btn-sm"><span class="material-icons" style="font-size: 0.9rem;">edit</span> Editar</a>
+                            <form method="post" action="{% url 'eliminar_personaje' personaje.id %}" style="display: inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('¿Estás seguro de eliminar este personaje?')">🗑️</button>
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                    onclick="return confirm('Estas seguro de eliminar este personaje?')"><span class="material-icons" style="font-size: 0.9rem;">delete</span></button>
                             </form>
                         </div>
                     </td>
@@ -76,16 +76,16 @@
         </table>
 
         <div class="pagination-controls">
-            <button class="btn btn-sm" disabled>◀ Anterior</button>
-            <span class="pagination-page">Página 1 de 1</span>
-            <button class="btn btn-sm" disabled>Siguiente ▶</button>
+<button class="btn btn-sm" disabled><span class="material-icons" style="font-size: 0.9rem;">chevron_left</span> Anterior</button>
+            <span class="pagination-page">Pagina 1 de 1</span>
+            <button class="btn btn-sm" disabled>Siguiente <span class="material-icons" style="font-size: 0.9rem;">chevron_right</span></button>
         </div>
         {% else %}
         <div class="empty-state">
-            <span class="empty-icon">🛡️</span>
+            <span class="empty-icon material-icons">shield</span>
             <h3>No tienes héroes</h3>
             <p>Crea tu primer héroe para comenzar la aventura</p>
-            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">➕ Crear Héroe</a>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary"><span class="material-icons">add</span> Crear Heroe</a>
         </div>
         {% endif %}
     </div>
