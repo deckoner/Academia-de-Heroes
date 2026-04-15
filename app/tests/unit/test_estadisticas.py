@@ -102,7 +102,9 @@ class TestClasesMasSeleccionadas:
         resultado = clases_mas_seleccionadas()
         assert resultado == []
 
-    def test_devuelve_clases_seleccionadas(self, db, personaje_guerrero, personaje_mago):
+    def test_devuelve_clases_seleccionadas(
+        self, db, personaje_guerrero, personaje_mago
+    ):
         """Debe devolver las clases con su cantidad."""
         resultado = clases_mas_seleccionadas()
         assert len(resultado) == 2
@@ -118,7 +120,14 @@ class TestClasesGanadorasMasCombates:
         resultado = clases_ganadoras_mas_combates()
         assert resultado == []
 
-    def test_devuelve_victorias_por_clase(self, db, usuario_mayor, personaje_guerrero, personaje_mago, batalla_entre_personajes):
+    def test_devuelve_victorias_por_clase(
+        self,
+        db,
+        usuario_mayor,
+        personaje_guerrero,
+        personaje_mago,
+        batalla_entre_personajes,
+    ):
         """Debe contar las victorias por clase."""
         resultado = clases_ganadoras_mas_combates()
         assert len(resultado) > 0
@@ -141,7 +150,9 @@ class TestClasesMasEntrenadas:
         resultado = clases_mas_entrenadas()
         assert resultado == []
 
-    def test_devuelve_nivel_promedio_por_clase(self, db, usuario_mayor, personaje_guerrero, personaje_mago):
+    def test_devuelve_nivel_promedio_por_clase(
+        self, db, usuario_mayor, personaje_guerrero, personaje_mago
+    ):
         """Debe devolver el nivel promedio por clase."""
         resultado = clases_mas_entrenadas()
         assert len(resultado) > 0
@@ -156,7 +167,9 @@ class TestRankingPersonajes:
         resultado = ranking_personajes_estadisticas()
         assert resultado == []
 
-    def test_devuelve_ranking_limitado_a_10(self, db, usuario_mayor, personaje_guerrero):
+    def test_devuelve_ranking_limitado_a_10(
+        self, db, usuario_mayor, personaje_guerrero
+    ):
         """Debe devolver maximo 10 personajes."""
         resultado = ranking_personajes_estadisticas()
         assert len(resultado) <= 10
@@ -172,7 +185,14 @@ class TestPromedioBatallasPorUsuario:
         assert resultado["total_batallas"] == 0
         assert resultado["total_usuarios"] == 0
 
-    def test_calcula_promedio_correctamente(self, db, usuario_mayor, personaje_guerrero, personaje_mago, batalla_entre_personajes):
+    def test_calcula_promedio_correctamente(
+        self,
+        db,
+        usuario_mayor,
+        personaje_guerrero,
+        personaje_mago,
+        batalla_entre_personajes,
+    ):
         """Debe calcular el promedio de batallas."""
         resultado = promedio_batallas_por_usuario()
         assert resultado["total_batallas"] == 1

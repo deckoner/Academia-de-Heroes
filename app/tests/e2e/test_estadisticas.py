@@ -92,7 +92,9 @@ class TestEstadisticasPage:
         response = cliente_admin.get("/estadisticas/")
         assert "estadisticas" in response.context
 
-    def test_estadisticas_tiene_clases_seleccionadas(self, cliente_admin, personaje_admin):
+    def test_estadisticas_tiene_clases_seleccionadas(
+        self, cliente_admin, personaje_admin
+    ):
         """La pagina debe incluir clases_seleccionadas."""
         response = cliente_admin.get("/estadisticas/")
         assert "clases_seleccionadas" in response.context["estadisticas"]
@@ -132,14 +134,18 @@ class TestEstadisticasPage:
 class TestEstadisticasConDatos:
     """Tests E2E para estadisticas con datos en la base de datos."""
 
-    def test_estadisticas_muestra_datos_con_personajes(self, cliente_admin, usuario_admin, personaje_admin):
+    def test_estadisticas_muestra_datos_con_personajes(
+        self, cliente_admin, usuario_admin, personaje_admin
+    ):
         """Las estadisticas deben mostrar datos cuando hay personajes."""
         response = cliente_admin.get("/estadisticas/")
         estadisticas = response.context["estadisticas"]
         assert estadisticas["clases_seleccionadas"] is not None
         assert estadisticas["distribucion_niveles"] is not None
 
-    def test_estadisticas_calcular_promedio_batallas(self, cliente_admin, usuario_admin, personaje_admin):
+    def test_estadisticas_calcular_promedio_batallas(
+        self, cliente_admin, usuario_admin, personaje_admin
+    ):
         """El promedio de batallas debe calcularse correctamente."""
         response = cliente_admin.get("/estadisticas/")
         promedio = response.context["estadisticas"]["promedio_batallas"]

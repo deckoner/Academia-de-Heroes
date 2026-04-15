@@ -3,3 +3,4 @@ plotly
 playwright
 pytest
 pytest-django
+dj-database-url
