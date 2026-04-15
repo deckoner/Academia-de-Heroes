@@ -5,12 +5,12 @@
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h2>🏆 Ranking</h2>
+        <h2><span class="material-icons">emoji_events</span> Ranking</h2>
     </div>
 
     <div class="ranking-container">
         <div class="rpg-card">
-            <h3 class="rpg-card-title">⚔️ Ranking de Usuarios</h3>
+            <h3 class="rpg-card-title"><span class="material-icons">groups</span> Ranking de Usuarios</h3>
             {% if usuarios %}
             <div class="rpg-table-container">
                 <table class="rpg-table">
@@ -25,13 +25,13 @@
                         {% for usuario, victimas in usuarios %}
                         <tr class="{% if forloop.first %}first-row{% elif forloop.counter == 2 %}second-row{% elif forloop.counter == 3 %}third-row{% endif %}">
                             <td class="col-pos">
-                                {% if forloop.counter == 1 %}<span class="medal gold">👑</span>
-                                {% elif forloop.counter == 2 %}<span class="medal silver">🥈</span>
-                                {% elif forloop.counter == 3 %}<span class="medal bronze">🥉</span>
+                                {% if forloop.counter == 1 %}<span class="medal gold"><span class="material-icons">workspace_premium</span></span>
+                                {% elif forloop.counter == 2 %}<span class="medal silver"><span class="material-icons" style="font-size: 1.5rem;">military_tech</span></span>
+                                {% elif forloop.counter == 3 %}<span class="medal bronze"><span class="material-icons" style="font-size: 1.5rem;">military_tech</span></span>
                                 {% else %}{{ forloop.counter }}{% endif %}
                             </td>
                             <td class="col-user">
-                                <span class="user-icon">⚔️</span>
+                                <span class="user-icon material-icons">sports_mma</span>
                                 {{ usuario.user.username }}
                             </td>
                             <td class="col-victorias">
@@ -44,7 +44,7 @@
             </div>
             {% else %}
             <div class="empty-state">
-                <span class="empty-icon">🏆</span>
+                <span class="empty-icon material-icons">emoji_events</span>
                 <h3>No hay usuarios en el ranking</h3>
                 <p>Gana batallas para aparecer aquí</p>
             </div>
@@ -52,7 +52,7 @@
         </div>
 
         <div class="rpg-card">
-            <h3 class="rpg-card-title">🛡️ Ranking de Personajes</h3>
+            <h3 class="rpg-card-title"><span class="material-icons">shield</span> Ranking de Personajes</h3>
             {% if personajes %}
             <div class="rpg-table-container">
                 <table class="rpg-table">
@@ -68,14 +68,14 @@
                         {% for personaje, victimas in personajes %}
                         <tr class="{% if forloop.first %}first-row{% elif forloop.counter == 2 %}second-row{% elif forloop.counter == 3 %}third-row{% endif %}">
                             <td class="col-pos">
-                                {% if forloop.counter == 1 %}<span class="medal gold">👑</span>
-                                {% elif forloop.counter == 2 %}<span class="medal silver">🥈</span>
-                                {% elif forloop.counter == 3 %}<span class="medal bronze">🥉</span>
+                                {% if forloop.counter == 1 %}<span class="medal gold"><span class="material-icons">workspace_premium</span></span>
+                                {% elif forloop.counter == 2 %}<span class="medal silver"><span class="material-icons" style="font-size: 1.5rem;">military_tech</span></span>
+                                {% elif forloop.counter == 3 %}<span class="medal bronze"><span class="material-icons" style="font-size: 1.5rem;">military_tech</span></span>
                                 {% else %}{{ forloop.counter }}{% endif %}
                             </td>
                             <td class="col-user">
                                 <span class="char-icon">
-                                    {% if personaje.tipo == 'GUERRERO' %}🛡️{% elif personaje.tipo == 'MAGO' %}🔮{% elif personaje.tipo == 'ARQUERO' %}🏹{% else %}👤{% endif %}
+                                    {% if personaje.tipo == 'GUERRERO' %}<span class="material-icons">security</span>{% elif personaje.tipo == 'MAGO' %}<span class="material-icons">auto_fix_high</span>{% elif personaje.tipo == 'ARQUERO' %}<span class="material-icons">gps_fixed</span>{% else %}<span class="material-icons">person</span>{% endif %}
                                 </span>
                                 {{ personaje.nombre }}
                             </td>
@@ -92,7 +92,7 @@
             </div>
             {% else %}
             <div class="empty-state">
-                <span class="empty-icon">⚔️</span>
+                <span class="empty-icon material-icons">sports_mma</span>
                 <h3>No hay personajes en el ranking</h3>
                 <p>Crea personajes y gana batallas para aparecer aquí</p>
             </div>

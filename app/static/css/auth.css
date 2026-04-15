@@ -27,7 +27,8 @@
 
 /* Decoración superior */
 .auth-container::before {
-    content: '⚜';
+    font-family: 'Material Icons';
+    content: "\e865";
     position: absolute;
     top: -15px;
     left: 50%;

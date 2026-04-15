@@ -5,22 +5,22 @@
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h2>🏋️ Entrenar Héroe</h2>
+        <h2><span class="material-icons">fitness_center</span> Entrenar Heroe</h2>
     </div>
 
     <div class="rpg-card">
-        <h3 class="rpg-card-title">⚔️ Recursos de Guerra</h3>
+        <h3 class="rpg-card-title"><span class="material-icons">sports_mma</span> Recursos de Guerra</h3>
         
         <div class="resource-grid">
             <div class="resource-item">
-                <span class="resource-icon">🪙</span>
+                <span class="resource-icon material-icons">paid</span>
                 <div class="resource-info">
                     <span class="resource-label">Oro</span>
                     <span class="resource-value">{{ monedas }}</span>
                 </div>
             </div>
             <div class="resource-item">
-                <span class="resource-icon">💂</span>
+                <span class="resource-icon material-icons">person</span>
                 <div class="resource-info">
                     <span class="resource-label">Mercenarios</span>
                     <span class="resource-value">{{ mercenarios }}</span>
@@ -34,14 +34,14 @@
             {% csrf_token %}
             <input type="hidden" name="accion" value="comprar">
             <button type="submit" class="btn btn-secondary" {% if monedas < costo_mercenario %}disabled{% endif %}>
-                💂 Contratar Mercenario ({{ costo_mercenario }} 🪙)
+                <span class="material-icons">person_add</span> Contratar Mercenario ({{ costo_mercenario }} <span class="material-icons" style="font-size: 0.9rem;">paid</span>)
             </button>
         </form>
     </div>
 
     {% if personajes %}
     <div class="rpg-card">
-        <h3 class="rpg-card-title">🛡️ Seleccionar Héroe</h3>
+        <h3 class="rpg-card-title"><span class="material-icons">shield</span> Seleccionar Heroe</h3>
         <p class="card-description">Selecciona un héroe para entrenar (click para seleccionar)</p>
         
         <form method="post" action="{% url 'entrenar' %}" id="entrenar-form">
@@ -53,15 +53,15 @@
                 {% for p in personajes %}
                 <div class="hero-card-select hero-card-entrenar" data-id="{{ p.id }}">
                     <span class="hero-type">
-                        {% if p.tipo == 'GUERRERO' %}⚔️
-                        {% elif p.tipo == 'MAGO' %}🔮
-                        {% elif p.tipo == 'ARQUERO' %}🏹
-                        {% else %}👤{% endif %}
+                        {% if p.tipo == 'GUERRERO' %}<span class="material-icons">security</span>
+                        {% elif p.tipo == 'MAGO' %}<span class="material-icons">auto_fix_high</span>
+                        {% elif p.tipo == 'ARQUERO' %}<span class="material-icons">gps_fixed</span>
+                        {% else %}<span class="material-icons">person</span>{% endif %}
                     </span>
                     <span class="hero-name">{{ p.nombre }}</span>
                     <span class="hero-level">NVL {{ p.nivel }}</span>
                     <div class="hero-stats">
-                        <span>❤️ {{ p.vida }}/{{ p.vida_max }}</span>
+                        <span><span class="material-icons" style="color: #e74c3c;">favorite</span> {{ p.vida }}/{{ p.vida_max }}</span>
                     </div>
                 </div>
                 {% endfor %}
@@ -72,8 +72,8 @@
             </p>
 
             <div class="form-actions" style="justify-content: center;">
-                <button type="submit" class="btn btn-primary" id="btn-entrenar" disabled>🏋️ Entrenar (1 💂)</button>
-                <a href="{% url 'home' %}" class="btn btn-secondary">⬅️ Volver</a>
+                <button type="submit" class="btn btn-primary" id="btn-entrenar" disabled><span class="material-icons">fitness_center</span> Entrenar (1 <span class="material-icons" style="font-size: 0.9rem;">person</span>)</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary"><span class="material-icons">arrow_back</span> Volver</a>
             </div>
         </form>
     </div>
@@ -115,10 +115,10 @@
     {% else %}
     <div class="rpg-card">
         <div class="empty-state">
-            <span class="empty-icon">🛡️</span>
+            <span class="empty-icon material-icons">shield</span>
             <h3>No hay héroes disponibles</h3>
             <p>Crea uno primero para comenzar a entrenar</p>
-            <a href="{% url 'crear_personaje' %}" class="btn btn-primary">➕ Crear héroe</a>
+            <a href="{% url 'crear_personaje' %}" class="btn btn-primary"><span class="material-icons">add</span> Crear heroe</a>
         </div>
     </div>
     {% endif %}

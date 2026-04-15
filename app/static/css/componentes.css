@@ -96,7 +96,8 @@ input[type="submit"]:active {
 }
 
 .rpg-card::before {
-    content: '⚜';
+    font-family: 'Material Icons';
+    content: "\e865";
     position: absolute;
     top: -12px;
     left: 50%;
@@ -194,7 +195,8 @@ input[type="submit"]:active {
 }
 
 .rpg-form-title::after {
-    content: '⚜';
+    font-family: 'Material Icons';
+    content: "\e865";
     position: absolute;
     bottom: -10px;
     left: 50%;
