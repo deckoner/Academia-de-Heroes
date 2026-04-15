@@ -1,6 +1,6 @@
 Django
-plotly
-playwright
-pytest
-pytest-django
 dj-database-url
+psycopg[binary]
+whitenoise
+gunicorn
+plotly
